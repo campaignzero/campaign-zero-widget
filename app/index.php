@@ -44,9 +44,35 @@ $result = curl_exec($curl);
 // Terminate cURL
 curl_close($curl);
 
+// Store results as JSON
+$results = json_decode($result, true);
+
+// Save Current State
+$state = (isset($results[0]['state'])) ? strtoupper($results[0]['state']) : NULL;
+
+// Parse CSV
+$bills = array();
+if (($handle = fopen('data.csv', 'r')) !== FALSE) {
+  while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+    if ($data[0] === $state) {
+      if( !isset($bills[$data[1]])) {
+        $bills[$data[1]] = array();
+      }
+      $bills[$data[1]][] = array(
+        'bill' => $data[2],
+        'status' => $data[3],
+        'label' => $data[4],
+        'url' => $data[5]
+      );
+    }
+  }
+  fclose($handle);
+}
+
 // Return JSON as PHP Array
 $response = array(
-  'results' => json_decode($result, true),
+  'results' => $results,
+  'bills' => $bills,
   'location' => array(
     'latitude' => $latitude,
     'longitude' => $longitude,

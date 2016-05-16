@@ -13,7 +13,7 @@
   box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
   margin: 0 auto;
   position: relative;
-  min-height: 300px;
+  min-height: 345px;
   overflow: hidden;
 }
 #campaign-zero-widget *,
@@ -175,8 +175,8 @@
   top: 2px;
 }
 #campaign-zero-widget .avatar.large {
-  height: 80px;
-  width: 80px;
+  height: 70px;
+  width: 70px;
 }
 #campaign-zero-widget .avatar.republican {
   background-color: #c96060;
@@ -279,14 +279,46 @@
   font-weight: 400;
   color: #272727;
   margin-top: 8px;
+  text-align: left;
+  font-size: 0.7rem;
 }
-#campaign-zero-widget .representative .support .status {
-  background-color: #5cb85c;
+#campaign-zero-widget .representative .support.text-center {
+  text-align: center;
+}
+#campaign-zero-widget .representative .support a {
   color: #fff;
   padding: 2px 6px;
   font-size: 0.7rem;
   text-transform: uppercase;
   margin-right: 2px;
+  background-color: #333;
+  text-decoration: none;
+  min-width: 50px;
+  display: inline-block;
+  text-align: center;
+}
+#campaign-zero-widget .representative .support a:hover {
+  color: #333;
+  background-color: #fff;
+}
+#campaign-zero-widget .representative .support .status {
+  color: #fff;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  margin-right: 2px;
+  width: 80px;
+  display: inline-block;
+  text-align: center;
+}
+#campaign-zero-widget .representative .support .status.considering {
+  background-color: #D88C00;
+}
+#campaign-zero-widget .representative .support .status.supported {
+  background-color: #5cb85c;
+}
+#campaign-zero-widget .representative .support .status.opposed {
+  background-color: #C33232;
 }
 
 @media screen and (max-width: 380px) {
@@ -303,6 +335,15 @@
   }
   #campaign-zero-widget p.intro {
     font-size: 1.2rem;
+  }
+  #campaign-zero-widget .representative a.action-button {
+    padding: 6px 25px;
+  }
+  #campaign-zero-widget .summary .summary-details {
+    font-size: 0.6rem;
+  }
+  #campaign-zero-widget .summary .summary-details strong {
+    font-size: 0.6rem;
   }
 }
 @media screen and (max-width: 300px) {

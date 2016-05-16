@@ -5,7 +5,7 @@ var appWidget = {
   geoErrorMessage: null,
   timeout: null,
   elementName: 'campaign-zero-widget',
-  storedRepresentatives: null,
+  storedResponse: null,
 
   /** Get Geo Location */
   getLocation: function() {
@@ -87,7 +87,7 @@ var appWidget = {
         if(response && response.error){
           self.showError(response.error);
         } else {
-          self.storedRepresentatives = response;
+          self.storedResponse = response;
           self.generateResults(response);
         }
       },
@@ -106,10 +106,16 @@ var appWidget = {
       elm.html('');
 
       var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center='+ response.location.latitude +','+ response.location.longitude +'&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
-      var html = '<div class="wrapper" style="min-height: 298px; background: url('+ backgroundImage +') center center no-repeat; background-size: cover;">';
+      var html = '<div class="wrapper" style="min-height: 343px; background: url('+ backgroundImage +') center center no-repeat; background-size: cover;">';
 
       if(response && response.results.length === 1){
-        self.generateDetails(response.results[0], false);
+
+        var rep = response.results[0];
+        var chamber = response.results[0]['chamber'];
+        var bills = response.bills[chamber] || [];
+
+        self.generateDetails(rep, bills, false);
+
       } else if (response && response.results.length >= 1){
 
         html += '<h2 class="black">Pick a Representative</h2>';
@@ -133,7 +139,11 @@ var appWidget = {
 
           jQuery('a.representative-summary', elm).click(function(){
             var id = jQuery(this).data('id');
-            self.generateDetails(response.results[id], true);
+            var rep = response.results[id];
+            var chamber = response.results[id]['chamber'];
+            var bills = response.bills[chamber] || [];
+
+            self.generateDetails(rep, bills, true);
           });
         }, 200);
 
@@ -145,14 +155,14 @@ var appWidget = {
   },
 
   /** Generate Representative Details */
-  generateDetails: function(rep, multiple){
+  generateDetails: function(rep, bills, multiple){
     var self = this;
     var elm = jQuery('#' + this.elementName);
-        elm.html('').append(this.templateDetails(rep));
+        elm.html('').append(this.templateDetails(rep, bills));
 
     jQuery('small.back a', elm).click(function(){
       if(multiple){
-        self.generateResults(self.storedRepresentatives);
+        self.generateResults(self.storedResponse);
       } else {
         self.init();
       }
@@ -187,10 +197,11 @@ var appWidget = {
   },
 
   /** HTML Template for Representative Details */
-  templateDetails: function(rep){
-    var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center=' + this.storedRepresentatives.location.latitude + ',' + this.storedRepresentatives.location.longitude + '&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
+  templateDetails: function(rep, bills){
+    var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center=' + this.storedResponse.location.latitude + ',' + this.storedResponse.location.longitude + '&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
+    var status = this.templateBills(bills);
 
-    return '<div class="wrapper text-center representative" style="min-height: 298px; background: url(' + backgroundImage + ') center center no-repeat; background-size: cover;">' +
+    return '<div class="wrapper text-center representative" style="min-height: 343px; background: url(' + backgroundImage + ') center center no-repeat; background-size: cover;">' +
       '<div class="summary-name ' + rep.party.toLowerCase() + '">' + rep.full_name + '</div>' +
       '<div class="summary-details"><strong>' + rep.party + '</strong> &nbsp;&nbsp; <strong>District:</strong> ' + rep.district + ' &nbsp;&nbsp; <strong>Chamber:</strong> ' + rep.chamber + '</div>' +
       '<div class="avatar large animated flipInY ' + rep.party.toLowerCase() + '" style="background-image: url(' + rep.photo_url + ')"></div>' +
@@ -200,9 +211,31 @@ var appWidget = {
       '<a href="javascript:void(0)" class="action-button"><i class="fa fa-facebook-official"></i></a>' +
       '<a href="javascript:void(0)" class="action-button"><i class="fa fa-envelope"></i></a>' +
       '</div>'+
-      '<div class="support"><span class="status">supports</span> ending police violance</div>' +
+      status +
       '</div>' +
       '<small class="powered-by back"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i>&nbsp; Back</a></small>';
+  },
+
+  templateBills: function(bills){
+
+    var html = '';
+
+    if( !bills || bills.length === 0) {
+      html = html.concat('<div class="support text-center">No bills on this issue.</div>');
+    } else {
+      bills.sort(function(a, b){
+        if(a.status < b. status) return -1;
+        if(a.status > b. status) return 1;
+        return 0;
+      });
+
+
+      for(var i = 0; i < bills.length; i++){
+        html = html.concat('<div class="support"><span class="status ' + bills[i].status + '">' + bills[i].status + '</span> <a target="_blank" rel="noopener" href="' + bills[i].url + '">' + bills[i].bill + '</a> for ' + bills[i].label + '</div>');
+      }
+    }
+
+    return html;
   },
 
   /** Load Initial Widget Form */
