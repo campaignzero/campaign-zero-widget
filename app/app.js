@@ -263,7 +263,7 @@ var appWidget = {
           }, 100);
           this.voteStatus(bills[i], rep_id, function(bill, status){
             jQuery('#loading-results').remove();
-            var label = (status !== 'unknown') ? status : 'no vote';
+            var label = (status !== 'unknown') ? status : 'did not vote';
             jQuery('#widget-bill-results').append('<div class="support"><span class="status ' + status + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> for ' + bill.label + '</div>');
           });
         }
