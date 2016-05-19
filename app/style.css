@@ -320,6 +320,9 @@
 #campaign-zero-widget .representative .support .status.opposed {
   background-color: #C33232;
 }
+#campaign-zero-widget .representative .support .status.unknown {
+  background-color: #666;
+}
 #campaign-zero-widget .widget-modal {
   position: absolute;
   top: 18px;

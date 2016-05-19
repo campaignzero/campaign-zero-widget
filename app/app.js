@@ -263,7 +263,8 @@ var appWidget = {
           }, 100);
           this.voteStatus(bills[i], rep_id, function(bill, status){
             jQuery('#loading-results').remove();
-            jQuery('#widget-bill-results').append('<div class="support"><span class="status ' + status + '">' + status + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> for ' + bill.label + '</div>');
+            var label = (status !== 'unknown') ? status : 'no vote';
+            jQuery('#widget-bill-results').append('<div class="support"><span class="status ' + status + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> for ' + bill.label + '</div>');
           });
         }
       }
