@@ -320,7 +320,26 @@
 #campaign-zero-widget .representative .support .status.opposed {
   background-color: #C33232;
 }
-
+#campaign-zero-widget .widget-modal {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  background: #fff;
+  bottom: 18px;
+  right: 18px;
+  z-index: 500;
+  display: none;
+}
+#campaign-zero-widget .widget-modal .widget-modal-close {
+  color: #666;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+}
+#campaign-zero-widget .widget-modal .widget-modal-close:hover {
+  color: #333;
+}
 @media screen and (max-width: 380px) {
   #campaign-zero-widget h2 {
     font-size: 0.8rem;

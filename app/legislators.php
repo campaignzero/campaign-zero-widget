@@ -59,10 +59,13 @@ if (($handle = fopen('data.csv', 'r')) !== FALSE) {
         $bills[$data[1]] = array();
       }
       $bills[$data[1]][] = array(
+        'state' => $data[0],
+        'chamber' => $data[1],
         'bill' => $data[2],
-        'status' => $data[3],
-        'label' => $data[4],
-        'url' => $data[5]
+        'session' => $data[3],
+        'status' => $data[4],
+        'label' => $data[5],
+        'url' => $data[6]
       );
     }
   }
@@ -73,7 +76,7 @@ if (($handle = fopen('data.csv', 'r')) !== FALSE) {
 $response = array(
   'results' => $results,
   'bills' => $bills,
-  'location' => array(
+  'request' => array(
     'latitude' => $latitude,
     'longitude' => $longitude,
     'zipcode' => $zipcode

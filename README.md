@@ -1,5 +1,5 @@
-# campaign-zero-widget
 Campaign Zero Widget
+===
 
 Usage Instructions
 ---
@@ -10,28 +10,32 @@ To use this script, you simply need to add the following code anywhere on your w
 <script async src="http://embed.joincampaignzero.org/widget.js" charset="utf-8"></script>
 ```
 
-This will inject a widget into a newly created HTML element with the ID `campaign-zero-widget`.
+This will inject a widget into a newly created HTML element with the ID `campaign-zero-widget` directly above where you placed our script.
 
 
 Alternate Usage Instructions
 ---
 
-You may not be able to add a script tag into your content, but might be able to stick javascript into the footer or something.
-
-For this, we also have a solution.  Simply add the following HTML anywhere on your site where you want our widget to display:
+If you are unable to place JavaScript where you want the widget to go, you can use the following HTML directly:
 
 ```html
-<div id="campaign-zero-widget">test</div>
+<div id="campaign-zero-widget"></div>
 ```
 
-Then, include the following script tag in your HTML footer"
+Then, include the following script tag anywhere else on your page:
 
 ```html
 <script async src="http://embed.joincampaignzero.org/widget.js" charset="utf-8"></script>
 ```
 
-If you are using something like wordpress that just asks you for the URL for the script to put in your footer, you can use the following URL:
+If you are using something like WordPress that just asks you for the URL for the script to put in your footer, you can use the following URL:
 
 ```
 http://embed.joincampaignzero.org/widget.js
 ```
+
+Demos
+---
+
+* [DEMO](http://embed.joincampaignzero.org/plain.html): Widget using just the script tag
+* [DEMO](http://embed.joincampaignzero.org/sample.html): Widget using custom placement ( with surrounding HTML )

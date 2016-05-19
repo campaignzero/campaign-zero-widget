@@ -68,7 +68,7 @@ var appWidget = {
   /** Handle Form Submission */
   getRepresentatives: function(geoLocation, zipCode){
 
-    var jsonpUrl = './app/index.php';
+    var jsonpUrl = './app/legislators.php';
     if(geoLocation){
       jsonpUrl += '?latitude=' + geoLocation.latitude + '&longitude=' + geoLocation.longitude
     } else if(zipCode){
@@ -105,7 +105,7 @@ var appWidget = {
     setTimeout(function(){
       elm.html('');
 
-      var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center='+ response.location.latitude +','+ response.location.longitude +'&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
+      var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center='+ response.request.latitude +','+ response.request.longitude +'&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
       var html = '<div class="wrapper" style="min-height: 343px; background: url('+ backgroundImage +') center center no-repeat; background-size: cover;">';
 
       if(response && response.results.length === 1){
@@ -167,6 +167,26 @@ var appWidget = {
         self.init();
       }
     });
+
+    jQuery('.widget-modal-close', elm).click(function(){
+      self.closeModal();
+    });
+
+    jQuery('.widget-modal-phone', elm).click(function(){
+      self.openModal('phone');
+    });
+
+    jQuery('.widget-modal-twitter', elm).click(function(){
+      self.openModal('twitter');
+    });
+
+    jQuery('.widget-modal-facebook', elm).click(function(){
+      self.openModal('facebook');
+    });
+
+    jQuery('.widget-modal-email', elm).click(function(){
+      self.openModal('email');
+    });
   },
 
   /** HTML Template for Initial Form */
@@ -181,7 +201,7 @@ var appWidget = {
       '<button class="submit" type="submit">Find your rep</button>' +
       '</form>' +
       '<small class="powered-by"><span>Powered by </span><a href="http://www.joincampaignzero.org/" target="_blank">Campaign Zero</a></small>' +
-      '<a class="add-to-site" href="https://github.com/manifestinteractive/campaign-zero-widget" target="_blank">Add <span>this</span> to <span>your</span> site</a>' +
+      '<a class="add-to-site" href="https://github.com/campaignzero/campaign-zero-widget" target="_blank">Add <span>this</span> to <span>your</span> site</a>' +
       '</div>';
   },
 
@@ -198,44 +218,77 @@ var appWidget = {
 
   /** HTML Template for Representative Details */
   templateDetails: function(rep, bills){
-    var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center=' + this.storedResponse.location.latitude + ',' + this.storedResponse.location.longitude + '&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
-    var status = this.templateBills(bills);
+    var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center=' + this.storedResponse.request.latitude + ',' + this.storedResponse.request.longitude + '&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
+    var status = this.templateBills(bills, rep.id);
 
     return '<div class="wrapper text-center representative" style="min-height: 343px; background: url(' + backgroundImage + ') center center no-repeat; background-size: cover;">' +
       '<div class="summary-name ' + rep.party.toLowerCase() + '">' + rep.full_name + '</div>' +
       '<div class="summary-details"><strong>' + rep.party + '</strong> &nbsp;&nbsp; <strong>District:</strong> ' + rep.district + ' &nbsp;&nbsp; <strong>Chamber:</strong> ' + rep.chamber + '</div>' +
       '<div class="avatar large animated flipInY ' + rep.party.toLowerCase() + '" style="background-image: url(' + rep.photo_url + ')"></div>' +
       '<div class="action-buttons">' +
-      '<a href="javascript:void(0)" class="action-button"><i class="fa fa-phone"></i></a>' +
-      '<a href="javascript:void(0)" class="action-button"><i class="fa fa-twitter"></i></a>' +
-      '<a href="javascript:void(0)" class="action-button"><i class="fa fa-facebook-official"></i></a>' +
-      '<a href="javascript:void(0)" class="action-button"><i class="fa fa-envelope"></i></a>' +
-      '</div>'+
+      '<a href="javascript:void(0)" class="action-button widget-modal-phone"><i class="fa fa-phone"></i></a>' +
+      '<a href="javascript:void(0)" class="action-button widget-modal-twitter"><i class="fa fa-twitter"></i></a>' +
+      '<a href="javascript:void(0)" class="action-button widget-modal-facebook"><i class="fa fa-facebook-official"></i></a>' +
+      '<a href="javascript:void(0)" class="action-button widget-modal-email"><i class="fa fa-envelope"></i></a>' +
+      '</div><div id="widget-bill-results">'+
       status +
+      '</div></div>' +
+      '<div class="widget-modal">' +
+      '<a href="javascript:void(0)" class="widget-modal-close"><i class="fa fa-times-circle"></i></a>' +
       '</div>' +
       '<small class="powered-by back"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i>&nbsp; Back</a></small>';
   },
 
-  templateBills: function(bills){
+  /** HTML Template for Bill Details */
+  templateBills: function(bills, rep_id){
 
     var html = '';
 
     if( !bills || bills.length === 0) {
       html = html.concat('<div class="support text-center">No bills on this issue.</div>');
     } else {
+
       bills.sort(function(a, b){
         if(a.status < b. status) return -1;
         if(a.status > b. status) return 1;
         return 0;
       });
 
-
       for(var i = 0; i < bills.length; i++){
-        html = html.concat('<div class="support"><span class="status ' + bills[i].status + '">' + bills[i].status + '</span> <a target="_blank" rel="noopener" href="' + bills[i].url + '">' + bills[i].bill + '</a> for ' + bills[i].label + '</div>');
+        if(bills[i].status === 'considering'){
+          html = html.concat('<div class="support"><span class="status ' + bills[i].status + '">' + bills[i].status + '</span> <a target="_blank" rel="noopener" href="' + bills[i].url + '">' + bills[i].bill + '</a> for ' + bills[i].label + '</div>');
+        } else {
+          setTimeout(function(){
+            jQuery('#widget-bill-results').append('<div id="loading-results" class="support text-center"><i class="fa fa-spinner fa-pulse fa-fw"></i> Checking status of votes ...</div>');
+          }, 100);
+          this.voteStatus(bills[i], rep_id, function(bill, status){
+            jQuery('#loading-results').remove();
+            jQuery('#widget-bill-results').append('<div class="support"><span class="status ' + status + '">' + status + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> for ' + bill.label + '</div>');
+          });
+        }
       }
     }
 
     return html;
+  },
+
+  // Check for voting status
+  voteStatus: function(bill, rep_id, callback){
+    var jsonpUrl = './app/bills.php?state=' + bill.state + '&session=' + bill.session + '&bill=' + bill.bill + '&rep=' + rep_id;
+
+    $.when( jQuery.ajax(jsonpUrl) ).then(function( data ) {
+      return callback(bill, data.results.status);
+    });
+  },
+
+  openModal: function(section){
+    var elm = jQuery('#' + this.elementName);
+    $('.widget-modal', elm).fadeIn(250);
+  },
+
+  closeModal: function(){
+    var elm = jQuery('#' + this.elementName);
+    $('.widget-modal', elm).fadeOut(250);
   },
 
   /** Load Initial Widget Form */
