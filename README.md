@@ -7,7 +7,7 @@ Usage Instructions
 To use this script, you simply need to add the following code anywhere on your website that you want the widget to show up:
 
 ```html
-<script async src="http://embed.joincampaignzero.org/widget.js" charset="utf-8"></script>
+<script async src="https://embed.joincampaignzero.org/widget.js" charset="utf-8"></script>
 ```
 
 This will inject a widget into a newly created HTML element with the ID `campaign-zero-widget` directly above where you placed our script.
@@ -25,17 +25,17 @@ If you are unable to place JavaScript where you want the widget to go, you can u
 Then, include the following script tag anywhere else on your page:
 
 ```html
-<script async src="http://embed.joincampaignzero.org/widget.js" charset="utf-8"></script>
+<script async src="https://embed.joincampaignzero.org/widget.js" charset="utf-8"></script>
 ```
 
 If you are using something like WordPress that just asks you for the URL for the script to put in your footer, you can use the following URL:
 
 ```
-http://embed.joincampaignzero.org/widget.js
+https://embed.joincampaignzero.org/widget.js
 ```
 
 Demos
 ---
 
-* [DEMO](http://embed.joincampaignzero.org/plain.html): Widget using just the script tag
-* [DEMO](http://embed.joincampaignzero.org/sample.html): Widget using custom placement ( with surrounding HTML )
+* [DEMO](https://embed.joincampaignzero.org/plain.html): Widget using just the script tag
+* [DEMO](https://embed.joincampaignzero.org/sample.html): Widget using custom placement ( with surrounding HTML )

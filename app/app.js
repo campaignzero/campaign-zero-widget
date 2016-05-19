@@ -7,6 +7,13 @@ var appWidget = {
   elementName: 'campaign-zero-widget',
   storedResponse: null,
 
+  /**
+   * Track Event using Google Analytics
+   * @param category
+   * @param action
+   * @param label
+   * @param value
+   */
   trackEvent: function(category, action, label, value){
     if(typeof window.ga !== 'undefined'){
       ga('campaignZeroWidget.send', 'event', category, action, label, value);
@@ -16,7 +23,9 @@ var appWidget = {
     }
   },
 
-  /** Get Geo Location */
+  /**
+   * Get Geo Location
+   */
   getLocation: function() {
     if(this.geoLocation && this.geoLocation.latitude && this.geoLocation.longitude){
       this.geoSuccess({
@@ -30,7 +39,10 @@ var appWidget = {
     }
   },
 
-  /** Geo Location Success */
+  /**
+   * Geo Location Success
+   * @param position
+   */
   geoSuccess: function(position) {
     if(position){
       appWidget.geoLocation = position.coords;
@@ -41,7 +53,10 @@ var appWidget = {
     }
   },
 
-  /** Geo Location Error */
+  /**
+   * Geo Location Error
+   * @param error
+   */
   geoError: function(error) {
     if(error){
       switch(error.code) {
@@ -63,7 +78,10 @@ var appWidget = {
     }
   },
 
-  /** Show Error Message */
+  /**
+   * Show Error Message
+   * @param error
+   */
   showError: function(error){
     var elm = jQuery('#' + this.elementName);
     jQuery('small.note', elm).html('<i class="fa fa-exclamation-triangle"></i>&nbsp; ' + error).addClass('error animated shake');
@@ -75,7 +93,12 @@ var appWidget = {
     }, 5000);
   },
 
-  /** Handle Form Submission */
+  /**
+   * Handle Form Submission
+   * @param geoLocation
+   * @param zipCode
+   * @returns {boolean}
+   */
   getRepresentatives: function(geoLocation, zipCode){
 
     var jsonpUrl = './app/legislators.php';
@@ -111,7 +134,10 @@ var appWidget = {
     });
   },
 
-  /** Generate Results */
+  /**
+   * Generate Results
+   * @param response
+   */
   generateResults: function(response){
     var self = this;
     var elm = jQuery('#' + this.elementName);
@@ -173,7 +199,12 @@ var appWidget = {
     }, 200);
   },
 
-  /** Generate Representative Details */
+  /**
+   * Generate Representative Details
+   * @param rep
+   * @param bills
+   * @param multiple
+   */
   generateDetails: function(rep, bills, multiple){
     var self = this;
     var elm = jQuery('#' + this.elementName);
@@ -215,7 +246,10 @@ var appWidget = {
     });
   },
 
-  /** HTML Template for Initial Form */
+  /**
+   * HTML Template for Initial Form
+   * @returns {string}
+   */
   templateForm: function(){
     var note = (navigator.geolocation) ? 'leave empty to use your current location' : '';
     return '<div class="wrapper animated fadeIn" style="display: none">'+
@@ -231,7 +265,12 @@ var appWidget = {
       '</div>';
   },
 
-  /** HTML Template for Representative Summary */
+  /**
+   * HTML Template for Representative Summary
+   * @param key
+   * @param rep
+   * @returns {string}
+   */
   templateSummary: function(key, rep){
     return '<li><a href="javascript:void(0)" class="representative-summary animated fadeIn" data-id="'+ key +'">' +
       '<div class="avatar ' + rep.party.toLowerCase() + '" style="background-image: url(' + rep.photo_url + ')"></div>' +
@@ -242,7 +281,12 @@ var appWidget = {
       '</a></li>';
   },
 
-  /** HTML Template for Representative Details */
+  /**
+   * HTML Template for Representative Details
+   * @param rep
+   * @param bills
+   * @returns {string}
+   */
   templateDetails: function(rep, bills){
     var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center=' + this.storedResponse.request.latitude + ',' + this.storedResponse.request.longitude + '&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
     var status = this.templateBills(bills, rep.id);
@@ -265,7 +309,12 @@ var appWidget = {
       '<small class="powered-by back"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i>&nbsp; Back</a></small>';
   },
 
-  /** HTML Template for Bill Details */
+  /**
+   * HTML Template for Bill Details
+   * @param bills
+   * @param rep_id
+   * @returns {string}
+   */
   templateBills: function(bills, rep_id){
 
     var html = '';
@@ -299,7 +348,12 @@ var appWidget = {
     return html;
   },
 
-  // Check for voting status
+  /**
+   * Check for Voting Status
+   * @param bill
+   * @param rep_id
+   * @param callback
+   */
   voteStatus: function(bill, rep_id, callback){
     var jsonpUrl = './app/bills.php?state=' + bill.state + '&session=' + bill.session + '&bill=' + bill.bill + '&rep=' + rep_id;
 
@@ -312,17 +366,26 @@ var appWidget = {
     });
   },
 
+  /**
+   * Open Modal
+   * @param section
+   */
   openModal: function(section){
     var elm = jQuery('#' + this.elementName);
     $('.widget-modal', elm).fadeIn(250);
   },
 
+  /**
+   * Close Modal
+   */
   closeModal: function(){
     var elm = jQuery('#' + this.elementName);
     $('.widget-modal', elm).fadeOut(250);
   },
 
-  /** Load Initial Widget Form */
+  /**
+   * Load Initial Widget Form
+   */
   init: function(){
     var self = this;
     var elm = jQuery('#' + this.elementName);
