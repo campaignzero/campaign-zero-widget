@@ -90,6 +90,13 @@
         jQuery('<div id="' + elementName + '"></div>').insertBefore(scriptTag);
       }
 
+      loadScript('https://www.google-analytics.com/analytics.js', function(){
+        if(typeof window.ga !== 'undefined'){
+          ga('create', 'UA-77948909-1', 'auto', 'campaignZeroWidget');
+          ga('campaignZeroWidget.send', 'pageview');
+        }
+      });
+
       // load widgets main app's script file
       loadScript('./app/app.js', function(){
         loadedJS = true;

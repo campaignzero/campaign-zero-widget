@@ -7,6 +7,15 @@ var appWidget = {
   elementName: 'campaign-zero-widget',
   storedResponse: null,
 
+  trackEvent: function(category, action, label, value){
+    if(typeof window.ga !== 'undefined'){
+      ga('campaignZeroWidget.send', 'event', category, action, label, value);
+      console.log('campaignZeroWidget.send', category, action, label, value);
+    } else {
+      console.log('trackEvent', category, action, label, value);
+    }
+  },
+
   /** Get Geo Location */
   getLocation: function() {
     if(this.geoLocation && this.geoLocation.latitude && this.geoLocation.longitude){
@@ -27,7 +36,8 @@ var appWidget = {
       appWidget.geoLocation = position.coords;
       appWidget.getRepresentatives(appWidget.geoLocation);
     } else {
-      appWidget.showError('Unable to Dtermine Location');
+      appWidget.showError('Unable to Determine Location');
+      appWidget.trackEvent('Error', 'Geolocation', 'Unable to Determine Location');
     }
   },
 
@@ -48,7 +58,7 @@ var appWidget = {
           this.geoErrorMessage = 'Unable to Determine Location.';
           break;
       }
-
+      appWidget.trackEvent('Error', 'Geolocation', this.geoErrorMessage);
       appWidget.showError(this.geoErrorMessage);
     }
   },
@@ -70,9 +80,11 @@ var appWidget = {
 
     var jsonpUrl = './app/legislators.php';
     if(geoLocation){
-      jsonpUrl += '?latitude=' + geoLocation.latitude + '&longitude=' + geoLocation.longitude
+      jsonpUrl += '?latitude=' + geoLocation.latitude + '&longitude=' + geoLocation.longitude;
+      appWidget.trackEvent('Fetch', 'Reps Geo', geoLocation.latitude + ',' + geoLocation.longitude);
     } else if(zipCode){
-      jsonpUrl += '?zipcode=' + zipCode
+      jsonpUrl += '?zipcode=' + zipCode;
+      appWidget.trackEvent('Fetch', 'Reps Zipcode', zipCode);
     } else {
       return false;
     }
@@ -86,6 +98,7 @@ var appWidget = {
       success: function(response) {
         if(response && response.error){
           self.showError(response.error);
+          appWidget.trackEvent('Error', 'Reps Error', response.error);
         } else {
           self.storedResponse = response;
           self.generateResults(response);
@@ -93,6 +106,7 @@ var appWidget = {
       },
       error: function(jqXHR, textStatus, errorThrown) {
         self.showError('ERROR: ' + errorThrown);
+        appWidget.trackEvent('Error', 'Reps Error', errorThrown);
       }
     });
   },
@@ -135,6 +149,7 @@ var appWidget = {
         setTimeout(function(){
           jQuery('small.back a', elm).click(function(){
             self.init();
+            appWidget.trackEvent('Nav', 'Back Button', 'Main Page');
           });
 
           jQuery('a.representative-summary', elm).click(function(){
@@ -143,12 +158,16 @@ var appWidget = {
             var chamber = response.results[id]['chamber'];
             var bills = response.bills[chamber] || [];
 
+            appWidget.trackEvent('Nav', 'Selected Rep', rep.full_name);
+            appWidget.trackEvent('Nav', 'Selected Rep State', rep.state.toUpperCase());
+
             self.generateDetails(rep, bills, true);
           });
         }, 200);
 
       } else if (response && response.results.length === 0){
         self.showError('No Representatives Found.');
+        appWidget.trackEvent('Error', 'Representatives Error', 'No Representatives Found.');
       }
 
     }, 200);
@@ -163,29 +182,36 @@ var appWidget = {
     jQuery('small.back a', elm).click(function(){
       if(multiple){
         self.generateResults(self.storedResponse);
+        appWidget.trackEvent('Nav', 'Back Button', 'Back to Rep Listing');
       } else {
         self.init();
+        appWidget.trackEvent('Nav', 'Back Button', 'Main Page');
       }
     });
 
     jQuery('.widget-modal-close', elm).click(function(){
       self.closeModal();
+      appWidget.trackEvent('Nav', 'Modal', 'Close Modal');
     });
 
     jQuery('.widget-modal-phone', elm).click(function(){
       self.openModal('phone');
+      appWidget.trackEvent('Nav', 'Modal', 'Open Phone Modal');
     });
 
     jQuery('.widget-modal-twitter', elm).click(function(){
       self.openModal('twitter');
+      appWidget.trackEvent('Nav', 'Modal', 'Open Twitter Modal');
     });
 
     jQuery('.widget-modal-facebook', elm).click(function(){
       self.openModal('facebook');
+      appWidget.trackEvent('Nav', 'Modal', 'Open Facebook Modal');
     });
 
     jQuery('.widget-modal-email', elm).click(function(){
       self.openModal('email');
+      appWidget.trackEvent('Nav', 'Modal', 'Open Email Modal');
     });
   },
 
@@ -278,6 +304,10 @@ var appWidget = {
     var jsonpUrl = './app/bills.php?state=' + bill.state + '&session=' + bill.session + '&bill=' + bill.bill + '&rep=' + rep_id;
 
     $.when( jQuery.ajax(jsonpUrl) ).then(function( data ) {
+      appWidget.trackEvent('Vote', 'Status', data.results.status);
+      appWidget.trackEvent('Vote', 'Bill', bill.bill);
+      appWidget.trackEvent('Vote', 'State', bill.state);
+      appWidget.trackEvent('Vote', 'Session', bill.session);
       return callback(bill, data.results.status);
     });
   },
@@ -308,14 +338,18 @@ var appWidget = {
         var pattern = /[0-9]{5}/g;
         var allowGPS = (navigator.geolocation);
 
+        appWidget.trackEvent('Form', 'Submit', zipcode);
+
         if(zipcode !== '' && pattern.test(zipcode)){
           self.getRepresentatives(null, zipcode);
         } else if(zipcode !== '' && !pattern.test(zipcode)) {
           self.showError('Invalid Zip Code ( e.g. 90210 )');
+          appWidget.trackEvent('Error', 'Submit Form', 'Invalid Zip Code');
         } else if(zipcode === '' && allowGPS) {
           self.getLocation();
         } else {
           self.showError('Enter a Zip Code ( e.g. 90210 )');
+          appWidget.trackEvent('Error', 'Submit Form', 'No Zip Code Entered');
         }
 
         event.preventDefault();
