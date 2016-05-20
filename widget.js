@@ -77,7 +77,9 @@
     scriptTag = targetScripts[targetScripts.length - 1];
 
     // check if this is production
-    var assets = (scriptTag.src && scriptTag.src.indexOf('https://embed.joincampaignzero.org/widget.js') > 1) ? pathCDN : pathLocal;
+    var assets = (scriptTag.src && scriptTag.src === 'https://embed.joincampaignzero.org/widget.js') ? pathCDN : pathLocal;
+    console.log('scriptTag.src', scriptTag.src);
+    console.log('assets', assets);
 
     // load widget css before DOM ready
     loadCss(assets + 'style.css', function(){
