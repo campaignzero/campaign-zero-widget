@@ -17,9 +17,6 @@ var appWidget = {
   trackEvent: function(category, action, label, value){
     if(typeof window.ga !== 'undefined'){
       ga('campaignZeroWidget.send', 'event', category, action, label, value);
-      console.log('campaignZeroWidget.send', category, action, label, value);
-    } else {
-      console.log('trackEvent', category, action, label, value);
     }
   },
 
