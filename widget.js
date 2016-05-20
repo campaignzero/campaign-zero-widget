@@ -4,6 +4,8 @@
   var jqueryPath = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.3/jquery.min.js';
   var jqueryVersion = '1.12.3';
   var scriptTag;
+  var pathLocal = './app/';
+  var pathCDN = 'https://s3.amazonaws.com/campaign-zero-widget/';
   var elementName = 'campaign-zero-widget';
   var loadedCSS = false;
   var loadedJS = false;
@@ -74,8 +76,11 @@
     // reference scripts position on the page
     scriptTag = targetScripts[targetScripts.length - 1];
 
+    // check if this is production
+    var assets = (scriptTag.src && scriptTag.src.indexOf('https://embed.joincampaignzero.org/widget.js') > 1) ? pathCDN : pathLocal;
+
     // load widget css before DOM ready
-    loadCss('./app/style.css', function(){
+    loadCss(assets + 'style.css', function(){
       loadedCSS = true;
       if(typeof appWidget !== 'undefined' && loadedCSS && loadedJS){
         appWidget.init();
@@ -98,7 +103,7 @@
         }
 
         // load widgets main app's script file
-        loadScript('./app/app.js', function(){
+        loadScript(assets + 'app.js', function(){
           loadedJS = true;
           if(typeof appWidget !== 'undefined' && loadedCSS && loadedJS){
             appWidget.init();

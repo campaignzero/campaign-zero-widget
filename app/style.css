@@ -23,7 +23,6 @@
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 1rem;
   vertical-align: baseline;
 }
 #campaign-zero-widget .wrapper {
@@ -104,8 +103,11 @@
   margin-bottom: 1.75rem;
 }
 #campaign-zero-widget button i {
-  font-size: 12px;
+  font-size: 20px;
   margin-right: 4px;
+  line-height: 20px;
+  width: 20px;
+  height: 20px;
 }
 #campaign-zero-widget button:disabled,
 #campaign-zero-widget button:hover {
@@ -280,7 +282,7 @@
   color: #272727;
   margin-top: 8px;
   text-align: left;
-  font-size: 0.7rem;
+  font-size: 0.85rem;
 }
 #campaign-zero-widget .representative .support.text-center {
   text-align: center;
@@ -307,7 +309,7 @@
   font-size: 0.7rem;
   text-transform: uppercase;
   margin-right: 2px;
-  width: 80px;
+  width: 70px;
   display: inline-block;
   text-align: center;
 }
@@ -332,6 +334,35 @@
   right: 18px;
   z-index: 500;
   display: none;
+  padding: 30px;
+}
+#campaign-zero-widget .widget-modal .widget-modal-content {
+  display: none;
+}
+#campaign-zero-widget .widget-modal h1 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 300;
+}
+#campaign-zero-widget .widget-modal a {
+  text-decoration: none;
+  color: #5cb85c;
+}
+#campaign-zero-widget .widget-modal a:hover {
+  text-decoration: underline;
+}
+#campaign-zero-widget .widget-modal .address-phone {
+  margin-bottom: 10px;
+  font-size: 1.25rem;
+  font-weight: 300;
+}
+#campaign-zero-widget .widget-modal .address-email {
+  margin-bottom: 10px;
+  font-size: 1.25rem;
+  font-weight: 300;
+}
+#campaign-zero-widget .widget-modal .address-phone span {
+  color: #CCC;
 }
 #campaign-zero-widget .widget-modal .widget-modal-close {
   color: #666;
@@ -366,6 +397,9 @@
   }
   #campaign-zero-widget .summary .summary-details strong {
     font-size: 0.6rem;
+  }
+  #campaign-zero-widget .representative .support {
+    font-size: 0.7rem;
   }
 }
 @media screen and (max-width: 300px) {

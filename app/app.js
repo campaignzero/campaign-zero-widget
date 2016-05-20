@@ -173,6 +173,15 @@ var appWidget = {
         elm.append(html);
 
         setTimeout(function(){
+
+          jQuery('a', elm).click(function(){
+            appWidget.trackEvent('Nav', 'Link Clicked', jQuery(this).text());
+          });
+
+          jQuery('button', elm).click(function(){
+            appWidget.trackEvent('Nav', 'Button Clicked', jQuery(this).text());
+          });
+
           jQuery('small.back a', elm).click(function(){
             self.init();
             appWidget.trackEvent('Nav', 'Back Button', 'Main Page');
@@ -209,6 +218,14 @@ var appWidget = {
     var self = this;
     var elm = jQuery('#' + this.elementName);
         elm.html('').append(this.templateDetails(rep, bills));
+
+    jQuery('a', elm).click(function(){
+      appWidget.trackEvent('Nav', 'Link Clicked', jQuery(this).text());
+    });
+
+    jQuery('button', elm).click(function(){
+      appWidget.trackEvent('Nav', 'Button Clicked', jQuery(this).text());
+    });
 
     jQuery('small.back a', elm).click(function(){
       if(multiple){
@@ -291,20 +308,34 @@ var appWidget = {
     var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center=' + this.storedResponse.request.latitude + ',' + this.storedResponse.request.longitude + '&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
     var status = this.templateBills(bills, rep.id);
 
+    var phoneNumbers = '';
+
+    for(var i = 0; i < rep.offices.length; i++){
+      phoneNumbers = phoneNumbers.concat('<div class="address-phone"><a href="tel:' + rep.offices[i].phone.replace(/-/g, '') + '">' + rep.offices[i].phone + '</a>&nbsp; <span>( ' + rep.offices[i].name + ' )</span></div>');
+    }
+
     return '<div class="wrapper text-center representative" style="min-height: 343px; background: url(' + backgroundImage + ') center center no-repeat; background-size: cover;">' +
       '<div class="summary-name ' + rep.party.toLowerCase() + '">' + rep.full_name + '</div>' +
       '<div class="summary-details"><strong>' + rep.party + '</strong> &nbsp;&nbsp; <strong>District:</strong> ' + rep.district + ' &nbsp;&nbsp; <strong>Chamber:</strong> ' + rep.chamber + '</div>' +
       '<div class="avatar large animated flipInY ' + rep.party.toLowerCase() + '" style="background-image: url(' + rep.photo_url + ')"></div>' +
       '<div class="action-buttons">' +
       '<a href="javascript:void(0)" class="action-button widget-modal-phone"><i class="fa fa-phone"></i></a>' +
-      '<a href="javascript:void(0)" class="action-button widget-modal-twitter"><i class="fa fa-twitter"></i></a>' +
-      '<a href="javascript:void(0)" class="action-button widget-modal-facebook"><i class="fa fa-facebook-official"></i></a>' +
+      '<a href="https://twitter.com/home?status=Learn%20where%20your%20representatives%20stand%20on%20police%20violence%20and%20demand%20action%20now!%20JoinCampaignZero.org%20%23CampaignZero%20%23EndPoliceViolence" target="_blank" rel="noopener" class="action-button"><i class="fa fa-twitter"></i></a>' +
+      '<a href="https://www.facebook.com/sharer/sharer.php?u=JoinCampaignZero.org" target="_blank" rel="noopener" class="action-button"><i class="fa fa-facebook-official"></i></a>' +
       '<a href="javascript:void(0)" class="action-button widget-modal-email"><i class="fa fa-envelope"></i></a>' +
       '</div><div id="widget-bill-results">'+
-      status +
+        status +
       '</div></div>' +
       '<div class="widget-modal">' +
       '<a href="javascript:void(0)" class="widget-modal-close"><i class="fa fa-times-circle"></i></a>' +
+      '<div class="widget-modal-phone widget-modal-content">' +
+        '<h1>Call <b>' + rep.full_name + '</b> and demand action to end police violence:</h1>' +
+        phoneNumbers +
+      '</div>' +
+      '<div class="widget-modal-email widget-modal-content">' +
+        '<h1>Email <b>' + rep.full_name + '</b> and demand action to end police violence:</h1>' +
+        '<div class="address-email"><a href="mailto:' + rep.email + '?subject=We%20need%20urgent%20action%20to%20end%20police%20violence%20in%20our%20district.&body=Greetings,%0A%0AI\'m%20from%20your%20district%2C%20and%20police%20violence%20needs%20to%20be%20urgently%20addressed%20through%20comprehensive%20legislation%20as%20proposed%20by%20Campaign%20Zero.%20Here\'s%20why%3A%0A%0A[YOUR_REASON_HERE]">' + rep.email + '</a></div>' +
+      '</div>' +
       '</div>' +
       '<small class="powered-by back"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i>&nbsp; Back</a></small>';
   },
@@ -331,15 +362,22 @@ var appWidget = {
 
       for(var i = 0; i < bills.length; i++){
         if(bills[i].status === 'considering'){
-          html = html.concat('<div class="support"><span class="status ' + bills[i].status + '">' + bills[i].status + '</span> <a target="_blank" rel="noopener" href="' + bills[i].url + '">' + bills[i].bill + '</a> for ' + bills[i].label + '</div>');
+          html = html.concat('<div class="support"><span class="status ' + bills[i].status + '">' + bills[i].status + '</span> <a target="_blank" rel="noopener" href="' + bills[i].url + '">' + bills[i].bill + '</a> ' + bills[i].label + '</div>');
         } else {
+          var billID = bills[i].bill;
           setTimeout(function(){
-            jQuery('#widget-bill-results').append('<div id="loading-results" class="support text-center"><i class="fa fa-spinner fa-pulse fa-fw"></i> Checking status of votes ...</div>');
+            jQuery('#widget-bill-results').append('<div id="loading-results" class="support text-center"><i class="fa fa-spinner fa-pulse fa-fw"></i> Checking status of ' + billID + ' ...</div>');
           }, 100);
           this.voteStatus(bills[i], rep_id, function(bill, status){
             jQuery('#loading-results').remove();
             var label = (status !== 'unknown') ? status : 'did not vote';
-            jQuery('#widget-bill-results').append('<div class="support"><span class="status ' + status + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> for ' + bill.label + '</div>');
+            jQuery('#widget-bill-results').append('<div class="support"><span class="status ' + status + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> ' + bill.label + '</div>');
+            jQuery('#widget-bill-results a').click(function(){
+              appWidget.trackEvent('Nav', 'Bill Opened (State)', bill.state);
+              appWidget.trackEvent('Nav', 'Bill Opened (Status)', status);
+              appWidget.trackEvent('Nav', 'Bill Opened (Bill)', bill.bill);
+              appWidget.trackEvent('Nav', 'Bill Opened (Session)', bill.session);
+            });
           });
         }
       }
@@ -371,8 +409,12 @@ var appWidget = {
    * @param section
    */
   openModal: function(section){
-    var elm = jQuery('#' + this.elementName);
-    $('.widget-modal', elm).fadeIn(250);
+    if(section === 'email' || section === 'phone'){
+      var elm = jQuery('#' + this.elementName);
+      jQuery('.widget-modal-content', elm).hide();
+      jQuery('.widget-modal-' + section, elm).show();
+      jQuery('.widget-modal', elm).fadeIn(250);
+    }
   },
 
   /**
@@ -392,6 +434,15 @@ var appWidget = {
         elm.html('').append(this.templateForm());
 
     setTimeout(function(){
+
+      jQuery('a', elm).click(function(){
+        appWidget.trackEvent('Nav', 'Link Clicked', jQuery(this).text());
+      });
+
+      jQuery('button', elm).click(function(){
+        appWidget.trackEvent('Nav', 'Button Clicked', jQuery(this).text());
+      });
+
       jQuery('.wrapper', elm).show();
       jQuery('#campaign-zero-form').submit(function(event) {
 
@@ -399,7 +450,7 @@ var appWidget = {
 
         var zipcode = jQuery('#zip-code').val();
         var pattern = /[0-9]{5}/g;
-        var allowGPS = (navigator.geolocation);
+        var allowGPS = (navigator.geolocation && window.location.protocol === 'https:');
 
         appWidget.trackEvent('Form', 'Submit', zipcode);
 
