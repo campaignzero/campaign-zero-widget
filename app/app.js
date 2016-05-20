@@ -145,7 +145,31 @@ var appWidget = {
       var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center='+ response.request.latitude +','+ response.request.longitude +'&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
       var html = '<div class="wrapper" style="min-height: 343px; background: url('+ backgroundImage +') center center no-repeat; background-size: cover;">';
 
-      if(response && response.results.length === 1){
+      appWidget.trackEvent('API', 'Rep Count Location', response.request.latitude + ',' + response.request.longitude, response.results.length);
+      appWidget.trackEvent('API', 'Rep Count Zipcode', response.request.zipcode, response.results.length);
+
+      if(response && response.results.length === 0){
+
+        html += '<h2 class="black">No Representatives</h2>';
+        html += '<p class="no-reps">We could not find any Representatives in your location</p></div>';
+        html += '<small class="powered-by back"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i>&nbsp; Back</a></small>';
+
+        elm.append(html);
+
+        setTimeout(function(){
+
+          jQuery('a', elm).click(function(){
+            appWidget.trackEvent('Nav', 'Link Clicked', jQuery(this).text());
+          });
+
+          jQuery('small.back a', elm).click(function(){
+            self.init();
+            appWidget.trackEvent('Nav', 'Back Button', 'Main Page');
+          });
+
+        }, 200);
+
+      } else if(response && response.results.length === 1){
 
         var rep = response.results[0];
         var chamber = response.results[0]['chamber'];
@@ -308,7 +332,9 @@ var appWidget = {
     var phoneNumbers = '';
 
     for(var i = 0; i < rep.offices.length; i++){
-      phoneNumbers = phoneNumbers.concat('<div class="address-phone"><a href="tel:' + rep.offices[i].phone.replace(/-/g, '') + '">' + rep.offices[i].phone + '</a>&nbsp; <span>( ' + rep.offices[i].name + ' )</span></div>');
+      if(rep.offices[i].phone){
+        phoneNumbers = phoneNumbers.concat('<div class="address-phone"><a href="tel:' + rep.offices[i].phone.replace(/-/g, '') + '">' + rep.offices[i].phone + '</a>&nbsp; <span>( ' + rep.offices[i].name + ' )</span></div>');
+      }
     }
 
     return '<div class="wrapper text-center representative" style="min-height: 343px; background: url(' + backgroundImage + ') center center no-repeat; background-size: cover;">' +

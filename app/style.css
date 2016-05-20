@@ -197,10 +197,20 @@
   font-weight: 300;
   font-size: 0.8rem;
   text-transform: capitalize;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 275px;
+  white-space: nowrap;
 }
 #campaign-zero-widget .summary .summary-details strong {
   font-weight: 500;
   font-size: 0.8rem;
+}
+#campaign-zero-widget .summary .summary-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 275px;
+  white-space: nowrap;
 }
 #campaign-zero-widget .summary .summary-name.republican {
   color: #c96060;
@@ -210,6 +220,12 @@
 {
   color: #236FBD;
 }
+#campaign-zero-widget .wrapper p.no-reps {
+  margin-top: 30px;
+  font-size: 1.5rem;
+  font-weight: 300;
+  text-align: center;
+}
 #campaign-zero-widget .wrapper ul {
   list-style: none;
   margin-top: 12px;
@@ -217,6 +233,9 @@
 #campaign-zero-widget .wrapper li {
   width: 100%;
   margin-bottom: 20px;
+}
+#campaign-zero-widget .wrapper li:last-child {
+  margin-bottom: 40px;
 }
 #campaign-zero-widget .wrapper li a {
   width: 100%;
@@ -309,7 +328,7 @@
   font-size: 0.7rem;
   text-transform: uppercase;
   margin-right: 2px;
-  width: 70px;
+  width: 80px;
   display: inline-block;
   text-align: center;
 }
@@ -381,6 +400,10 @@
   #campaign-zero-widget p.intro {
     font-size: 1.3rem;
   }
+  #campaign-zero-widget .summary .summary-name,
+  #campaign-zero-widget .summary .summary-details {
+    max-width: 235px;
+  }
 }
 @media screen and (max-width: 320px) {
   #campaign-zero-widget h2 {
@@ -400,6 +423,10 @@
   }
   #campaign-zero-widget .representative .support {
     font-size: 0.7rem;
+  }
+  #campaign-zero-widget .summary .summary-name,
+  #campaign-zero-widget .summary .summary-details {
+    max-width: 180px;
   }
 }
 @media screen and (max-width: 300px) {
