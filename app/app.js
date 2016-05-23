@@ -310,8 +310,21 @@ var appWidget = {
    * @returns {string}
    */
   templateSummary: function(key, rep){
+
+    // Some Rep images are loading over HTTP rather than HTTPS, check that HTTPS works
+    var loadSecureImage = function(imageUrl) {
+      var image = new Image();
+      image.onload = function(){
+        jQuery('#rep-image-' + key).css('background-image', 'url(' + imageUrl + ')');
+      };
+      image.src = imageUrl;
+    };
+
+    // Replace all non secure images with secure images and verify they exist
+    loadSecureImage(rep.photo_url.replace('http://', 'https://'));
+
     return '<li><a href="javascript:void(0)" class="representative-summary animated fadeIn" data-id="'+ key +'">' +
-      '<div class="avatar ' + rep.party.toLowerCase() + '" style="background-image: url(' + rep.photo_url + ')"></div>' +
+      '<div class="avatar ' + rep.party.toLowerCase() + '" id="rep-image-' + key + '"></div>' +
       '<div class="summary">'+
       '<div class="summary-name ' + rep.party.toLowerCase() + '">' + rep.full_name + '</div>' +
       '<div class="summary-details"><strong>' + rep.party + '</strong> &nbsp;&nbsp; <strong>District:</strong> ' + rep.district + ' &nbsp;&nbsp; <strong>Chamber:</strong> ' + rep.chamber + '</div>' +
@@ -337,10 +350,22 @@ var appWidget = {
       }
     }
 
+    // Some Rep images are loading over HTTP rather than HTTPS, check that HTTPS works
+    var loadSecureImage = function(imageUrl) {
+      var image = new Image();
+      image.onload = function(){
+        jQuery('#rep-image').css('background-image', 'url(' + imageUrl + ')');
+      };
+      image.src = imageUrl;
+    };
+
+    // Replace all non secure images with secure images and verify they exist
+    loadSecureImage(rep.photo_url.replace('http://', 'https://'));
+
     return '<div class="wrapper text-center representative" style="min-height: 343px; background: url(' + backgroundImage + ') center center no-repeat; background-size: cover;">' +
       '<div class="summary-name ' + rep.party.toLowerCase() + '">' + rep.full_name + '</div>' +
       '<div class="summary-details"><strong>' + rep.party + '</strong> &nbsp;&nbsp; <strong>District:</strong> ' + rep.district + ' &nbsp;&nbsp; <strong>Chamber:</strong> ' + rep.chamber + '</div>' +
-      '<div class="avatar large animated flipInY ' + rep.party.toLowerCase() + '" style="background-image: url(' + rep.photo_url + ')"></div>' +
+      '<div class="avatar large animated flipInY ' + rep.party.toLowerCase() + '" id="rep-image"></div>' +
       '<div class="action-buttons">' +
       '<a href="javascript:void(0)" class="action-button widget-modal-phone"><i class="fa fa-phone"></i></a>' +
       '<a href="https://twitter.com/home?status=Learn%20where%20your%20representatives%20stand%20on%20police%20violence%20and%20demand%20action%20now!%20JoinCampaignZero.org%20%23CampaignZero%20%23EndPoliceViolence" target="_blank" rel="noopener" class="action-button"><i class="fa fa-twitter"></i></a>' +
