@@ -368,8 +368,8 @@ var appWidget = {
       '<div class="avatar large animated flipInY ' + rep.party.toLowerCase() + '" id="rep-image"></div>' +
       '<div class="action-buttons">' +
       '<a href="javascript:void(0)" class="action-button widget-modal-phone"><i class="fa fa-phone"></i></a>' +
-      '<a href="https://twitter.com/home?status=Learn%20where%20your%20representatives%20stand%20on%20police%20violence%20and%20demand%20action%20now!%20JoinCampaignZero.org%20%23CampaignZero%20%23EndPoliceViolence" target="_blank" rel="noopener" class="action-button"><i class="fa fa-twitter"></i></a>' +
-      '<a href="https://www.facebook.com/sharer/sharer.php?u=JoinCampaignZero.org" target="_blank" rel="noopener" class="action-button"><i class="fa fa-facebook-official"></i></a>' +
+      '<a href="https://twitter.com/intent/tweet?text=Learn%20where%20your%20representatives%20stand%20on%20police%20violence%20and%20demand%20action%20now!%20JoinCampaignZero.org" target="_blank" rel="noopener" class="action-button"><i class="fa fa-twitter"></i></a>' +
+      '<a href="https://www.facebook.com/sharer/sharer.php?u=JoinCampaignZero.org&description=Learn%20where%20your%20representatives%20stand%20on%20police%20violence%20and%20demand%20action%20now!%20JoinCampaignZero.org" target="_blank" rel="noopener" class="action-button"><i class="fa fa-facebook-official"></i></a>' +
       '<a href="javascript:void(0)" class="action-button widget-modal-email"><i class="fa fa-envelope"></i></a>' +
       '</div><div id="widget-bill-results">'+
         status +
