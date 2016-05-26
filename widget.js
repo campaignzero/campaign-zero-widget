@@ -9,6 +9,7 @@
   var elementName = 'campaign-zero-widget';
   var loadedCSS = false;
   var loadedJS = false;
+  var version = '1.0.0';
 
   /** Get reference to self (scriptTag) */
   var allScripts = document.getElementsByTagName('script');
@@ -80,7 +81,7 @@
     var assets = (scriptTag.src && scriptTag.src === 'https://embed.joincampaignzero.org/widget.js') ? pathCDN : pathLocal;
 
     // load widget css before DOM ready
-    loadCss(assets + 'style.css', function(){
+    loadCss(assets + 'style.css?v=' + version, function(){
       loadedCSS = true;
       if(typeof appWidget !== 'undefined' && loadedCSS && loadedJS){
         appWidget.init();
@@ -103,7 +104,7 @@
         }
 
         // load widgets main app's script file
-        loadScript(assets + 'app.js', function(){
+        loadScript(assets + 'app.js?v=' + version, function(){
           loadedJS = true;
           if(typeof appWidget !== 'undefined' && loadedCSS && loadedJS){
             appWidget.init();
