@@ -350,6 +350,16 @@ var appWidget = {
       }
     }
 
+    var emailAddress = '';
+
+    if(rep.email){
+      emailAddress = '<div class="address-email"><a href="mailto:' + rep.email + '?subject=We%20need%20urgent%20action%20to%20end%20police%20violence%20in%20our%20district.&body=Greetings,%0A%0AI\'m%20from%20your%20district%2C%20and%20police%20violence%20needs%20to%20be%20urgently%20addressed%20through%20comprehensive%20legislation%20as%20proposed%20by%20Campaign%20Zero.%20Here\'s%20why%3A%0A%0A[YOUR_REASON_HERE]">' + rep.email + '</a></div>';
+    } else if(rep.offices && rep.offices[0].email){
+      emailAddress = '<div class="address-email"><a href="mailto:' + rep.offices[0].email + '?subject=We%20need%20urgent%20action%20to%20end%20police%20violence%20in%20our%20district.&body=Greetings,%0A%0AI\'m%20from%20your%20district%2C%20and%20police%20violence%20needs%20to%20be%20urgently%20addressed%20through%20comprehensive%20legislation%20as%20proposed%20by%20Campaign%20Zero.%20Here\'s%20why%3A%0A%0A[YOUR_REASON_HERE]">' + rep.offices[0].email + '</a></div>';
+    } else {
+      emailAddress = '<div class="address-email"><a href="javascript:void(0)">No email address currently available</a></div>';
+    }
+
     // Some Rep images are loading over HTTP rather than HTTPS, check that HTTPS works
     var loadSecureImage = function(imageUrl) {
       var image = new Image();
@@ -382,7 +392,7 @@ var appWidget = {
       '</div>' +
       '<div class="widget-modal-email widget-modal-content">' +
         '<h1>Email <b>' + rep.full_name + '</b> and demand action to end police violence:</h1>' +
-        '<div class="address-email"><a href="mailto:' + rep.email + '?subject=We%20need%20urgent%20action%20to%20end%20police%20violence%20in%20our%20district.&body=Greetings,%0A%0AI\'m%20from%20your%20district%2C%20and%20police%20violence%20needs%20to%20be%20urgently%20addressed%20through%20comprehensive%20legislation%20as%20proposed%20by%20Campaign%20Zero.%20Here\'s%20why%3A%0A%0A[YOUR_REASON_HERE]">' + rep.email + '</a></div>' +
+        emailAddress +
       '</div>' +
       '</div>' +
       '<small class="powered-by back"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i>&nbsp; Back</a></small>';
