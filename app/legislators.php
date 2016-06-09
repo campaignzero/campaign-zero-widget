@@ -50,7 +50,7 @@ $results = json_decode($result, true);
 // Save Current State
 $state = (isset($results[0]['state'])) ? strtoupper($results[0]['state']) : NULL;
 
-// Parse CSV
+// Parse Bills CSV
 $bills = array();
 if (($handle = fopen('data.csv', 'r')) !== FALSE) {
   while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
@@ -64,9 +64,27 @@ if (($handle = fopen('data.csv', 'r')) !== FALSE) {
         'bill' => $data[2],
         'session' => $data[3],
         'status' => $data[4],
-        'label' => $data[5],
-        'url' => $data[6]
+        'progress' => $data[5],
+        'label' => $data[6],
+        'url' => $data[7]
       );
+    }
+  }
+  fclose($handle);
+}
+
+// Parse Killings CSV
+$killings = array();
+if (($handle = fopen('killings.csv', 'r')) !== FALSE) {
+  while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+    if ($data[0] === $state) {
+      $killings = array(
+        'code' => $data[0],
+        'state' => $data[1],
+        'count' => intval($data[2])
+      );
+
+      break;
     }
   }
   fclose($handle);
@@ -76,6 +94,7 @@ if (($handle = fopen('data.csv', 'r')) !== FALSE) {
 $response = array(
   'results' => $results,
   'bills' => $bills,
+  'killings' => $killings,
   'request' => array(
     'latitude' => $latitude,
     'longitude' => $longitude,

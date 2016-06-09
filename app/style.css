@@ -328,10 +328,12 @@
 #campaign-zero-widget .representative .support .status.considering {
   background-color: #D88C00;
 }
-#campaign-zero-widget .representative .support .status.supported {
+#campaign-zero-widget .representative .support .status.supported,
+#campaign-zero-widget .representative .support .status.supported.good {
   background-color: #5cb85c;
 }
-#campaign-zero-widget .representative .support .status.opposed {
+#campaign-zero-widget .representative .support .status.opposed,
+#campaign-zero-widget .representative .support .status.supported.bad {
   background-color: #C33232;
 }
 #campaign-zero-widget .representative .support .status.unknown {

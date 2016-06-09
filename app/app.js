@@ -174,8 +174,9 @@ var appWidget = {
         var rep = response.results[0];
         var chamber = response.results[0]['chamber'];
         var bills = response.bills[chamber] || [];
+        var killings = response.killings || { count: 0 };
 
-        self.generateDetails(rep, bills, false);
+        self.generateDetails(rep, bills, killings, false);
 
       } else if (response && response.results.length >= 1){
 
@@ -213,11 +214,12 @@ var appWidget = {
             var rep = response.results[id];
             var chamber = response.results[id]['chamber'];
             var bills = response.bills[chamber] || [];
+            var killings = response.killings || { count: 0 };
 
             appWidget.trackEvent('Nav', 'Selected Rep', rep.full_name);
             appWidget.trackEvent('Nav', 'Selected Rep State', rep.state.toUpperCase());
 
-            self.generateDetails(rep, bills, true);
+            self.generateDetails(rep, bills, killings, true);
           });
         }, 200);
 
@@ -235,10 +237,10 @@ var appWidget = {
    * @param bills
    * @param multiple
    */
-  generateDetails: function(rep, bills, multiple){
+  generateDetails: function(rep, bills, killings, multiple){
     var self = this;
     var elm = jQuery('#' + this.elementName);
-        elm.html('').append(this.templateDetails(rep, bills));
+        elm.html('').append(this.templateDetails(rep, bills, killings));
 
     jQuery('a', elm).click(function(){
       appWidget.trackEvent('Nav', 'Link Clicked', jQuery(this).text());
@@ -338,7 +340,7 @@ var appWidget = {
    * @param bills
    * @returns {string}
    */
-  templateDetails: function(rep, bills){
+  templateDetails: function(rep, bills, killings){
     var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center=' + this.storedResponse.request.latitude + ',' + this.storedResponse.request.longitude + '&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
     var status = this.templateBills(bills, rep.id);
 
@@ -350,12 +352,24 @@ var appWidget = {
       }
     }
 
+    var emailSubject = encodeURIComponent('We need urgent action to end police violence in our district.');
+    var emailMessage = '';
+
+    if(killings && killings.count > 0){
+
+      var label = (killings.count === 1) ? 'person' : 'people';
+
+      emailMessage = encodeURIComponent("Greetings " + rep.full_name +  ",\r\n\r\nI'm from your district, and police violence needs to be urgently addressed in my community. This year alone, police in " + killings.state + " have killed at least " + killings.count + " " + label + ". We need comprehensive legislation to make deadly force a last resort for police officers, establish alternative responses to minor offenses, demilitarize police departments, ensure independent investigations and prosecutions of police killings, as well as other solutions proposed by Campaign Zero. Here's my story:\r\n\r\n[YOUR_REASON_HERE]");
+    } else {
+      emailMessage = encodeURIComponent("Greetings " + rep.full_name +  ",\r\n\r\nI'm from your district, and police violence needs to be urgently addressed through comprehensive legislation as proposed by Campaign Zero. Here's why:\r\n\r\n[YOUR_REASON_HERE]");
+    }
+
     var emailAddress = '';
 
     if(rep.email){
-      emailAddress = '<div class="address-email"><a href="mailto:' + rep.email + '?subject=We%20need%20urgent%20action%20to%20end%20police%20violence%20in%20our%20district.&body=Greetings,%0A%0AI\'m%20from%20your%20district%2C%20and%20police%20violence%20needs%20to%20be%20urgently%20addressed%20through%20comprehensive%20legislation%20as%20proposed%20by%20Campaign%20Zero.%20Here\'s%20why%3A%0A%0A[YOUR_REASON_HERE]">' + rep.email + '</a></div>';
+      emailAddress = '<div class="address-email"><a href="mailto:' + rep.email + '?subject=' + emailSubject + '&body=' + emailMessage + '">' + rep.email + '</a></div>';
     } else if(rep.offices && rep.offices[0].email){
-      emailAddress = '<div class="address-email"><a href="mailto:' + rep.offices[0].email + '?subject=We%20need%20urgent%20action%20to%20end%20police%20violence%20in%20our%20district.&body=Greetings,%0A%0AI\'m%20from%20your%20district%2C%20and%20police%20violence%20needs%20to%20be%20urgently%20addressed%20through%20comprehensive%20legislation%20as%20proposed%20by%20Campaign%20Zero.%20Here\'s%20why%3A%0A%0A[YOUR_REASON_HERE]">' + rep.offices[0].email + '</a></div>';
+      emailAddress = '<div class="address-email"><a href="mailto:' + rep.offices[0].email + '?subject=' + emailSubject + '&body=' + emailMessage + '">' + rep.offices[0].email + '</a></div>';
     } else {
       emailAddress = '<div class="address-email"><a href="javascript:void(0)">No email address currently available</a></div>';
     }
@@ -429,7 +443,7 @@ var appWidget = {
           this.voteStatus(bills[i], rep_id, function(bill, status){
             jQuery('#loading-results').remove();
             var label = (status !== 'unknown') ? status : 'did not vote';
-            jQuery('#widget-bill-results').append('<div class="support"><span class="status ' + status + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> ' + bill.label + '</div>');
+            jQuery('#widget-bill-results').append('<div class="support"><span class="status ' + status + ' ' + bill.progress + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> ' + bill.label + '</div>');
             jQuery('#widget-bill-results a').click(function(){
               appWidget.trackEvent('Nav', 'Bill Opened (State)', bill.state);
               appWidget.trackEvent('Nav', 'Bill Opened (Status)', status);
