@@ -442,6 +442,9 @@ var appWidget = {
           }, 100);
           this.voteStatus(bills[i], rep_id, function(bill, status){
             jQuery('#loading-results').remove();
+            setTimeout(function(){
+              jQuery('#loading-results').remove();
+            }, 500);
             var label = (status !== 'unknown') ? status : 'did not vote';
             jQuery('#widget-bill-results').append('<div class="support"><span class="status ' + status + ' ' + bill.progress + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> ' + bill.label + '</div>');
             jQuery('#widget-bill-results a').click(function(){

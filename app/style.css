@@ -399,6 +399,16 @@
   #campaign-zero-widget .summary .summary-details {
     max-width: 235px;
   }
+  #campaign-zero-widget .representative .support .status {
+    width: 60px;
+    padding: 1px 2px;
+    font-size: 0.6rem;
+  }
+  #campaign-zero-widget .representative .support a {
+    min-width: 40px;
+    padding: 1px 3px;
+    font-size: 0.6rem;
+  }
 }
 @media screen and (max-width: 320px) {
   #campaign-zero-widget h2 {
