@@ -295,6 +295,10 @@
   margin-top: 8px;
   text-align: left;
   font-size: 0.85rem;
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 #campaign-zero-widget .representative .support.text-center {
   text-align: center;
@@ -324,6 +328,7 @@
   width: 80px;
   display: inline-block;
   text-align: center;
+  white-space: nowrap;
 }
 #campaign-zero-widget .representative .support .status.considering {
   background-color: #D88C00;
