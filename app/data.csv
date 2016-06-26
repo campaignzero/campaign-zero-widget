@@ -1,8 +1,8 @@
 STATE,CHAMBER,BILL,SESSION,STATUS,PROGRESS,LABEL,URL
 NY,lower,A 3949,2015-2016,passed,good,ending racial profiling,http://openstates.org/ny/bills/2015-2016/A3949/
 NY,lower,A 6509A,2015-2016,passed,good,special prosecutor for police killings,http://openstates.org/ny/bills/2015-2016/A6509A/
-NY,lower,A 7698A,,considering,,reporting data on police actions,https://www.nysenate.gov/legislation/bills/2015/a7698
-NY,upper,S 6001A,,considering,,reporting data on police actions,https://www.nysenate.gov/legislation/bills/2015/s6001
+NY,lower,A 7698A,2015-2016,passed,good,reporting data on police actions,https://www.nysenate.gov/legislation/bills/2015/a7698
+NY,upper,S 5598,2015-2016,passed,bad,further criminalizes resisting police,http://openstates.org/ny/bills/2015-2016/S5598/
 CA,upper,SB 443,20152016,passed,good,ending civil asset forfeiture,http://openstates.org/ca/bills/20152016/SB443/
 CA,lower,AB 2626,,considering,,improving police training,http://openstates.org/ca/bills/20152016/AB2626/
 CA,lower,AB 953,20152016,passed,good,ending racial profiling,http://openstates.org/ca/bills/20152016/AB953/
