@@ -9,7 +9,7 @@
   var elementName = 'campaign-zero-widget';
   var loadedCSS = false;
   var loadedJS = false;
-  var version = '1.0.5';
+  var version = '1.0.6';
 
   /** Get reference to self (scriptTag) */
   var allScripts = document.getElementsByTagName('script');
