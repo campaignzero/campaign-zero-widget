@@ -24,14 +24,13 @@ NC,lower,HB 193,,considering,,stronger civilian oversight,http://openstates.org/
 NC,lower,HB 97,2015,passed,good,funding body cams,http://openstates.org/nc/bills/2015/HB97/
 SC,upper,S 47,2015-2016,passed,good,requiring body cams,http://openstates.org/sc/bills/2015-2016/S47/
 SC,lower,H 4387,,passed,good,ending ticket quotas,http://openstates.org/sc/bills/2015-2016/H4387/
-OK,upper,SB 1189,,considering,,ending civil asset forfeiture,http://openstates.org/ok/bills/2015-2016/SB1189/
 CO,lower,HB 15-1287,2015A,passed,good,improving police training,http://openstates.org/co/bills/2015A/HB15-1287/
 CO,upper,SB 15-219,2015A,passed,good,independent investigations of police,http://openstates.org/co/bills/2015A/SB15-219/
 CO,upper,SB 15-218,2015A,passed,good,police misconduct database,http://openstates.org/co/bills/2015A/SB15-218/
-HI,upper,SB 2755,2016 Regular Session,passed,good,strengthen police hiring standards,http://openstates.org/hi/bills/2016%20Regular%20Session/SB2755/
+HI,upper,SB 2755,2016 Regular Session,passed,good,creates police hiring standards,http://openstates.org/hi/bills/2016%20Regular%20Session/SB2755/
 HI,upper,SB 2196,2016 Regular Session,passed,good,independent police shooting reviews,http://openstates.org/hi/bills/2016%20Regular%20Session/SB2196/
 WA,lower,HB 2399,2015-2016,passed,good,ending ticket quotas,http://openstates.org/wa/bills/2015-2016/HB2399/
-WA,lower,HB 2362,2015-2016,passed,good,public access to body cam video,http://openstates.org/wa/bills/2015-2016/HB%202362/documents/WAD00021241/
+WA,lower,HB 2362,2015-2016,passed,good,public access to body cam video,http://openstates.org/wa/bills/2015-2016/HB2362/
 WA,lower,HB 2908,2015-2016,passed,good,community policing standards,http://openstates.org/wa/bills/2015-2016/HB2908/
 CT,lower,HB 7103,2015,passed,good,special prosecutor for police killings,http://openstates.org/ct/bills/2015/HB7103/
 CT,lower,HB 7103,2015,passed,good,improving police training,http://openstates.org/ct/bills/2015/HB7103/
@@ -39,7 +38,7 @@ CT,lower,HB 7103,2015,passed,good,police misconduct database,http://openstates.o
 AL,upper,SB 70,2016rs,passed,good,ending racial profiling,http://openstates.org/al/bills/2016rs/SB70/
 VT,lower,H 8,2015-2016,passed,good,demilitarization of police,http://openstates.org/vt/bills/2015-2016/H8/
 KS,upper,SB 18,2015-2016,passed,good,requiring body cams,http://openstates.org/ks/bills/2015-2016/SB18/
-FL,upper,SB 1044,2016,passed,good,ending civil asset forfeiture,https://www.flsenate.gov/Session/Bill/2016/1044
+FL,upper,SB 1044,2016,passed,good,ending civil asset forfeiture,http://openstates.org/fl/bills/2016/SB1044/
 GA,upper,SB 94,2015_16,passed,good,creating body cam policies,http://openstates.org/ga/bills/2015_16/SB94/
 MD,lower,HB 1016,2016,passed,good,strengthening investigations of police,http://openstates.org/md/bills/2016/HB1016/
 MD,lower,HB 1016,2016,passed,good,stronger civilian oversight,http://openstates.org/md/bills/2016/HB1016/
@@ -49,7 +48,7 @@ TX,lower,HB 1036,84,passed,good,collecting police shootings data,http://openstat
 TX,lower,HB 2150,84,passed,good,accountable grand juries,http://openstates.org/tx/bills/84/HB2150/
 MT,lower,HB 330,2015,passed,good,demilitarization of police,http://openstates.org/mt/bills/2015/HB330/
 WY,upper,SF 46,2016,passed,good,ending civil asset forfeiture,http://openstates.org/wy/bills/2016/SF46/
-DC,lower,B 21-0351,21,passed,good,public access to body cam video,http://openstates.org/dc/bills/21/B21-0351/
+DC,upper,B 21-0351,21,passed,good,public access to body cam video,http://openstates.org/dc/bills/21/B21-0351/
 WI,lower,AB 409,2013 Regular Session,passed,good,independent investigations of police,http://openstates.org/wi/bills/2013%20Regular%20Session/AB409/
 UT,lower,HB 300,2016,passed,good,body cam policies,http://openstates.org/ut/bills/2016/HB300/
 UT,lower,HB 355,2016,passed,good,improving police training,http://openstates.org/ut/bills/2016/HB355/
@@ -65,3 +64,41 @@ WA,upper,HB 6230,2015-2016,passed,bad,allows police to search kids,http://openst
 LA,upper,HB 953,2016 Regular Session,passed,bad,further criminalizes resisting police,http://openstates.org/la/bills/2016/HB953/
 OR,lower,HB 4087,2016 Regular Session,passed,bad,keeps officer names secret,http://openstates.org/or/bills/2016%20Regular%20Session/HB4087/
 VA,upper,SB 552,2016 Regular Session,passed,bad,keeps officer names secret,http://openstates.org/va/bills/2016/SB552/
+LA,lower,HB 953,2016 Regular Session,passed,bad,further criminalizes resisting police,http://openstates.org/la/bills/2016/HB953/
+CA,upper,AB 71,20152016,passed,good,protecting right to film police,http://openstates.org/ca/bills/20152016/SB411/
+IL,lower,SB 1304,99th,passed,good,creating police misconduct database,http://openstates.org/il/bills/99th/SB1304/
+IL,lower,SB 1304,99th,passed,good,independent investigations of police,http://openstates.org/il/bills/99th/SB1304/
+IL,lower,SB 1304,99th,passed,good,banning choke holds,http://openstates.org/il/bills/99th/SB1304/
+SC,lower,S 47,2015-2016,passed,good,requiring body cams,http://openstates.org/sc/bills/2015-2016/S47/
+SC,upper,H 4387,,passed,good,ending ticket quotas,http://openstates.org/sc/bills/2015-2016/H4387/
+CO,upper,HB 15-1287,2015A,passed,good,improving police training,http://openstates.org/co/bills/2015A/HB15-1287/
+CO,lower,SB 15-219,2015A,passed,good,independent investigations of police,http://openstates.org/co/bills/2015A/SB15-219/
+CO,lower,SB 15-218,2015A,passed,good,police misconduct database,http://openstates.org/co/bills/2015A/SB15-218/
+HI,lower,SB 2755,2016 Regular Session,passed,good,creates police hiring standards,http://openstates.org/hi/bills/2016%20Regular%20Session/SB2755/
+HI,lower,SB 2196,2016 Regular Session,passed,good,independent police shooting reviews,http://openstates.org/hi/bills/2016%20Regular%20Session/SB2196/
+WA,upper,HB 2362,2015-2016,passed,good,public access to body cam video,http://openstates.org/wa/bills/2015-2016/HB2362/
+WA,upper,HB 2908,2015-2016,passed,good,community policing standards,http://openstates.org/wa/bills/2015-2016/HB2908/
+CT,upper,HB 7103,2015,passed,good,special prosecutor for police killings,http://openstates.org/ct/bills/2015/HB7103/
+CT,upper,HB 7103,2015,passed,good,improving police training,http://openstates.org/ct/bills/2015/HB7103/
+CT,upper,HB 7103,2015,passed,good,police misconduct database,http://openstates.org/ct/bills/2015/HB7103/
+FL,lower,SB 1044,2016,passed,good,ending civil asset forfeiture,http://openstates.org/fl/bills/2016/SB1044/
+GA,lower,SB 94,2015_16,passed,good,creating body cam policies,http://openstates.org/ga/bills/2015_16/SB94/
+MD,upper,HB 1016,2016,passed,good,strengthening investigations of police,http://openstates.org/md/bills/2016/HB1016/
+MD,upper,HB 1016,2016,passed,good,stronger civilian oversight,http://openstates.org/md/bills/2016/HB1016/
+MD,lower,SB 321,2015,passed,good,improving police training,http://openstates.org/md/bills/2015/SB321/
+TX,lower,SB 158,84,passed,good,funds body cams,http://openstates.org/tx/bills/84/SB158/
+TX,upper,HB 1036,84,passed,good,collecting police shootings data,http://openstates.org/tx/bills/84/HB1036/
+TX,upper,HB 2150,84,passed,good,accountable grand juries,http://openstates.org/tx/bills/84/HB2150/
+MT,upper,HB 330,2015,passed,good,demilitarization of police,http://openstates.org/mt/bills/2015/HB330/
+WY,lower,SF 46,2016,passed,good,ending civil asset forfeiture,http://openstates.org/wy/bills/2016/SF46/
+WI,upper,AB 409,2013 Regular Session,passed,good,independent investigations of police,http://openstates.org/wi/bills/2013%20Regular%20Session/AB409/
+UT,upper,HB 300,2016,passed,good,body cam policies,http://openstates.org/ut/bills/2016/HB300/
+UT,upper,HB 355,2016,passed,good,improving police training,http://openstates.org/ut/bills/2016/HB355/
+UT,upper,HB 361,2015,passed,good,independent investigations of police,http://openstates.org/ut/bills/2015/HB361/
+NM,upper,HB 560,2015,passed,good,ending civil asset forfeiture,http://openstates.org/nm/bills/2015/HB560/
+NV,lower,SB 111,78,passed,good,requiring body cams,http://openstates.org/nv/bills/78/SB111/
+NV,upper,AB 162,78,passed,good,body cam policies,http://openstates.org/nv/bills/78/AB162/
+LA,upper,HCR 180,2015,passed,good,studying body cam policies,http://openstates.org/la/bills/2015/HCR180/
+AZ,lower,SB 1300,52nd-1st-regular,passed,good,studying body cam policies,http://openstates.org/az/bills/52nd-1st-regular/SB1300/
+OR,lower,SB 5701,2016 Regular Session,passed,good,improving police training,http://openstates.org/or/bills/2016%20Regular%20Session/SB5701/
+IN,upper,HB 1019,2016 Regular Session,passed,bad,keeps body cam videos secret,http://openstates.org/in/bills/2016/HB1019/
