@@ -301,7 +301,7 @@ var appWidget = {
       '<button class="submit" type="submit">Find your rep</button>' +
       '</form>' +
       '<small class="powered-by"><span>Powered by </span><a href="http://www.joincampaignzero.org" target="_blank">Campaign Zero</a></small>' +
-      '<a class="add-to-site" href="http://www.joincampaignzero.org/action" target="_blank">Add <span>this</span> to <span>your</span> site</a>' +
+      '<a class="add-to-site" href="https://github.com/campaignzero/campaign-zero-widget/blob/master/README.md" target="_blank">Add <span>this</span> to <span>your</span> site</a>' +
       '</div>';
   },
 
