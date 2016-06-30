@@ -34,6 +34,12 @@ If you are using something like WordPress that just asks you for the URL for the
 https://embed.joincampaignzero.org/widget.js
 ```
 
+If you are using Firefox or Internet Explorer, you can use the following code:
+
+```
+<iframe src="https://embed.joincampaignzero.org/plain.html" width="100%" height="400px" style="border:0"></iframe>
+```
+
 Demos
 ---
 
