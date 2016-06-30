@@ -1,7 +1,7 @@
 STATE,CHAMBER,BILL,SESSION,STATUS,PROGRESS,LABEL,URL
 NY,lower,A 3949,2015-2016,passed,good,ending racial profiling,http://openstates.org/ny/bills/2015-2016/A3949/
 NY,lower,A 6509A,2015-2016,passed,good,special prosecutor for police killings,http://openstates.org/ny/bills/2015-2016/A6509A/
-NY,lower,A 7698A,2015-2016,passed,good,reporting data on police actions,https://www.nysenate.gov/legislation/bills/2015/a7698
+NY,lower,A 7698A,2015-2016,passed,good,reporting data on police actions,http://openstates.org/ny/bills/2015-2016/A7698A/
 NY,upper,S 5598,2015-2016,passed,bad,further criminalizes resisting police,http://openstates.org/ny/bills/2015-2016/S5598/
 CA,upper,SB 443,20152016,passed,good,ending civil asset forfeiture,http://openstates.org/ca/bills/20152016/SB443/
 CA,lower,AB 2626,,considering,,improving police training,http://openstates.org/ca/bills/20152016/AB2626/
@@ -18,10 +18,10 @@ MA,lower,H 3480,,considering,,police shooting review board,http://openstates.org
 MA,upper,S 1280,,considering,,improving police training,http://openstates.org/ma/bills/189th/S1280/
 OH,upper,SB 258,,considering,,special prosecutor for police killings,http://openstates.org/oh/bills/131/SB258/
 OH,lower,HB 64,131,passed,good,police use of force database,http://openstates.org/oh/bills/131/HB64/
-NC,lower,HB 713,2015,passed,good,public access to body cam video,http://openstates.org/nc/bills/2015/HB713/
+NC,lower,HB 972,2015,passed,bad,keeps body cam video secret,http://openstates.org/nc/bills/2015/HB972/
 NC,lower,HB 811,2015,passed,good,studying body cam policies,http://openstates.org/nc/bills/2015/HB811/
 NC,lower,HB 193,,considering,,stronger civilian oversight,http://openstates.org/nc/bills/2015/HB193/
-NC,lower,HB 97,2015,passed,good,funding body cams,http://openstates.org/nc/bills/2015/HB97/
+NC,upper,HB 97,2015,passed,good,funding body cams,http://openstates.org/nc/bills/2015/HB97/
 SC,upper,S 47,2015-2016,passed,good,requiring body cams,http://openstates.org/sc/bills/2015-2016/S47/
 SC,lower,H 4387,,passed,good,ending ticket quotas,http://openstates.org/sc/bills/2015-2016/H4387/
 CO,lower,HB 15-1287,2015A,passed,good,improving police training,http://openstates.org/co/bills/2015A/HB15-1287/
@@ -101,4 +101,18 @@ NV,upper,AB 162,78,passed,good,body cam policies,http://openstates.org/nv/bills/
 LA,upper,HCR 180,2015,passed,good,studying body cam policies,http://openstates.org/la/bills/2015/HCR180/
 AZ,lower,SB 1300,52nd-1st-regular,passed,good,studying body cam policies,http://openstates.org/az/bills/52nd-1st-regular/SB1300/
 OR,lower,SB 5701,2016 Regular Session,passed,good,improving police training,http://openstates.org/or/bills/2016%20Regular%20Session/SB5701/
-IN,upper,HB 1019,2016 Regular Session,passed,bad,keeps body cam videos secret,http://openstates.org/in/bills/2016/HB1019/
+IN,upper,HB 1019,2016,passed,bad,keeps body cam videos secret,http://openstates.org/in/bills/2016/HB1019/
+NC,upper,HB 972,2015,passed,bad,keeps body cam video secret,http://openstates.org/nc/bills/2015/HB972/
+NC,lower,HB 97,2015,passed,good,funding body cams,http://openstates.org/nc/bills/2015/HB97/
+OK,upper,HB 1037,2015-2016,passed,good,public access to body cam video,http://openstates.org/ok/bills/2015-2016/HB1037/
+OK,lower,HB 1037,2015-2016,passed,good,public access to body cam video,http://openstates.org/ok/bills/2015-2016/HB1037/
+RI,upper,HB 5819,2015,passed,good,limits stops and collects profiling data,http://openstates.org/ri/bills/2015/HB5819/
+RI,lower,HB 5819,2015,passed,good,limits stops and collects profiling data,http://openstates.org/ri/bills/2015/HB5819/
+DE,lower,HCR 46,148,passed,good,encourages uniform body cam policy,http://openstates.org/de/bills/148/HCR46/
+DE,upper,HCR 46,148,passed,good,encourages uniform body cam policy,http://openstates.org/de/bills/148/HCR46/
+MA,lower,H 3829,189th,passed,good,funds body cams,http://openstates.org/ma/bills/189th/H3829/
+MA,upper,H 3829,189th,passed,good,funds body cams,http://openstates.org/ma/bills/189th/H3829/
+NJ,lower,A 2280,216,passed,good,requires body or dash cams,http://openstates.org/nj/bills/216/A2280/
+NJ,upper,A 2280,216,passed,good,requires body or dash cams,http://openstates.org/nj/bills/216/A2280/
+MN,lower,SF 498,2015-2016,passed,good,public access to deadly force video,http://openstates.org/mn/bills/2015-2016/SF498/
+MN,upper,SF 498,2015-2016,passed,good,public access to deadly force video,http://openstates.org/mn/bills/2015-2016/SF498/
