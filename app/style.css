@@ -151,7 +151,7 @@
   bottom: 16px;
   right: 20px;
   font-size: 0.75rem;
-  color: #f5f5f5;
+  color: #BBB;
   text-decoration: none;
 }
 #campaign-zero-widget a.add-to-site span {
@@ -159,7 +159,7 @@
 }
 #campaign-zero-widget .powered-by a:hover,
 #campaign-zero-widget a.add-to-site:hover {
-  color: #f5f5f5;
+  color: #272727;
 }
 
 #campaign-zero-widget .avatar {
