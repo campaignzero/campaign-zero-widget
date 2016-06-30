@@ -150,12 +150,12 @@
   position: absolute;
   bottom: 16px;
   right: 20px;
-  font-size: 0.75rem;
+  font-size: 0.01rem;
   color: #BBB;
   text-decoration: none;
 }
 #campaign-zero-widget a.add-to-site span {
-  font-size: 0.75rem;
+  font-size: 0.01rem;
 }
 #campaign-zero-widget .powered-by a:hover,
 #campaign-zero-widget a.add-to-site:hover {
