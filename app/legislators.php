@@ -10,7 +10,10 @@ $longitude = isset($_GET['longitude']) ? $_GET['longitude'] : null;
 $zipcode = isset($_GET['zipcode']) ? $_GET['zipcode'] : null;
 
 if( !empty($zipcode)){
-  require('zipcodes.php');
+  # Get the first two digits of the zipcode
+  $prefix = substr($zipcode, 0, 2);
+
+  require("./zipcodedata/$prefix.php");
 
   if(isset($zipcodes[$zipcode])){
     $latitude = $zipcodes[$zipcode]['lat'];
