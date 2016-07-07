@@ -4,6 +4,7 @@ error_reporting(0);
 header('Content-Type: application/json');
 
 require('config.php');
+require('cache-or-curl.php');
 
 $latitude = isset($_GET['latitude']) ? $_GET['latitude'] : null;
 $longitude = isset($_GET['longitude']) ? $_GET['longitude'] : null;
@@ -32,17 +33,11 @@ $data = array(
   'long' => $longitude
 );
 
-// Make API call
-$curl = curl_init();
-curl_setopt($curl, CURLOPT_URL, sprintf("%s?%s", API_URL_LEGISLATORS, http_build_query($data)));
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($curl, CURLOPT_HEADER, 0);
 
-// Store API Result
-$result = curl_exec($curl);
+// replace curl call with function that caches, or loads from cache
+$file_name = 'legislators.txt';
+$result = get_content($file_name, $args);
 
-// Terminate cURL
-curl_close($curl);
 
 // Store results as JSON
 $results = json_decode($result, true);
