@@ -27,17 +27,13 @@ if(empty($latitude) && empty($longitude)){
 }
 
 // Create URL params for API call
-$data = array(
+$params = array(
   'apikey' => API_KEY,
   'lat' => $latitude,
   'long' => $longitude
 );
 
-
-// replace curl call with function that caches, or loads from cache
-$file_name = 'legislators.txt';
-$result = get_content($file_name, $args);
-
+$result = get_content(API_URL_LEGISLATORS, $params);
 
 // Store results as JSON
 $results = json_decode($result, true);

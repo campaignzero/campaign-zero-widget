@@ -3,7 +3,7 @@
 error_reporting(0);
 header('Content-Type: application/json');
 
-require('config.php');
+require_once('config.php');
 require('cache-or-curl.php');
 
 $state = isset($_GET['state']) ? $_GET['state'] : null;
@@ -20,14 +20,13 @@ if(empty($state) || empty($session) || empty($bill) || empty($rep)){
 $url = API_URL_BILLS . strtolower($state) . '/' . rawurlencode($session) . '/' . rawurlencode($bill) . '/';
 
 // Create URL params for API call
-$data = array(
+$params = array(
   'apikey' => API_KEY
 );
 
 
 // replace curl call with function that caches, or loads from cache
-$file_name = 'bills.txt';
-$result = get_content($file_name, $args);
+$result = get_content($url, $params);
 
 
 // Store results as JSON
