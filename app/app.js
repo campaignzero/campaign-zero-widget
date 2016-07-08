@@ -28,7 +28,7 @@ var appWidget = {
       this.geoSuccess({
         coords: this.geoLocation
       });
-    } else if (navigator.geolocation) {
+    } else if (this.supportsGeolocation()) {
       navigator.geolocation.getCurrentPosition(this.geoSuccess, this.geoError);
       this.geoEnabled = true;
     } else {
@@ -80,12 +80,13 @@ var appWidget = {
    * @param error
    */
   showError: function(error){
+    var self = this;
     var elm = jQuery('#' + this.elementName);
     jQuery('small.note', elm).html('<i class="fa fa-exclamation-triangle"></i>&nbsp; ' + error).addClass('error animated shake');
     jQuery('button.submit', elm).removeAttr('disabled').html('Find your rep');
     clearTimeout(this.timeout);
     this.timeout = setTimeout(function(){
-      var note = (navigator.geolocation) ? 'leave empty to use your current location' : '';
+      var note = (self.supportsGeolocation()) ? 'leave empty to use your current location' : '';
       jQuery('small.note', elm).removeClass('error animated shake').html(note);
     }, 5000);
   },
@@ -287,11 +288,19 @@ var appWidget = {
   },
 
   /**
+   * Prevent Geolocation usage unless the user is using HTTPS protocol
+   * @returns {boolean}
+   */
+  supportsGeolocation: function (){
+    return (navigator.geolocation && window.location.protocol ==='https:');
+  },
+
+  /**
    * HTML Template for Initial Form
    * @returns {string}
    */
   templateForm: function(){
-    var note = (navigator.geolocation) ? 'leave empty to use your current location' : '';
+    var note = (this.supportsGeolocation()) ? 'leave empty to use your current location' : '';
     return '<div class="wrapper animated fadeIn" style="display: none">'+
       '<h2>End Police Violence</h2>' +
       '<p class="intro">Where does your rep stand?</p>' +
@@ -525,7 +534,7 @@ var appWidget = {
 
         var zipcode = jQuery('#zip-code').val();
         var pattern = /[0-9]{5}/g;
-        var allowGPS = (navigator.geolocation && window.location.protocol === 'https:');
+        var allowGPS = self.supportsGeolocation();
 
         appWidget.trackEvent('Form', 'Submit', zipcode);
 
@@ -542,6 +551,7 @@ var appWidget = {
         }
 
         event.preventDefault();
+        return false;
       });
     }, 200);
   }

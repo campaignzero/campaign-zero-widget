@@ -4,32 +4,28 @@ require_once('config.php');
 
 /**
  * @param $url
- * @param $data
- * @param int $hours
- * @param string $fn
- * @param string $fn_args
+ * @param $params
  * @return mixed|string
  */
-function get_content($url, $params, $hours = 24, $fn = '', $fn_args = '') {
-  $file = CACHE_PATH . md5(sprintf("%s?%s", $url, http_build_query($params)));
+function get_content($url, $params) {
+  $file = CACHE_PATH . md5(sprintf("%s?%s", $url, http_build_query($params))) . '.json';
 	$current_time = time();
-  $expire_time = $hours * 60 * 60;
+  $expire_time = CACHE_EXPIRE;
   $file_time = filemtime($file);
+  $time_difference = $current_time - $expire_time;
 
-	if(file_exists($file) && ($current_time - $expire_time < $file_time)) {
-		return file_get_contents($file);
+	if(file_exists($file) && ($time_difference < $file_time)) {
+    return file_get_contents($file);
 	} else {
 		$content = get_url($url, $params);
-		if ($fn) {
-      $content = $fn($content, $fn_args);
-    }
 		file_put_contents($file, $content);
 		return $content;
 	}
 }
 
 /**
- * @param $data
+ * @param $url
+ * @param $params
  * @return mixed
  */
 function get_url($url, $params) {
