@@ -454,7 +454,7 @@ var appWidget = {
             setTimeout(function(){
               jQuery('#loading-results').remove();
             }, 500);
-            var label = (status !== 'unknown') ? status : 'did not vote';
+            var label = (status !== 'unknown') ? status : 'unknown';
             jQuery('#widget-bill-results').append('<div class="support"><span class="status ' + status + ' ' + bill.progress + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> ' + bill.label + '</div>');
             jQuery('#widget-bill-results a').click(function(){
               appWidget.trackEvent('Nav', 'Bill Opened (State)', bill.state);
