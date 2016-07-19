@@ -62,4 +62,10 @@ $response = array(
   )
 );
 
-exit(json_encode($response));
+// update to support jsonp responses
+
+$json = json_encode($response);
+exit(isset($_GET['callback'])
+    ? "{$_GET['callback']}($json)"
+    : $json);
+

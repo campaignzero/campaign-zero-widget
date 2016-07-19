@@ -78,13 +78,16 @@
     scriptTag = targetScripts[targetScripts.length - 1];
 
     // check if this is production
-    var assets = (scriptTag.src && scriptTag.src === 'https://embed.joincampaignzero.org/widget.js') ? pathCDN : pathLocal;
+    var assets = (scriptTag.src && scriptTag.src === 'https://embed.joincampaignzero.org/widget.js') ? pathCDN : pathLocal; 
 
     // load widget css before DOM ready
     loadCss(assets + 'style.css?v=' + version, function(){
       loadedCSS = true;
       if(typeof appWidget !== 'undefined' && loadedCSS && loadedJS){
-        appWidget.init();
+             jQuery.extend(appWidget, {
+                assets: assets
+            });
+       appWidget.init();
       }
     });
 
@@ -107,7 +110,10 @@
         loadScript(assets + 'app.js?v=' + version, function(){
           loadedJS = true;
           if(typeof appWidget !== 'undefined' && loadedCSS && loadedJS){
-            appWidget.init();
+            jQuery.extend(appWidget, {
+                assets: assets
+            });
+              appWidget.init();
           }
         });
       });
