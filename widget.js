@@ -83,6 +83,11 @@
     // load widget css before DOM ready
     loadCss(assets + 'style.css?v=' + version, function(){
       loadedCSS = true;
+      // pass the calculated assets variable to appWidget
+      // this resolves an issue where calling this file from an external site
+      // causes links to legislators.php and bills.php to break
+      // because all pathnames are assumed to be ./ to whatever the URL is
+      // in the client browser
       if(typeof appWidget !== 'undefined' && loadedCSS && loadedJS){
              jQuery.extend(appWidget, {
                 assets: assets

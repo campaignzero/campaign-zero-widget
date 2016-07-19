@@ -1,5 +1,5 @@
 function jsonCallback(jsdata) {
-    //console.log(jsdata);
+    // JSONP callback function here
 }
 var appWidget = {
 
@@ -103,8 +103,11 @@ var appWidget = {
  
     var self = this;
 
+    // changing this to JSONP to resolve cross-domain AJAX issues
+    // also pass the JSON parameters as an object now, this lets jQuery build
+    // the URL dynamically (since it also has to add in a callback parameter now automatically)
     var jsonpUrl = self.assets + 'app/legislators.php';
-      var jsonData = {};
+     var jsonData = {};
     if(geoLocation){
       jsonData.latitude = geoLocation.latitude;
       jsonData.longitude = geoLocation.longitude;
@@ -484,7 +487,11 @@ var appWidget = {
    * @param callback
    */
   voteStatus: function(bill, rep_id, callback){
-      jsonData = {
+    // changing this to JSONP to resolve cross-domain AJAX issues
+    // also pass the JSON parameters as an object now, this lets jQuery build
+    // the URL dynamically (since it also has to add in a callback parameter now automatically)
+      
+    jsonData = {
           state: bill.state,
           session: bill.session,
           bill: bill.bill,
