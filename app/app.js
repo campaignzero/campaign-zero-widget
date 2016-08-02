@@ -332,7 +332,9 @@ var appWidget = {
     };
 
     // Replace all non secure images with secure images and verify they exist
-    loadSecureImage(rep.photo_url.replace('http://', 'https://'));
+    if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
+      loadSecureImage(rep.photo_url.replace('http://', 'https://'));
+    }
 
     return '<li><a href="javascript:void(0)" class="representative-summary animated fadeIn" data-id="'+ key +'">' +
       '<div class="avatar ' + rep.party.toLowerCase() + '" id="rep-image-' + key + '"></div>' +
