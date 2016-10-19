@@ -78,13 +78,21 @@
     scriptTag = targetScripts[targetScripts.length - 1];
 
     // check if this is production
-    var assets = (scriptTag.src && scriptTag.src === 'https://embed.joincampaignzero.org/widget.js') ? pathCDN : pathLocal;
+    var assets = (scriptTag.src && scriptTag.src === 'https://embed.joincampaignzero.org/widget.js') ? pathCDN : pathLocal; 
 
     // load widget css before DOM ready
     loadCss(assets + 'style.css?v=' + version, function(){
       loadedCSS = true;
+      // pass the calculated assets variable to appWidget
+      // this resolves an issue where calling this file from an external site
+      // causes links to legislators.php and bills.php to break
+      // because all pathnames are assumed to be ./ to whatever the URL is
+      // in the client browser
       if(typeof appWidget !== 'undefined' && loadedCSS && loadedJS){
-        appWidget.init();
+             jQuery.extend(appWidget, {
+                assets: assets
+            });
+       appWidget.init();
       }
     });
 
@@ -107,7 +115,10 @@
         loadScript(assets + 'app.js?v=' + version, function(){
           loadedJS = true;
           if(typeof appWidget !== 'undefined' && loadedCSS && loadedJS){
-            appWidget.init();
+            jQuery.extend(appWidget, {
+                assets: assets
+            });
+              appWidget.init();
           }
         });
       });

@@ -1,3 +1,6 @@
+function jsonCallback(jsdata) {
+    // JSONP callback function here
+}
 var appWidget = {
 
   geoEnabled: null,
@@ -6,7 +9,6 @@ var appWidget = {
   timeout: null,
   elementName: 'campaign-zero-widget',
   storedResponse: null,
-
   /**
    * Track Event using Google Analytics
    * @param category
@@ -98,24 +100,32 @@ var appWidget = {
    * @returns {boolean}
    */
   getRepresentatives: function(geoLocation, zipCode){
+ 
+    var self = this;
 
-    var jsonpUrl = './app/legislators.php';
+    // changing this to JSONP to resolve cross-domain AJAX issues
+    // also pass the JSON parameters as an object now, this lets jQuery build
+    // the URL dynamically (since it also has to add in a callback parameter now automatically)
+    var jsonpUrl = self.assets + 'app/legislators.php';
+     var jsonData = {};
     if(geoLocation){
-      jsonpUrl += '?latitude=' + geoLocation.latitude + '&longitude=' + geoLocation.longitude;
+      jsonData.latitude = geoLocation.latitude;
+      jsonData.longitude = geoLocation.longitude;
       appWidget.trackEvent('Fetch', 'Reps Geo', geoLocation.latitude + ',' + geoLocation.longitude);
     } else if(zipCode){
-      jsonpUrl += '?zipcode=' + zipCode;
+       jsonData.zipcode = zipCode;
       appWidget.trackEvent('Fetch', 'Reps Zipcode', zipCode);
     } else {
       return false;
     }
 
-    var self = this;
 
     jQuery.ajax({
       url: jsonpUrl,
       type: 'GET',
-      dataType: 'json',
+      dataType: 'jsonp',
+        data: jsonData,
+        jsonpCallback: 'jsonCallback',
       success: function(response) {
         if(response && response.error){
           self.showError(response.error);
@@ -479,9 +489,26 @@ var appWidget = {
    * @param callback
    */
   voteStatus: function(bill, rep_id, callback){
-    var jsonpUrl = './app/bills.php?state=' + bill.state + '&session=' + bill.session + '&bill=' + bill.bill + '&rep=' + rep_id;
+    // changing this to JSONP to resolve cross-domain AJAX issues
+    // also pass the JSON parameters as an object now, this lets jQuery build
+    // the URL dynamically (since it also has to add in a callback parameter now automatically)
+      
+    jsonData = {
+          state: bill.state,
+          session: bill.session,
+          bill: bill.bill,
+          rep: rep_id
+      }
+    var jsonpUrl = this.assets + 'app/bills.php';
 
-    $.when( jQuery.ajax(jsonpUrl) ).then(function( data ) {
+    $.when( jQuery.ajax({
+        url: jsonpUrl,
+        type: 'GET',
+        dataType: 'jsonp',
+        data: jsonData,
+        jsonpCallback: 'jsonCallback'
+
+    }) ).then(function( data ) {
       appWidget.trackEvent('Vote', 'Status', data.results.status);
       appWidget.trackEvent('Vote', 'Bill', bill.bill);
       appWidget.trackEvent('Vote', 'State', bill.state);
@@ -519,7 +546,7 @@ var appWidget = {
     var elm = jQuery('#' + this.elementName);
         elm.html('').append(this.templateForm());
 
-    setTimeout(function(){
+      setTimeout(function(){
 
       jQuery('a', elm).click(function(){
         appWidget.trackEvent('Nav', 'Link Clicked', jQuery(this).text());
