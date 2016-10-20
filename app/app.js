@@ -140,96 +140,101 @@ var appWidget = {
     var self = this;
     var elm = jQuery('#' + this.elementName);
 
-    setTimeout(function(){
-      elm.html('');
+    if (response.results) {
+      setTimeout(function(){
+        elm.html('');
 
-      var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center='+ response.request.latitude +','+ response.request.longitude +'&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
-      var html = '<div class="wrapper" style="min-height: 343px; background: url('+ backgroundImage +') center center no-repeat; background-size: cover;">';
+        var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center='+ response.request.latitude +','+ response.request.longitude +'&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
+        var html = '<div class="wrapper" style="min-height: 343px; background: url('+ backgroundImage +') center center no-repeat; background-size: cover;">';
 
-      appWidget.trackEvent('API', 'Rep Count Location', response.request.latitude + ',' + response.request.longitude, response.results.length);
-      appWidget.trackEvent('API', 'Rep Count Zipcode', response.request.zipcode, response.results.length);
+        appWidget.trackEvent('API', 'Rep Count Location', response.request.latitude + ',' + response.request.longitude, response.results.length);
+        appWidget.trackEvent('API', 'Rep Count Zipcode', response.request.zipcode, response.results.length);
 
-      if(response && response.results.length === 0){
+        if(response && response.results.length === 0){
 
-        html += '<h2 class="black">No Representatives</h2>';
-        html += '<p class="no-reps">We could not find any Representatives in your location</p></div>';
-        html += '<small class="powered-by back"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i>&nbsp; Back</a></small>';
+          html += '<h2 class="black">No Representatives</h2>';
+          html += '<p class="no-reps">We could not find any Representatives in your location</p></div>';
+          html += '<small class="powered-by back"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i>&nbsp; Back</a></small>';
 
-        elm.append(html);
+          elm.append(html);
 
-        setTimeout(function(){
+          setTimeout(function(){
 
-          jQuery('a', elm).click(function(){
-            appWidget.trackEvent('Nav', 'Link Clicked', jQuery(this).text());
-          });
+            jQuery('a', elm).click(function(){
+              appWidget.trackEvent('Nav', 'Link Clicked', jQuery(this).text());
+            });
 
-          jQuery('small.back a', elm).click(function(){
-            self.init();
-            appWidget.trackEvent('Nav', 'Back Button', 'Main Page');
-          });
+            jQuery('small.back a', elm).click(function(){
+              self.init();
+              appWidget.trackEvent('Nav', 'Back Button', 'Main Page');
+            });
 
-        }, 200);
+          }, 200);
 
-      } else if(response && response.results.length === 1){
+        } else if(response && response.results.length === 1){
 
-        var rep = response.results[0];
-        var chamber = response.results[0]['chamber'];
-        var bills = response.bills[chamber] || [];
-        var killings = response.killings || { count: 0 };
+          var rep = response.results[0];
+          var chamber = response.results[0]['chamber'];
+          var bills = response.bills[chamber] || [];
+          var killings = response.killings || { count: 0 };
 
-        self.generateDetails(rep, bills, killings, false);
+          self.generateDetails(rep, bills, killings, false);
 
-      } else if (response && response.results.length >= 1){
+        } else if (response && response.results.length >= 1){
 
-        html += '<h2 class="black">Pick a Representative</h2>';
-        html += '<ul>';
+          html += '<h2 class="black">Pick a Representative</h2>';
+          html += '<ul>';
 
-        for (var key in response.results) {
-          if (response.results.hasOwnProperty(key)) {
-            html += self.templateSummary(key, response.results[key]);
+          for (var key in response.results) {
+            if (response.results.hasOwnProperty(key)) {
+              html += self.templateSummary(key, response.results[key]);
+            }
           }
+
+          html += '</ul></div>';
+          html += '<small class="powered-by back"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i>&nbsp; Back</a></small>';
+
+          elm.append(html);
+
+          setTimeout(function(){
+
+            jQuery('a', elm).click(function(){
+              appWidget.trackEvent('Nav', 'Link Clicked', jQuery(this).text());
+            });
+
+            jQuery('button', elm).click(function(){
+              appWidget.trackEvent('Nav', 'Button Clicked', jQuery(this).text());
+            });
+
+            jQuery('small.back a', elm).click(function(){
+              self.init();
+              appWidget.trackEvent('Nav', 'Back Button', 'Main Page');
+            });
+
+            jQuery('a.representative-summary', elm).click(function(){
+              var id = jQuery(this).data('id');
+              var rep = response.results[id];
+              var chamber = response.results[id]['chamber'];
+              var bills = response.bills[chamber] || [];
+              var killings = response.killings || { count: 0 };
+
+              appWidget.trackEvent('Nav', 'Selected Rep', rep.full_name);
+              appWidget.trackEvent('Nav', 'Selected Rep State', rep.state.toUpperCase());
+
+              self.generateDetails(rep, bills, killings, true);
+            });
+          }, 200);
+
+        } else if (response && response.results.length === 0){
+          self.showError('No Representatives Found.');
+          appWidget.trackEvent('Error', 'Representatives Error', 'No Representatives Found.');
         }
 
-        html += '</ul></div>';
-        html += '<small class="powered-by back"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i>&nbsp; Back</a></small>';
-
-        elm.append(html);
-
-        setTimeout(function(){
-
-          jQuery('a', elm).click(function(){
-            appWidget.trackEvent('Nav', 'Link Clicked', jQuery(this).text());
-          });
-
-          jQuery('button', elm).click(function(){
-            appWidget.trackEvent('Nav', 'Button Clicked', jQuery(this).text());
-          });
-
-          jQuery('small.back a', elm).click(function(){
-            self.init();
-            appWidget.trackEvent('Nav', 'Back Button', 'Main Page');
-          });
-
-          jQuery('a.representative-summary', elm).click(function(){
-            var id = jQuery(this).data('id');
-            var rep = response.results[id];
-            var chamber = response.results[id]['chamber'];
-            var bills = response.bills[chamber] || [];
-            var killings = response.killings || { count: 0 };
-
-            appWidget.trackEvent('Nav', 'Selected Rep', rep.full_name);
-            appWidget.trackEvent('Nav', 'Selected Rep State', rep.state.toUpperCase());
-
-            self.generateDetails(rep, bills, killings, true);
-          });
-        }, 200);
-
-      } else if (response && response.results.length === 0){
-        self.showError('No Representatives Found.');
-        appWidget.trackEvent('Error', 'Representatives Error', 'No Representatives Found.');
-      }
-
-    }, 200);
+      }, 200);
+    } else {
+      appWidget.trackEvent('Error', 'Representatives Error', 'No Representatives Found.');
+      appWidget.showError('Currently Unable to Fetch Results');
+    }
   },
 
   /**
