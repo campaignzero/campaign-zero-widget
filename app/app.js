@@ -329,6 +329,11 @@ var appWidget = {
 
     // Some Rep images are loading over HTTP rather than HTTPS, check that HTTPS works
     var loadSecureImage = function(imageUrl) {
+
+      if (imageUrl.startsWith('http://')) {
+        imageUrl = 'https://proxy.joincampaignzero.org/' + imageUrl;
+      }
+
       var image = new Image();
       image.onload = function(){
         jQuery('#rep-image-' + key).css('background-image', 'url(' + imageUrl + ')');
@@ -338,7 +343,7 @@ var appWidget = {
 
     // Replace all non secure images with secure images and verify they exist
     if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
-      loadSecureImage(rep.photo_url.replace('http://', 'https://'));
+      loadSecureImage(rep.photo_url);
     }
 
     return '<li><a href="javascript:void(0)" class="representative-summary animated fadeIn" data-id="'+ key +'">' +
