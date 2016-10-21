@@ -107,7 +107,7 @@ var appWidget = {
    */
   getRepresentatives: function(geoLocation, zipCode){
 
-    var jsonpUrl = './app/legislators.php';
+    var jsonpUrl = window.CAMPAIGN_ZERO_WIDGET.base + 'legislators.php';
     if(geoLocation){
       jsonpUrl += '?latitude=' + geoLocation.latitude + '&longitude=' + geoLocation.longitude;
       appWidget.trackEvent('Fetch', 'Reps Geo', geoLocation.latitude + ',' + geoLocation.longitude);
@@ -510,7 +510,7 @@ var appWidget = {
    * @param callback
    */
   voteStatus: function(bill, rep_id, callback){
-    var jsonpUrl = './app/bills.php?state=' + bill.state + '&session=' + bill.session + '&bill=' + bill.bill + '&rep=' + rep_id;
+    var jsonpUrl = window.CAMPAIGN_ZERO_WIDGET.base + 'bills.php?state=' + bill.state + '&session=' + bill.session + '&bill=' + bill.bill + '&rep=' + rep_id;
 
     $.when( jQuery.ajax(jsonpUrl) ).then(function( data ) {
       appWidget.trackEvent('Vote', 'Status', data.results.status);

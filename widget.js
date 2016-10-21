@@ -91,6 +91,14 @@
     // wait for DOM ready to load other script to prevent page blocking
     jQuery(document).ready(function ($) {
 
+      var isProduction = (scriptTag.src === 'https://embed.joincampaignzero.org/widget.js');
+
+      window.CAMPAIGN_ZERO_WIDGET = {
+        environment: isProduction ? 'production' : 'development',
+        base: isProduction ? 'https://embed.joincampaignzero.org/app/' : './app/',
+        version: version
+      };
+
       // check for existing element, otherwise create it
       if(jQuery('#' + elementName).length === 0){
         jQuery('<div id="' + elementName + '"></div>').insertBefore(scriptTag);
@@ -106,7 +114,7 @@
         // load bugsnag
         loadScript('https://d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js', function(){
           if (typeof Bugsnag !== 'undefined') {
-            Bugsnag.releaseStage = 'production';
+            Bugsnag.releaseStage = window.CAMPAIGN_ZERO_WIDGET.environment;
             Bugsnag.apiKey = '9f6e3446ec521807bdb0cdf646204a85';
             Bugsnag.appVersion = version;
 
