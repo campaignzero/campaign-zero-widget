@@ -2,6 +2,7 @@
 
 error_reporting(0);
 header('Content-Type: application/json');
+header("Access-Control-Allow-Origin: *");
 
 require('config.php');
 require('cache-or-curl.php');
