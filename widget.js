@@ -9,7 +9,7 @@
   var elementName = 'campaign-zero-widget';
   var loadedCSS = false;
   var loadedJS = false;
-  var version = '1.0.11';
+  var version = '1.0.12';
 
   /** Get reference to self (scriptTag) */
   var allScripts = document.getElementsByTagName('script');
@@ -109,6 +109,26 @@
             Bugsnag.releaseStage = 'production';
             Bugsnag.apiKey = '9f6e3446ec521807bdb0cdf646204a85';
             Bugsnag.appVersion = version;
+
+            // Only send errors from our own widget, not the embedded website it's on
+            Bugsnag.beforeNotify = function(payload) {
+              var sendError = false;
+              var trackScriptFiles = [
+                scriptTag.src,
+                assets.replace('./', '/') + 'app.js'
+              ];
+
+              if (payload && payload.stacktrace) {
+                for (var i = 0; i < trackScriptFiles.length; i++) {
+                  if (payload.stacktrace.includes(trackScriptFiles[i])) {
+                    sendError = true;
+                    break;
+                  }
+                }
+              }
+
+              return !!(sendError);
+            }
           }
         });
 
