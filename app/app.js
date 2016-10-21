@@ -72,6 +72,10 @@ var appWidget = {
       }
       appWidget.trackEvent('Error', 'Geolocation', this.geoErrorMessage);
       appWidget.showError(this.geoErrorMessage);
+
+      if (typeof Bugsnag !== 'undefined') {
+        Bugsnag.notify('geoError', error);
+      }
     }
   },
 
@@ -80,6 +84,10 @@ var appWidget = {
    * @param error
    */
   showError: function(error){
+    if (typeof Bugsnag !== 'undefined') {
+      Bugsnag.notifyException(error);
+    }
+
     var self = this;
     var elm = jQuery('#' + this.elementName);
     jQuery('small.note', elm).html('<i class="fa fa-exclamation-triangle"></i>&nbsp; ' + error).addClass('error animated shake');
@@ -120,6 +128,10 @@ var appWidget = {
         if(response && response.error){
           self.showError(response.error);
           appWidget.trackEvent('Error', 'Reps Error', response.error);
+
+          if (typeof Bugsnag !== 'undefined') {
+            Bugsnag.notify('getRepresentativesError', response);
+          }
         } else {
           self.storedResponse = response;
           self.generateResults(response);
@@ -144,7 +156,7 @@ var appWidget = {
       setTimeout(function(){
         elm.html('');
 
-        var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center='+ response.request.latitude +','+ response.request.longitude +'&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
+        var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center='+ response.request.latitude +','+ response.request.longitude +'&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa&key=AIzaSyBlgFUsVry1HfM7cbWEfNmbu_RSPNQin9o';
         var html = '<div class="wrapper" style="min-height: 343px; background: url('+ backgroundImage +') center center no-repeat; background-size: cover;">';
 
         appWidget.trackEvent('API', 'Rep Count Location', response.request.latitude + ',' + response.request.longitude, response.results.length);
@@ -234,6 +246,10 @@ var appWidget = {
     } else {
       appWidget.trackEvent('Error', 'Representatives Error', 'No Representatives Found.');
       appWidget.showError('Currently Unable to Fetch Results');
+
+      if (typeof Bugsnag !== 'undefined') {
+        Bugsnag.notify('generateResultsError', response);
+      }
     }
   },
 
@@ -397,15 +413,20 @@ var appWidget = {
 
     // Some Rep images are loading over HTTP rather than HTTPS, check that HTTPS works
     var loadSecureImage = function(imageUrl) {
+
+      if (imageUrl.startsWith('http://')) {
+        imageUrl = 'https://proxy.joincampaignzero.org/' + imageUrl;
+      }
+
       var image = new Image();
       image.onload = function(){
-        jQuery('#rep-image').css('background-image', 'url(' + imageUrl + ')');
+        jQuery('#rep-image-' + key).css('background-image', 'url(' + imageUrl + ')');
       };
       image.src = imageUrl;
     };
 
     // Replace all non secure images with secure images and verify they exist
-    loadSecureImage(rep.photo_url.replace('http://', 'https://'));
+    loadSecureImage(rep.photo_url);
 
     return '<div class="wrapper text-center representative" style="min-height: 343px; background: url(' + backgroundImage + ') center center no-repeat; background-size: cover;">' +
       '<div class="summary-name ' + rep.party.toLowerCase() + '">' + rep.full_name + '</div>' +
@@ -555,6 +576,9 @@ var appWidget = {
         } else if(zipcode !== '' && !pattern.test(zipcode)) {
           self.showError('Invalid Zip Code ( e.g. 90210 )');
           appWidget.trackEvent('Error', 'Submit Form', 'Invalid Zip Code');
+          if (typeof Bugsnag !== 'undefined') {
+            Bugsnag.notify('invalidZipCode', zipcode);
+          }
         } else if(zipcode === '' && allowGPS) {
           self.getLocation();
         } else {

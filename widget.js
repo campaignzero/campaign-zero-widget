@@ -9,7 +9,7 @@
   var elementName = 'campaign-zero-widget';
   var loadedCSS = false;
   var loadedJS = false;
-  var version = '1.0.10';
+  var version = '1.0.11';
 
   /** Get reference to self (scriptTag) */
   var allScripts = document.getElementsByTagName('script');
@@ -102,6 +102,15 @@
           ga('create', 'UA-77948909-1', 'auto', 'campaignZeroWidget');
           ga('campaignZeroWidget.send', 'pageview');
         }
+
+        // load bugsnag
+        loadScript('https://d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js', function(){
+          if (typeof Bugsnag !== 'undefined') {
+            Bugsnag.releaseStage = 'production';
+            Bugsnag.apiKey = '9f6e3446ec521807bdb0cdf646204a85';
+            Bugsnag.appVersion = version;
+          }
+        });
 
         // load widgets main app's script file
         loadScript(assets + 'app.js?v=' + version, function(){
