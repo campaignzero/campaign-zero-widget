@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+/* WIDGET STYLE RESET */
+
+#campaign-zero-widget div,
+#campaign-zero-widget span,
+#campaign-zero-widget h1,
+#campaign-zero-widget h2,
+#campaign-zero-widget h3,
+#campaign-zero-widget h4,
+#campaign-zero-widget h5,
+#campaign-zero-widget h6,
+#campaign-zero-widget p,
+#campaign-zero-widget a,
+#campaign-zero-widget img,
+#campaign-zero-widget strong,
+#campaign-zero-widget b,
+#campaign-zero-widget u,
+#campaign-zero-widget i,
+#campaign-zero-widget ol,
+#campaign-zero-widget ul,
+#campaign-zero-widget li,
+#campaign-zero-widget form,
+#campaign-zero-widget label {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  text-indent: 0;
+
+}
+#campaign-zero-widget i.fa {
+  font: normal normal normal 100%/1 FontAwesome;
+}
+#campaign-zero-widget ol,
+#campaign-zero-widget ul {
+  list-style: none;
+}

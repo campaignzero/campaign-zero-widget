@@ -1,6 +1,11 @@
+/* Import CSS Files */
+@import url(reset.css);
+@import url(animate.css);
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600);
 @import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css);
-@import url(animate.css);
+
+
+/* MAIN WIDGET STYLES */
 
 #campaign-zero-widget {
   box-sizing: border-box;
@@ -184,6 +189,7 @@
   display: inline-block;
   position: relative;
   top: -5px;
+  text-align: left;
 }
 #campaign-zero-widget .summary .summary-details {
   font-weight: 300;
