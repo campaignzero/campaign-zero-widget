@@ -420,7 +420,7 @@ var appWidget = {
 
       var image = new Image();
       image.onload = function(){
-        jQuery('#rep-image-' + key).css('background-image', 'url(' + imageUrl + ')');
+        jQuery('#rep-image').css('background-image', 'url(' + imageUrl + ')');
       };
       image.src = imageUrl;
     };
