@@ -378,7 +378,7 @@ var appWidget = {
    * @returns {string}
    */
   templateDetails: function(rep, bills, killings){
-    var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center=' + this.storedResponse.request.latitude + ',' + this.storedResponse.request.longitude + '&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa';
+    var backgroundImage = 'https://maps.googleapis.com/maps/api/staticmap?center=' + this.storedResponse.request.latitude + ',' + this.storedResponse.request.longitude + '&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa&key=AIzaSyBlgFUsVry1HfM7cbWEfNmbu_RSPNQin9o';
     var status = this.templateBills(bills, rep.id);
 
     var phoneNumbers = '';
@@ -431,7 +431,7 @@ var appWidget = {
     return '<div class="wrapper text-center representative" style="min-height: 343px; background: url(' + backgroundImage + ') center center no-repeat; background-size: cover;">' +
       '<div class="summary-name ' + rep.party.toLowerCase() + '">' + rep.full_name + '</div>' +
       '<div class="summary-details"><strong>' + rep.party + '</strong> &nbsp;&nbsp; <strong>District:</strong> ' + rep.district + ' &nbsp;&nbsp; <strong>Chamber:</strong> ' + rep.chamber + '</div>' +
-      '<div class="avatar large animated flipInY ' + rep.party.toLowerCase() + '" id="rep-image"></div>' +
+      '<div><div class="avatar large animated flipInY ' + rep.party.toLowerCase() + '" id="rep-image"></div></div>' +
       '<div class="action-buttons">' +
       '<a href="javascript:void(0)" class="action-button widget-modal-phone"><i class="fa fa-phone"></i></a>' +
       '<a href="https://twitter.com/intent/tweet?text=Learn%20where%20your%20representatives%20stand%20on%20police%20violence%20and%20demand%20action%20now!%20http://JoinCampaignZero.org/action&hashtags=CampaignZero" target="_blank" rel="noopener" class="action-button"><i class="fa fa-twitter"></i></a>' +
@@ -542,6 +542,43 @@ var appWidget = {
     $('.widget-modal', elm).fadeOut(250);
   },
 
+  resize: function() {
+    var elm = jQuery('#' + this.elementName);
+    var width = elm.width();
+
+    console.log('width', width)
+
+    elm.removeClass('w200 w220 w240 w280 w300 w320 w380');
+
+    if (width <= 200) {
+      elm.addClass('w200');
+    }
+
+    if (width <= 220) {
+      elm.addClass('w220');
+    }
+
+    if (width <= 240) {
+      elm.addClass('w240');
+    }
+
+    if (width <= 280) {
+      elm.addClass('w280');
+    }
+
+    if (width <= 300) {
+      elm.addClass('w300');
+    }
+
+    if (width <= 320) {
+      elm.addClass('w320');
+    }
+
+    if (width <= 380) {
+      elm.addClass('w380');
+    }
+  },
+
   /**
    * Load Initial Widget Form
    */
@@ -549,6 +586,8 @@ var appWidget = {
     var self = this;
     var elm = jQuery('#' + this.elementName);
         elm.html('').append(this.templateForm());
+
+    appWidget.resize();
 
     setTimeout(function(){
 
@@ -589,6 +628,7 @@ var appWidget = {
         event.preventDefault();
         return false;
       });
+
     }, 200);
   }
 };

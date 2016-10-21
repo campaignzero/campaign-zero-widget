@@ -7,7 +7,6 @@
   max-width: 400px;
   border: 1px solid #e3e3e3;
   background-color: #f5f5f5;
-  margin-bottom: 20px;
   font-family: 'Source Sans Pro', sans-serif;
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
   box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
@@ -237,6 +236,7 @@
   display: block;
   color: #272727;
   text-decoration: none;
+  overflow: hidden;
 }
 #campaign-zero-widget .wrapper li a:hover {
   background: rgba(255,255,255,0.95);
@@ -393,132 +393,163 @@
 #campaign-zero-widget .widget-modal .widget-modal-close:hover {
   color: #333;
 }
-@media screen and (max-width: 380px) {
-  #campaign-zero-widget h2 {
-    font-size: 0.8rem;
-  }
-  #campaign-zero-widget p.intro {
-    font-size: 1.3rem;
-  }
-  #campaign-zero-widget .summary .summary-name,
-  #campaign-zero-widget .summary .summary-details {
-    max-width: 235px;
-  }
-  #campaign-zero-widget .representative .support .status {
-    width: 60px;
-    padding: 1px 2px;
-    font-size: 0.6rem;
-  }
-  #campaign-zero-widget .representative .support a {
-    min-width: 40px;
-    padding: 1px 3px;
-    font-size: 0.6rem;
-  }
+
+
+/* PSEUDO MEDIA QUERIES ( actual ones wont work since widget is sized my parent element, not page */
+
+
+/* 380px sizing */
+#campaign-zero-widget.w380 h2 {
+  font-size: 0.8rem;
 }
-@media screen and (max-width: 320px) {
-  #campaign-zero-widget h2 {
-    font-size: 0.8rem;
-  }
-  #campaign-zero-widget p.intro {
-    font-size: 1.2rem;
-  }
-  #campaign-zero-widget .representative a.action-button {
-    padding: 6px 25px;
-  }
-  #campaign-zero-widget .summary .summary-details {
-    font-size: 0.6rem;
-  }
-  #campaign-zero-widget .summary .summary-details strong {
-    font-size: 0.6rem;
-  }
-  #campaign-zero-widget .representative .support {
-    font-size: 0.7rem;
-  }
-  #campaign-zero-widget .summary .summary-name,
-  #campaign-zero-widget .summary .summary-details {
-    max-width: 180px;
-  }
+#campaign-zero-widget.w380 p.intro {
+  font-size: 1.3rem;
 }
-@media screen and (max-width: 300px) {
-  #campaign-zero-widget h2 {
-    font-size: 0.75rem;
-  }
-  #campaign-zero-widget p.intro {
-    font-size: 1.2rem;
-  }
-  #campaign-zero-widget button {
-    font-size: 1.2rem;
-  }
-  #campaign-zero-widget a.add-to-site span {
-    display: none;
-  }
+#campaign-zero-widget.w380 .summary .summary-name,
+#campaign-zero-widget.w380 .summary .summary-details {
+  max-width: 235px;
 }
-@media screen and (max-width: 280px) {
-  #campaign-zero-widget h2 {
-    font-size: 0.75rem;
-    letter-spacing: 0.15rem;
-  }
-  #campaign-zero-widget p.intro {
-    font-size: 1rem;
-  }
-  #campaign-zero-widget button {
-    font-size: 0.9rem;
-  }
-  #campaign-zero-widget .powered-by span {
-    display: none;
-  }
+#campaign-zero-widget.w380 .representative .support .status {
+  width: 60px;
+  padding: 1px 2px;
+  font-size: 0.6rem;
 }
-@media screen and (max-width: 240px) {
-  #campaign-zero-widget h2 {
-    font-size: 0.75rem;
-    letter-spacing: 0.05rem;
-  }
-  #campaign-zero-widget p.intro {
-    font-size: 0.9rem;
-  }
-  #campaign-zero-widget button {
-    font-size: 0.9rem;
-  }
-  #campaign-zero-widget .powered-by span {
-    display: none;
-  }
+#campaign-zero-widget.w380 .representative .support a {
+  min-width: 40px;
+  padding: 1px 3px;
+  font-size: 0.6rem;
 }
-@media screen and (max-width: 220px) {
-  #campaign-zero-widget .wrapper {
-    padding: 10px;
-  }
-  #campaign-zero-widget p.intro {
-    font-size: 0.8rem;
-  }
-  #campaign-zero-widget input {
-    font-size: 0.8rem;
-  }
-  #campaign-zero-widget button {
-    letter-spacing: 0.15rem;
-  }
-  #campaign-zero-widget .powered-by span {
-    display: none;
-  }
-  #campaign-zero-widget .powered-by {
-    left: 10px;
-    bottom: 10px;
-  }
-  #campaign-zero-widget a.add-to-site {
-    right: 10px;
-    bottom: 10px;
-  }
-  #campaign-zero-widget button {
-    letter-spacing: 0.1rem;
-    padding: 4px 0;
-  }
-  #campaign-zero-widget .powered-by span {
-    display: none;
-  }
+#campaign-zero-widget.w380 .representative a.action-button {
+  padding: 6px 15px;
 }
-@media screen and (max-width: 200px) {
-  #campaign-zero-widget input {
-    font-size: 0.8rem;
-    padding: 4px 8px;
-    margin-bottom: 0.8rem;
-  }
+
+
+/* 320px sizing */
+#campaign-zero-widget.w320 h2 {
+  font-size: 0.8rem;
+}
+#campaign-zero-widget.w320 p.intro {
+  font-size: 1.2rem;
+}
+#campaign-zero-widget.w320 .representative a.action-button {
+  padding: 6px 15px;
+}
+#campaign-zero-widget.w320 .summary .summary-details {
+  font-size: 0.6rem;
+}
+#campaign-zero-widget.w320 .summary .summary-details strong {
+  font-size: 0.6rem;
+}
+#campaign-zero-widget.w320 .representative .support {
+  font-size: 0.7rem;
+}
+#campaign-zero-widget.w320 .summary .summary-name,
+#campaign-zero-widget.w320 .summary .summary-details {
+  max-width: 180px;
+}
+
+
+/* 300px sizing */
+#campaign-zero-widget.w300 h2 {
+  font-size: 0.75rem;
+}
+#campaign-zero-widget.w300 p.intro {
+  font-size: 1.2rem;
+}
+#campaign-zero-widget.w300 button {
+  font-size: 1.2rem;
+}
+#campaign-zero-widget.w300 a.add-to-site span {
+  display: none;
+}
+#campaign-zero-widget.w300 .summary {
+  top: 0;
+}
+
+
+/* 280px sizing */
+#campaign-zero-widget.w280 h2 {
+  font-size: 0.75rem;
+  letter-spacing: 0.15rem;
+}
+#campaign-zero-widget.w280 p.intro {
+  font-size: 1rem;
+}
+#campaign-zero-widget.w280 button {
+  font-size: 0.9rem;
+}
+#campaign-zero-widget.w280 .powered-by span {
+  display: none;
+}
+#campaign-zero-widget.w280 .summary {
+  top: 0;
+}
+
+
+/* 240px sizing */
+#campaign-zero-widget.w240 h2 {
+  font-size: 0.75rem;
+  letter-spacing: 0.05rem;
+}
+#campaign-zero-widget.w240 p.intro {
+  font-size: 0.9rem;
+}
+#campaign-zero-widget.w240 button {
+  font-size: 0.9rem;
+}
+#campaign-zero-widget.w240 .powered-by span {
+  display: none;
+}
+#campaign-zero-widget.w240 .summary {
+  top: 0;
+}
+
+
+/* 220px sizing */
+#campaign-zero-widget.w220 .wrapper {
+  padding: 10px;
+}
+#campaign-zero-widget.w220 p.intro {
+  font-size: 0.8rem;
+}
+#campaign-zero-widget.w220 input {
+  font-size: 0.8rem;
+}
+#campaign-zero-widget.w220 .summary {
+  top: 0;
+}
+#campaign-zero-widget.w220 button {
+  letter-spacing: 0.15rem;
+}
+#campaign-zero-widget.w220 .powered-by span {
+  display: none;
+}
+#campaign-zero-widget.w220 .powered-by {
+  left: 10px;
+  bottom: 10px;
+}
+#campaign-zero-widget.w220 a.add-to-site {
+  right: 10px;
+  bottom: 10px;
+}
+#campaign-zero-widget.w220 button {
+  letter-spacing: 0.1rem;
+  padding: 4px 0;
+}
+#campaign-zero-widget.w220 .powered-by span {
+  display: none;
+}
+
+
+/* 200px sizing */
+#campaign-zero-widget.w200 input {
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  margin-bottom: 0.8rem;
+}
+#campaign-zero-widget.w200 .summary {
+  top: 0;
+}
+#campaign-zero-widget.w200 button {
+  font-size: 0.9rem;
 }

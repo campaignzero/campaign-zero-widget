@@ -9,7 +9,7 @@
   var elementName = 'campaign-zero-widget';
   var loadedCSS = false;
   var loadedJS = false;
-  var version = '1.0.12';
+  var version = '1.0.13';
 
   /** Get reference to self (scriptTag) */
   var allScripts = document.getElementsByTagName('script');
@@ -91,6 +91,10 @@
     // wait for DOM ready to load other script to prevent page blocking
     jQuery(document).ready(function ($) {
 
+      jQuery(window).resize(function() {
+        appWidget.resize();
+      });
+
       var isProduction = (scriptTag.src === 'https://embed.joincampaignzero.org/widget.js');
 
       window.CAMPAIGN_ZERO_WIDGET = {
@@ -114,6 +118,7 @@
         // load bugsnag
         loadScript('https://d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js', function(){
           if (typeof Bugsnag !== 'undefined') {
+            Bugsnag.notifyReleaseStages = [''];
             Bugsnag.releaseStage = window.CAMPAIGN_ZERO_WIDGET.environment;
             Bugsnag.apiKey = '9f6e3446ec521807bdb0cdf646204a85';
             Bugsnag.appVersion = version;
