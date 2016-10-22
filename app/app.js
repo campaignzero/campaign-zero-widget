@@ -546,8 +546,6 @@ var appWidget = {
     var elm = jQuery('#' + this.elementName);
     var width = elm.width();
 
-    console.log('width', width)
-
     elm.removeClass('w200 w220 w240 w280 w300 w320 w380');
 
     if (width <= 200) {

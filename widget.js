@@ -63,6 +63,28 @@
     init();
   }
 
+  /**
+   * Debounce Resize
+   * @param func
+   * @param wait
+   * @param immediate
+   * @returns {Function}
+   */
+  function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+      var context = this, args = arguments;
+      var later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
+  }
+
   /** Initialize widget */
   function init() {
 
@@ -91,9 +113,11 @@
     // wait for DOM ready to load other script to prevent page blocking
     jQuery(document).ready(function ($) {
 
-      jQuery(window).resize(function() {
+      var resizeHandeler = debounce(function() {
         appWidget.resize();
-      });
+      }, 100);
+
+      window.addEventListener('resize', resizeHandeler);
 
       var isProduction = (scriptTag.src === 'https://embed.joincampaignzero.org/widget.js');
 
