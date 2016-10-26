@@ -1,3 +1,5 @@
+![Campaign Zero Logo](https://github.com/campaignzero/artwork/raw/master/logo/campaign-zero/web/306x128/campaign-zero.png "Campaign Zero Logo")
+
 Campaign Zero Widget
 ===
 
