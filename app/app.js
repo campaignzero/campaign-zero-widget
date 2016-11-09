@@ -5,7 +5,8 @@ var appWidget = {
   geoErrorMessage: null,
   timeout: null,
   elementName: 'campaign-zero-widget',
-  storedResponse: null,
+  storedResponse: {},
+  settings: window.CAMPAIGN_ZERO_WIDGET,
 
   /**
    * Track Event using Google Analytics
@@ -107,7 +108,8 @@ var appWidget = {
    */
   getRepresentatives: function(geoLocation, zipCode){
 
-    var jsonpUrl = window.CAMPAIGN_ZERO_WIDGET.base + 'legislators.php';
+    var jsonpUrl = appWidget.settings.api.base + 'legislators/';
+
     if(geoLocation){
       jsonpUrl += '?latitude=' + geoLocation.latitude + '&longitude=' + geoLocation.longitude;
       appWidget.trackEvent('Fetch', 'Reps Geo', geoLocation.latitude + ',' + geoLocation.longitude);
@@ -118,7 +120,7 @@ var appWidget = {
       return false;
     }
 
-    var self = this;
+    jsonpUrl += '&apikey=' + appWidget.settings.api.key;
 
     jQuery.ajax({
       url: jsonpUrl,
@@ -126,22 +128,56 @@ var appWidget = {
       dataType: 'json',
       success: function(response) {
         if(response && response.error){
-          self.showError(response.error);
-          appWidget.trackEvent('Error', 'Reps Error', response.error);
+          appWidget.showError(response.errors[0]);
+          appWidget.trackEvent('Error', 'Reps Error', response.errors);
 
           if (typeof Bugsnag !== 'undefined') {
             Bugsnag.notify('getRepresentativesError', response);
           }
         } else {
-          self.storedResponse = response;
-          self.generateResults(response);
+
+          appWidget.getBills(response.data.results[0].state);
+          appWidget.getPoliceKillings();
+
+          appWidget.storedResponse = response.data;
+          appWidget.generateResults(response.data);
         }
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        self.showError('ERROR: ' + errorThrown);
+        appWidget.showError('ERROR: ' + errorThrown);
         appWidget.trackEvent('Error', 'Reps Error', errorThrown);
       }
     });
+  },
+
+  getBills: function (state) {
+    var jsonpUrl = appWidget.settings.api.base + 'bills/?state=' + state + '&apikey=' + appWidget.settings.api.key;
+
+    jQuery.ajax({
+      url: jsonpUrl,
+      type: 'GET',
+      dataType: 'json',
+      success: function(response) {
+        if(response && response.error){
+          appWidget.showError(response.errors[0]);
+          appWidget.trackEvent('Error', 'Reps Error', response.errors);
+
+          if (typeof Bugsnag !== 'undefined') {
+            Bugsnag.notify('getRepresentativesError', response);
+          }
+          appWidget.storedResponse.bills = {};
+        } else {
+          appWidget.storedResponse.bills = response.data;
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        appWidget.showError('ERROR: ' + errorThrown);
+        appWidget.trackEvent('Error', 'Reps Error', errorThrown);
+      }
+    });
+  },
+  getPoliceKillings: function () {
+    appWidget.storedResponse.killings = {};
   },
 
   /**
@@ -461,7 +497,7 @@ var appWidget = {
    * @returns {string}
    */
   templateBills: function(bills, rep_id){
-
+    console.log('bills', bills);
     var html = '';
 
     if( !bills || bills.length === 0) {
@@ -476,9 +512,9 @@ var appWidget = {
 
       for(var i = 0; i < bills.length; i++){
         if(bills[i].status === 'considering'){
-          html = html.concat('<div class="support"><span class="status ' + bills[i].status + '">' + bills[i].status + '</span> <a target="_blank" rel="noopener" href="' + bills[i].url + '">' + bills[i].bill + '</a> ' + bills[i].label + '</div>');
+          html = html.concat('<div class="support"><span class="status ' + bills[i].status + '">' + bills[i].status + '</span> <a target="_blank" rel="noopener" href="' + bills[i].details_url + '">' + bills[i].bill_id + '</a> ' + bills[i].short_description + '</div>');
         } else {
-          var billID = bills[i].bill;
+          var billID = bills[i].bill_id;
           setTimeout(function(){
             jQuery('#widget-bill-results').append('<div id="loading-results" class="support text-center"><i class="fa fa-spinner fa-pulse fa-fw"></i> Checking status of ' + billID + ' ...</div>');
           }, 100);
@@ -488,12 +524,12 @@ var appWidget = {
               jQuery('#loading-results').remove();
             }, 500);
             var label = (status !== 'unknown') ? status : 'did not vote';
-            jQuery('#widget-bill-results').append('<div class="support"><span class="status ' + status + ' ' + bill.progress + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> ' + bill.label + '</div>');
+            jQuery('#widget-bill-results').append('<div class="support"><span class="status ' + status + ' ' + bill.progress + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.details_url + '">' + bill.bill_id + '</a> ' + bill.short_description + '</div>');
             jQuery('#widget-bill-results a').click(function(){
               appWidget.trackEvent('Nav', 'Bill Opened (State)', bill.state);
               appWidget.trackEvent('Nav', 'Bill Opened (Status)', status);
-              appWidget.trackEvent('Nav', 'Bill Opened (Bill)', bill.bill);
-              appWidget.trackEvent('Nav', 'Bill Opened (Session)', bill.session);
+              appWidget.trackEvent('Nav', 'Bill Opened (Bill)', bill.bill_id);
+              appWidget.trackEvent('Nav', 'Bill Opened (Session)', bill.session_id);
             });
           });
         }
@@ -510,14 +546,14 @@ var appWidget = {
    * @param callback
    */
   voteStatus: function(bill, rep_id, callback){
-    var jsonpUrl = window.CAMPAIGN_ZERO_WIDGET.base + 'bills.php?state=' + bill.state + '&session=' + bill.session + '&bill=' + bill.bill + '&rep=' + rep_id;
+    var jsonpUrl = appWidget.settings.api.base + 'bills/?state=' + bill.state + '&sessionId=' + bill.session_id + '&billId=' + bill.bill_id + '&repId=' + rep_id + '&apikey=' + appWidget.settings.api.key;
 
-    $.when( jQuery.ajax(jsonpUrl) ).then(function( data ) {
-      appWidget.trackEvent('Vote', 'Status', data.results.status);
+    $.when( jQuery.ajax(jsonpUrl) ).then(function( response ) {
+      appWidget.trackEvent('Vote', 'Status', response.data[bill.chamber][0].vote);
       appWidget.trackEvent('Vote', 'Bill', bill.bill);
       appWidget.trackEvent('Vote', 'State', bill.state);
       appWidget.trackEvent('Vote', 'Session', bill.session);
-      return callback(bill, data.results.status);
+      return callback(bill, response.data[bill.chamber][0].vote);
     });
   },
 

@@ -9,7 +9,7 @@
   var elementName = 'campaign-zero-widget';
   var loadedCSS = false;
   var loadedJS = false;
-  var version = '1.0.13';
+  var version = '1.1.0';
 
   /** Get reference to self (scriptTag) */
   var allScripts = document.getElementsByTagName('script');
@@ -124,6 +124,10 @@
       window.CAMPAIGN_ZERO_WIDGET = {
         environment: isProduction ? 'production' : 'development',
         base: isProduction ? 'https://embed.joincampaignzero.org/app/' : './app/',
+        api: {
+          base: isProduction ? 'https://api.joincampaignzero.org/v1/' : 'http://127.0.0.1:5000/v1/',
+          key: '7E07D864-209A-F9E4-819F-2DD7E76B6F24'
+        },
         version: version
       };
 
