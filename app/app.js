@@ -497,7 +497,6 @@ var appWidget = {
    * @returns {string}
    */
   templateBills: function(bills, rep_id){
-    console.log('bills', bills);
     var html = '';
 
     if( !bills || bills.length === 0) {
