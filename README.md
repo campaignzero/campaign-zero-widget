@@ -47,3 +47,13 @@ Demos
 
 * [DEMO](https://embed.joincampaignzero.org/plain.html): Widget using just the script tag
 * [DEMO](https://embed.joincampaignzero.org/sample.html): Widget using custom placement ( with surrounding HTML )
+
+
+Developers
+---
+
+This Widget gets it's data from our [Campaign Zero API](https://github.com/campaignzero/api).  
+
+Both this Widget and its API are open for Developer Contribution.
+
+If you wish to contribute to Campaign Zero development, you will need to request an API Key from [Peter Schmalfeldt](https://twitter.com/mrmidi).
