@@ -3,6 +3,8 @@
 Campaign Zero Widget
 ===
 
+![campaign-zero](https://cloud.githubusercontent.com/assets/508411/20238410/f639d34e-a8b8-11e6-9aeb-4a1169b6b8ce.gif)
+
 Usage Instructions
 ---
 
