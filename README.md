@@ -3,7 +3,10 @@
 Campaign Zero Widget
 ===
 
-![campaign-zero](https://cloud.githubusercontent.com/assets/508411/20238410/f639d34e-a8b8-11e6-9aeb-4a1169b6b8ce.gif)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://raw.githubusercontent.com/campaignzero/campaign-zero-widget/master/LICENSE)  [![GitHub contributors](https://img.shields.io/github/contributors/campaignzero/campaign-zero-widget.svg)](https://github.com/campaignzero/campaign-zero-widget/graphs/contributors)
+
+![Demo](https://cloud.githubusercontent.com/assets/508411/20238410/f639d34e-a8b8-11e6-9aeb-4a1169b6b8ce.gif "Demo")
+
 
 Usage Instructions
 ---
@@ -38,18 +41,61 @@ If you are using something like WordPress that just asks you for the URL for the
 https://embed.joincampaignzero.org/widget.js
 ```
 
-If you are using Firefox or Internet Explorer, you can use the following code:
+For browsers that let you use iFrames, you can also use:
 
+#### XXXS - 200 x 345:
+
+```html
+<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="200" height="345" frameborder="0"></iframe>
 ```
-<iframe src="https://embed.joincampaignzero.org/plain.html" width="100%" height="400px" style="border:0"></iframe>
+
+#### XXS - 220 x 345:
+
+```html
+<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="220" height="345" frameborder="0"></iframe>
 ```
+
+#### XS - 240 x 345:
+
+```html
+<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="240" height="345" frameborder="0"></iframe>
+```
+
+#### S - 280 x 345:
+
+```html
+<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="280" height="345" frameborder="0"></iframe>
+```
+
+#### M - 300 x 345:
+
+```html
+<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="300" height="345" frameborder="0"></iframe>
+```
+
+#### L - 320 x 345:
+
+```html
+<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="320" height="345" frameborder="0"></iframe>
+```
+
+#### XL - 380 x 345:
+
+```html
+<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="400" height="380" frameborder="0"></iframe>
+```
+
+#### XXL - 400 x 345:
+
+```html
+<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="400" height="380" frameborder="0"></iframe>
+```
+
 
 Demos
 ---
 
-* [DEMO](https://embed.joincampaignzero.org/plain.html): Widget using just the script tag
-* [DEMO](https://embed.joincampaignzero.org/sample.html): Widget using custom placement ( with surrounding HTML )
-
+* [DEMO](https://embed.joincampaignzero.org)
 
 Developers
 ---
