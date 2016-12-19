@@ -4,6 +4,7 @@ var appWidget = {
   geoLocation: {},
   geoErrorMessage: null,
   timeout: null,
+  promptedCityData: false,
   elementName: 'campaign-zero-widget',
   storedResponse: {},
   settings: window.CAMPAIGN_ZERO_WIDGET,
@@ -141,8 +142,10 @@ var appWidget = {
             Bugsnag.notify('getRepresentativesError', response);
           }
         } else if(response.data.results && response.data.results && response.data.results.length > 0) {
+
           appWidget.getBills(response.data.results[0].state);
-          appWidget.getPoliceKillings();
+          appWidget.getPoliceKillings(response.data.results[0].state);
+          appWidget.detectSupportedCity(response.data.request.state, response.data.request.city);
 
           appWidget.storedResponse = response.data;
 
@@ -161,6 +164,10 @@ var appWidget = {
     });
   },
 
+  /**
+   * Get Bills for given State
+   * @param state
+   */
   getBills: function (state) {
     var jsonpUrl = appWidget.settings.api.base + 'bills/?state=' + state + '&apikey=' + appWidget.settings.api.key;
 
@@ -188,6 +195,44 @@ var appWidget = {
     });
   },
 
+  /**
+   * Detect if Current City & State are supported for City Council Data
+   * @param state
+   * @param city
+   */
+  detectSupportedCity: function (state, city) {
+    appWidget.storedResponse.supportedCity = false;
+
+    var cleanState = state.toLowerCase();
+    var cleanCity = city.toLowerCase().replace(/[^a-z- ]/gi, '').replace(/ /gi, '-');
+
+    var jsonpUrl = appWidget.settings.api.base + 'city-council/' + cleanState + '/' + cleanCity + '?apikey=' + appWidget.settings.api.key;
+
+    jQuery.ajax({
+      url: jsonpUrl,
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        if(response && response.error) {
+          appWidget.trackEvent('Error', 'Support City Error', response.errors);
+
+          if (typeof Bugsnag !== 'undefined') {
+            Bugsnag.notify('detectSupportedCityError', response);
+          }
+          appWidget.storedResponse.supportedCity = false;
+        } else {
+          appWidget.storedResponse.supportedCity = response.data.supported;
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        appWidget.trackEvent('Error', 'Support City Error', errorThrown);
+      }
+    });
+  },
+
+  /**
+   * Get Police Killings
+   */
   getPoliceKillings: function () {
     appWidget.storedResponse.killings = {};
   },
@@ -254,8 +299,18 @@ var appWidget = {
               jQuery('.representative-summary .summary-details .district', $li).text(rep.district);
               jQuery('.representative-summary .summary-details .chamber', $li).text(rep.chamber);
 
+              // Hide Element Not Needed
+              if (!rep.district || rep.district === '') {
+                jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
+              }
+
+              if (!rep.chamber || rep.chamber === '') {
+                jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
+              }
+
               if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
-                jQuery('.representative-summary .avatar', $li).css('background-image', 'url(https://proxy.joincampaignzero.org/' + rep.photo_url + ')');
+                var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
+                jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
               }
 
               jQuery('ul.representatives', elm).append($li);
@@ -293,6 +348,29 @@ var appWidget = {
             appWidget.init();
             appWidget.trackEvent('Nav', 'Back Button', 'Main Page');
           });
+
+          if (appWidget.storedResponse.supportedCity && !appWidget.promptedCityData) {
+            appWidget.promptedCityData = true;
+
+            jQuery('.supported-cty', elm).show();
+
+            jQuery('a.modal-close', elm).off('click.widget');
+            jQuery('a.modal-close', elm).on('click.widget', function () {
+              jQuery('.supported-cty', elm).hide();
+              appWidget.trackEvent('Nav', 'Local Data Modal', 'Closed');
+            });
+
+            jQuery('#address-lookup', elm).off('submit.widget');
+            jQuery('#address-lookup', elm).on('submit.widget', function () {
+              jQuery('.supported-cty', elm).hide();
+              appWidget.trackEvent('Nav', 'Local Data Modal', 'Closed');
+
+              var address = jQuery('#address', elm).val();
+
+              appWidget.geoCodeAddress(address);
+              return false;
+            });
+          }
         });
       });
     }
@@ -348,9 +426,13 @@ var appWidget = {
 
       var status = appWidget.templateBills(bills, rep.id);
 
+      if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
+        var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
+        jQuery('#rep-image', elm).addClass(rep.party.toLowerCase()).css('background-image', 'url(' + image + ')');
+      }
+
       // Replace Template Data
       jQuery('.representative', elm).css('background-image', 'url(https://maps.googleapis.com/maps/api/staticmap?center=' + appWidget.storedResponse.request.latitude + ',' + appWidget.storedResponse.request.longitude + '&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa&key=AIzaSyBlgFUsVry1HfM7cbWEfNmbu_RSPNQin9o)');
-      jQuery('#rep-image', elm).addClass(rep.party.toLowerCase()).css('background-image', 'url(https://proxy.joincampaignzero.org/' + rep.photo_url + ')');
       jQuery('.summary-name', elm).addClass(rep.party.toLowerCase()).text(rep.full_name);
       jQuery('.summary-details .party', elm).text(rep.party);
       jQuery('.summary-details .district', elm).text(rep.district);
@@ -359,6 +441,15 @@ var appWidget = {
 
       jQuery('.widget-modal .phone-numbers', elm).html(phoneNumbers);
       jQuery('.widget-modal .email-addresses', elm).html(emailAddress);
+
+      // Hide Element Not Needed
+      if (!rep.district || rep.district === '') {
+        jQuery('.summary-details .district, .summary-details .district-label', elm).hide();
+      }
+
+      if (!rep.chamber || rep.chamber === '') {
+        jQuery('.summary-details .chamber, .summary-details .chamber-label', elm).hide();
+      }
 
       // Event Handlers
       jQuery('a', elm).off('click.widget');
@@ -423,6 +514,127 @@ var appWidget = {
   },
 
   /**
+   * Geocode Address
+   * @param address
+   * @param city
+   * @param state
+   */
+  geoCodeAddress: function (address) {
+    var cleanAddress = address.replace(/ /g, '+');
+    var cleanCity = appWidget.storedResponse.request.city.replace(/ /g, '+');
+    var cleanState = appWidget.storedResponse.request.state;
+
+    var jsonpUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + cleanAddress + ',+' + cleanCity + ',+' + cleanState + '&key=AIzaSyBlgFUsVry1HfM7cbWEfNmbu_RSPNQin9o'
+
+    jQuery.ajax({
+      url: jsonpUrl,
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        if (response.status && response.status === 'OK' && response && response.results && response.results.length > 0) {
+          appWidget.getCityCouncilData(response.results[0].geometry.location);
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        appWidget.trackEvent('Error', 'Geo Code Address Error', errorThrown);
+      }
+    });
+  },
+
+  /**
+   * Get City Council Data
+   * @param location
+   */
+  getCityCouncilData: function (location) {
+
+    var cleanCity = appWidget.storedResponse.request.city.toLowerCase().replace(/[^a-z- ]/gi, '').replace(/ /gi, '-');
+    var cleanState = appWidget.storedResponse.request.state.toLowerCase();
+
+    var jsonpUrl = appWidget.settings.api.base + 'city-council/' + cleanState + '/' + cleanCity + '?latitude=' + location.lat + '&longitude=' + location.lng + '&apikey=' + appWidget.settings.api.key;
+
+    jQuery.ajax({
+      url: jsonpUrl,
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        console.log('getCityCouncilData', response);
+        if(response && response.error) {
+          appWidget.trackEvent('Error', 'Get City Council Data Error', response.errors);
+
+          if (typeof Bugsnag !== 'undefined') {
+            Bugsnag.notify('detectSupportedCityError', response);
+          }
+        } else {
+          if (response.data && response.data.mayor) {
+            var mayor = response.data.mayor;
+
+            appWidget.storedResponse.results.push({
+              full_name: 'Mayor ' + mayor.representative,
+              party: mayor.party,
+              district: '',
+              chamber: '',
+              photo_url: (mayor.photo_url) ? mayor.photo_url : null,
+              state: appWidget.storedResponse.request.state,
+              offices: [
+                {
+                  name: 'City Council',
+                  email: mayor.email,
+                  phone: mayor.phone
+                }
+              ]
+            });
+          }
+
+          if (response.data && response.data.district_attorney) {
+            var district_attorney = response.data.district_attorney;
+
+            appWidget.storedResponse.results.push({
+              full_name: 'D.A. ' + district_attorney.representative,
+              party: district_attorney.party,
+              district: '',
+              chamber: '',
+              photo_url: (district_attorney.photo_url) ? district_attorney.photo_url : null,
+              state: appWidget.storedResponse.request.state,
+              offices: [
+                {
+                  name: 'City Council',
+                  email: district_attorney.email,
+                  phone: district_attorney.phone
+                }
+              ]
+            });
+          }
+
+          if (response.data && response.data.council_member) {
+            var council_member = response.data.council_member;
+
+            appWidget.storedResponse.results.push({
+              full_name: 'Councilman ' + council_member.representative,
+              party: council_member.party,
+              district: council_member.district_number,
+              chamber: '',
+              photo_url: (council_member.photo_url) ? council_member.photo_url : null,
+              state: appWidget.storedResponse.request.state,
+              offices: [
+                {
+                  name: 'City Council',
+                  email: council_member.email,
+                  phone: council_member.phone
+                }
+              ]
+            });
+          }
+
+          appWidget.generateResults(appWidget.storedResponse);
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        appWidget.trackEvent('Error', 'Geo Code Address Error', errorThrown);
+      }
+    });
+  },
+
+  /**
    * HTML Template for Bill Details
    * @param bills
    * @param rep_id
@@ -448,18 +660,18 @@ var appWidget = {
         } else {
           var billID = bills[i].bill_id;
           setTimeout(function () {
-            jQuery('#widget-bill-results').append('<div id="loading-results" class="support text-center"><i class="fa fa-spinner fa-pulse fa-fw"></i> Checking status of ' + billID + ' ...</div>');
+            jQuery('#widget-bill-results', elm).append('<div id="loading-results" class="support text-center"><i class="fa fa-spinner fa-pulse fa-fw"></i> Checking status of ' + billID + ' ...</div>');
           }, 100);
           appWidget.voteStatus(bills[i], rep_id, function (bill, status) {
-            jQuery('#loading-results').remove();
+            jQuery('#loading-results', elm).remove();
             setTimeout(function () {
-              jQuery('#loading-results').remove();
+              jQuery('#loading-results', elm).remove();
             }, 500);
             var label = (status !== 'unknown') ? status : 'did not vote';
-            jQuery('#widget-bill-results').append('<div class="support"><span class="status ' + status + ' ' + bill.progress + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.details_url + '">' + bill.bill_id + '</a> ' + bill.short_description + '</div>');
+            jQuery('#widget-bill-results', elm).append('<div class="support"><span class="status ' + status + ' ' + bill.progress + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.details_url + '">' + bill.bill_id + '</a> ' + bill.short_description + '</div>');
 
             jQuery('#widget-bill-results a', elm).off('click.widget');
-            jQuery('#widget-bill-results a').on('click.widget', function () {
+            jQuery('#widget-bill-results a', elm).on('click.widget', function () {
               appWidget.trackEvent('Nav', 'Bill Opened (State)', bill.state);
               appWidget.trackEvent('Nav', 'Bill Opened (Status)', status);
               appWidget.trackEvent('Nav', 'Bill Opened (Bill)', bill.bill_id);
@@ -512,6 +724,9 @@ var appWidget = {
     $('.widget-modal', elm).fadeOut(250);
   },
 
+  /**
+   * Handle Widget Resize
+   */
   resize: function () {
     var elm = jQuery('#' + appWidget.elementName);
     var width = elm.width();
@@ -522,27 +737,27 @@ var appWidget = {
       elm.addClass('w200');
     }
 
-    if (width <= 220) {
+    if (width > 200 && width <= 220) {
       elm.addClass('w220');
     }
 
-    if (width <= 240) {
+    if (width > 220 && width <= 240) {
       elm.addClass('w240');
     }
 
-    if (width <= 280) {
+    if (width > 240 && width <= 280) {
       elm.addClass('w280');
     }
 
-    if (width <= 300) {
+    if (width > 280 && width <= 300) {
       elm.addClass('w300');
     }
 
-    if (width <= 320) {
+    if (width > 300 && width <= 320) {
       elm.addClass('w320');
     }
 
-    if (width <= 380) {
+    if (width >= 320) {
       elm.addClass('w380');
     }
   },
@@ -553,6 +768,8 @@ var appWidget = {
   init: function () {
     var elm = jQuery('#' + appWidget.elementName);
     var note = (appWidget.supportsGeolocation()) ? 'leave empty to use your current location' : '';
+
+    appWidget.promptedCityData = false;
 
     jQuery(elm).html('');
     jQuery(elm).load(appWidget.settings.base + 'template/form.html', function () {

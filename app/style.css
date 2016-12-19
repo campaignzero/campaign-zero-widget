@@ -93,6 +93,26 @@
       outline: 0; }
   #campaign-zero-widget .wrapper {
     padding: 20px; }
+    #campaign-zero-widget .wrapper .supported-cty {
+      position: absolute;
+      z-index: 500;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: #FFF;
+      margin: 10px;
+      padding: 30px;
+      display: none; }
+      #campaign-zero-widget .wrapper .supported-cty .modal-close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 16px;
+        color: #999;
+        font-size: 20px; }
+      #campaign-zero-widget .wrapper .supported-cty h2, #campaign-zero-widget .wrapper .supported-cty p, #campaign-zero-widget .wrapper .supported-cty input {
+        margin-bottom: 20px; }
     #campaign-zero-widget .wrapper p.no-reps {
       margin-top: 30px;
       font-size: 1.5rem;
@@ -133,6 +153,8 @@
     #campaign-zero-widget .note.error {
       color: #CA4141;
       font-weight: 400; }
+  #campaign-zero-widget .district-label, #campaign-zero-widget .chamber-label {
+    margin-left: 10px; }
   #campaign-zero-widget .powered-by {
     position: absolute;
     bottom: 16px;
@@ -151,10 +173,11 @@
       #campaign-zero-widget .powered-by.back a {
         color: #272727;
         text-decoration: none;
-        background: rgba(255, 255, 255, 0.5);
+        background: #FFF;
         padding: 4px 12px 4px 10px; }
         #campaign-zero-widget .powered-by.back a:hover {
-          background: rgba(255, 255, 255, 0.9); }
+          background: #272727;
+          color: #FFF; }
   #campaign-zero-widget a.add-to-site {
     position: absolute;
     bottom: 16px;
@@ -208,6 +231,11 @@
         color: #c96060; }
       #campaign-zero-widget .summary .summary-name.democrat, #campaign-zero-widget .summary .summary-name.democratic {
         color: #236FBD; }
+  #campaign-zero-widget .representatives {
+    max-height: 265px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch; }
   #campaign-zero-widget .representative .summary-name {
     font-weight: 500;
     font-size: 1.8rem;
@@ -245,6 +273,11 @@
         border-right: none;
         border-top-right-radius: 4px;
         border-bottom-right-radius: 4px; }
+  #campaign-zero-widget .representative #widget-bill-results {
+    max-height: 110px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; }
   #campaign-zero-widget .representative .support {
     font-weight: 400;
     color: #272727;
@@ -327,24 +360,76 @@
       #campaign-zero-widget .widget-modal .widget-modal-close:hover {
         color: #333; }
   #campaign-zero-widget.w200 input {
-    font-size: 0.8rem;
-    padding: 4px 8px;
-    margin-bottom: 0.8rem; }
+    font-size: 0.8rem; }
   #campaign-zero-widget.w200 button {
+    padding: 4px 0;
+    font-size: 0.9rem;
+    letter-spacing: 0.05rem; }
+  #campaign-zero-widget.w200 h2 {
+    font-size: 0.75rem;
+    letter-spacing: 0.05rem; }
+  #campaign-zero-widget.w200 .wrapper {
+    padding: 10px; }
+  #campaign-zero-widget.w200 p.intro {
+    font-size: 0.8rem; }
+  #campaign-zero-widget.w200 .representatives .avatar {
+    height: 30px;
+    width: 30px;
+    top: 0;
+    margin-right: 8px; }
+  #campaign-zero-widget.w200 .representatives .summary {
+    top: 0;
+    overflow: hidden;
+    max-width: calc(100% - 55px); }
+  #campaign-zero-widget.w200 .powered-by {
+    left: 10px;
+    bottom: 10px; }
+    #campaign-zero-widget.w200 .powered-by span {
+      display: none; }
+  #campaign-zero-widget.w200 .representative .summary-name {
+    font-size: 1.2rem; }
+  #campaign-zero-widget.w200 .representative a.action-button {
+    padding: 6px 15px;
+    font-size: 14px; }
+  #campaign-zero-widget.w200 .representative .support {
+    font-size: 0.7rem; }
+  #campaign-zero-widget.w200 a.add-to-site {
+    right: 10px;
+    bottom: 10px; }
+  #campaign-zero-widget.w200 .supported-cty .modal-close {
+    padding: 12px;
+    font-size: 16px; }
+  #campaign-zero-widget.w200 .supported-cty h2, #campaign-zero-widget.w200 .supported-cty p, #campaign-zero-widget.w200 .supported-cty input {
+    margin-bottom: 16px; }
+  #campaign-zero-widget.w200 .supported-cty p {
+    line-height: 14px; }
+  #campaign-zero-widget.w200 .supported-cty button {
+    letter-spacing: 0rem;
+    font-size: 1rem; }
+  #campaign-zero-widget.w200 .supported-cty h2 {
     font-size: 0.9rem; }
-  #campaign-zero-widget.w200 .summary {
-    top: 0; }
   #campaign-zero-widget.w220 input {
     font-size: 0.8rem; }
   #campaign-zero-widget.w220 button {
-    letter-spacing: 0.1rem;
-    padding: 4px 0; }
+    padding: 4px 0;
+    font-size: 0.9rem;
+    letter-spacing: 0.05rem; }
+  #campaign-zero-widget.w220 h2 {
+    font-size: 0.75rem;
+    letter-spacing: 0.05rem; }
   #campaign-zero-widget.w220 .wrapper {
     padding: 10px; }
   #campaign-zero-widget.w220 p.intro {
     font-size: 0.8rem; }
-  #campaign-zero-widget.w220 .summary {
-    top: 0; }
+  #campaign-zero-widget.w220 .representatives .avatar {
+    height: 30px;
+    width: 30px;
+    top: 0;
+    margin-right: 8px; }
+  #campaign-zero-widget.w220 .representatives .summary {
+    top: 0;
+    overflow: hidden;
+    max-width: calc(100% - 55px); }
   #campaign-zero-widget.w220 .powered-by {
     left: 10px;
     bottom: 10px; }
@@ -353,6 +438,25 @@
   #campaign-zero-widget.w220 a.add-to-site {
     right: 10px;
     bottom: 10px; }
+  #campaign-zero-widget.w220 .representative .summary-name {
+    font-size: 1.3rem; }
+  #campaign-zero-widget.w220 .representative a.action-button {
+    padding: 6px 15px;
+    font-size: 16px; }
+  #campaign-zero-widget.w220 .representative .support {
+    font-size: 0.7rem; }
+  #campaign-zero-widget.w220 .supported-cty .modal-close {
+    padding: 12px;
+    font-size: 16px; }
+  #campaign-zero-widget.w220 .supported-cty h2, #campaign-zero-widget.w220 .supported-cty p, #campaign-zero-widget.w220 .supported-cty input {
+    margin-bottom: 16px; }
+  #campaign-zero-widget.w220 .supported-cty p {
+    line-height: 14px; }
+  #campaign-zero-widget.w220 .supported-cty button {
+    letter-spacing: 0rem;
+    font-size: 1rem; }
+  #campaign-zero-widget.w220 .supported-cty h2 {
+    font-size: 0.9rem; }
   #campaign-zero-widget.w240 input {
     font-size: 1rem; }
   #campaign-zero-widget.w240 button {
@@ -365,8 +469,31 @@
     font-size: 0.9rem; }
   #campaign-zero-widget.w240 .powered-by span {
     display: none; }
-  #campaign-zero-widget.w240 .summary {
-    top: 0; }
+  #campaign-zero-widget.w240 .representatives .avatar {
+    height: 30px;
+    width: 30px;
+    top: 0;
+    margin-right: 8px; }
+  #campaign-zero-widget.w240 .representatives .summary {
+    top: 0;
+    overflow: hidden;
+    max-width: calc(100% - 55px); }
+  #campaign-zero-widget.w240 .representative .summary-name {
+    font-size: 1.4rem; }
+  #campaign-zero-widget.w240 .representative a.action-button {
+    padding: 8px 14px;
+    font-size: 18px; }
+  #campaign-zero-widget.w240 .representative .support {
+    font-size: 0.8rem; }
+  #campaign-zero-widget.w240 .supported-cty .modal-close {
+    padding: 12px;
+    font-size: 16px; }
+  #campaign-zero-widget.w240 .supported-cty h2, #campaign-zero-widget.w240 .supported-cty p, #campaign-zero-widget.w240 .supported-cty input {
+    margin-bottom: 16px; }
+  #campaign-zero-widget.w240 .supported-cty p {
+    line-height: 14px; }
+  #campaign-zero-widget.w240 .supported-cty h2 {
+    font-size: 1.25rem; }
   #campaign-zero-widget.w280 button {
     font-size: 0.9rem; }
   #campaign-zero-widget.w280 h2 {
@@ -376,8 +503,25 @@
     font-size: 1rem; }
   #campaign-zero-widget.w280 .powered-by span {
     display: none; }
-  #campaign-zero-widget.w280 .summary {
-    top: 0; }
+  #campaign-zero-widget.w280 .representatives .avatar {
+    height: 30px;
+    width: 30px;
+    top: 0;
+    margin-right: 8px; }
+  #campaign-zero-widget.w280 .representatives .summary {
+    top: 0;
+    overflow: hidden;
+    max-width: calc(100% - 55px); }
+  #campaign-zero-widget.w280 .representative .summary-name {
+    font-size: 1.5rem; }
+  #campaign-zero-widget.w280 .representative a.action-button {
+    padding: 10px 20px; }
+  #campaign-zero-widget.w280 .representative .support {
+    font-size: 0.9rem; }
+  #campaign-zero-widget.w280 .supported-cty h2, #campaign-zero-widget.w280 .supported-cty p, #campaign-zero-widget.w280 .supported-cty input {
+    margin-bottom: 16px; }
+  #campaign-zero-widget.w280 .supported-cty h2 {
+    font-size: 1.25rem; }
   #campaign-zero-widget.w300 button {
     font-size: 1.2rem; }
   #campaign-zero-widget.w300 h2 {
@@ -386,35 +530,43 @@
     font-size: 1.2rem; }
   #campaign-zero-widget.w300 a.add-to-site span {
     display: none; }
-  #campaign-zero-widget.w300 .summary {
-    top: 0; }
+  #campaign-zero-widget.w300 .representatives .avatar {
+    margin-right: 10px; }
+  #campaign-zero-widget.w300 .representatives .summary {
+    top: 0;
+    overflow: hidden;
+    max-width: calc(100% - 55px); }
+  #campaign-zero-widget.w300 .representative .summary-name {
+    font-size: 1.6rem; }
+  #campaign-zero-widget.w300 .representative a.action-button {
+    padding: 12px 22px; }
+  #campaign-zero-widget.w300 .supported-cty h2 {
+    font-size: 1.25rem; }
   #campaign-zero-widget.w320 h2 {
     font-size: 0.8rem; }
   #campaign-zero-widget.w320 p.intro {
     font-size: 1.2rem; }
+  #campaign-zero-widget.w320 .representatives .summary {
+    max-width: calc(100% - 60px); }
   #campaign-zero-widget.w320 .representative a.action-button {
-    padding: 6px 15px; }
-  #campaign-zero-widget.w320 .representative .support {
-    font-size: 0.7rem; }
+    padding: 12px 24px; }
   #campaign-zero-widget.w320 .summary .summary-details {
     font-size: 0.6rem; }
     #campaign-zero-widget.w320 .summary .summary-details strong {
       font-size: 0.6rem; }
   #campaign-zero-widget.w320 .summary .summary-name, #campaign-zero-widget.w320 .summary .summary-details {
     max-width: 180px; }
-  #campaign-zero-widget.w380 h2 {
-    font-size: 0.8rem; }
-  #campaign-zero-widget.w380 p.intro {
-    font-size: 1.3rem; }
+  #campaign-zero-widget.w320 .supported-cty h2 {
+    font-size: 1.25rem; }
   #campaign-zero-widget.w380 .summary .summary-name, #campaign-zero-widget.w380 .summary .summary-details {
     max-width: 235px; }
-  #campaign-zero-widget.w380 .representative a {
-    min-width: 40px;
-    padding: 1px 3px;
-    font-size: 0.6rem; }
-    #campaign-zero-widget.w380 .representative a.action-button {
-      padding: 6px 15px; }
+  #campaign-zero-widget.w380 .representatives .summary {
+    max-width: calc(100% - 60px); }
+  #campaign-zero-widget.w380 .representative a.action-button {
+    padding: 12px 26px; }
   #campaign-zero-widget.w380 .representative .support .status {
     width: 60px;
     padding: 1px 2px;
     font-size: 0.6rem; }
+  #campaign-zero-widget.w380 .supported-cty h2 {
+    font-size: 1.25rem; }

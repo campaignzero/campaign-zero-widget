@@ -113,6 +113,32 @@
   .wrapper {
     padding: 20px;
 
+    .supported-cty {
+      position: absolute;
+      z-index: 500;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: #FFF;
+      margin: 10px;
+      padding: 30px;
+      display: none;
+
+      .modal-close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 16px;
+        color: #999;
+        font-size: 20px;
+      }
+
+      h2, p, input {
+        margin-bottom: 20px;
+      }
+    }
+
     p.no-reps {
       margin-top: 30px;
       font-size: 1.5rem;
@@ -172,6 +198,10 @@
     }
   }
 
+  .district-label, .chamber-label {
+    margin-left: 10px;
+  }
+
   .powered-by {
     position: absolute;
     bottom: 16px;
@@ -198,11 +228,12 @@
       a {
         color: #272727;
         text-decoration: none;
-        background: rgba(255,255,255,0.5);
+        background: #FFF;
         padding: 4px 12px 4px 10px;
 
         &:hover {
-          background: rgba(255,255,255,0.9);
+          background: #272727;
+          color: #FFF;
         }
       }
     }
@@ -283,6 +314,13 @@
     }
   }
 
+  .representatives {
+    max-height: 265px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .representative {
     .summary-name {
       font-weight: 500;
@@ -333,6 +371,12 @@
           border-bottom-right-radius: 4px;
         }
       }
+    }
+    #widget-bill-results {
+      max-height: 110px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     .support {
       font-weight: 400;
@@ -456,14 +500,82 @@
   &.w200 {
     input {
       font-size: 0.8rem;
-      padding: 4px 8px;
-      margin-bottom: 0.8rem;
     }
     button {
+      padding: 4px 0;
       font-size: 0.9rem;
+      letter-spacing: 0.05rem;
     }
-    .summary {
-      top: 0;
+    h2 {
+      font-size: 0.75rem;
+      letter-spacing: 0.05rem;
+    }
+    .wrapper {
+      padding: 10px;
+    }
+    p.intro {
+      font-size: 0.8rem;
+    }
+    .representatives {
+      .avatar {
+        height: 30px;
+        width: 30px;
+        top: 0;
+        margin-right: 8px;
+      }
+      .summary {
+        top: 0;
+        overflow: hidden;
+        max-width: calc(100% - 55px);
+      }
+    }
+    .powered-by {
+      left: 10px;
+      bottom: 10px;
+
+      span {
+        display: none;
+      }
+    }
+    .representative {
+      .summary-name {
+        font-size: 1.2rem;
+      }
+      a.action-button {
+        padding: 6px 15px;
+        font-size: 14px;
+      }
+      .support {
+        font-size: 0.7rem;
+      }
+    }
+    a.add-to-site {
+      right: 10px;
+      bottom: 10px;
+    }
+    .supported-cty {
+
+      .modal-close {
+        padding: 12px;
+        font-size: 16px;
+      }
+
+      h2, p, input {
+        margin-bottom: 16px;
+      }
+
+      p {
+        line-height: 14px;
+      }
+
+      button {
+        letter-spacing: 0rem;
+        font-size: 1rem;
+      }
+
+      h2 {
+        font-size: 0.9rem;
+      }
     }
   }
 
@@ -473,8 +585,13 @@
       font-size: 0.8rem;
     }
     button {
-      letter-spacing: 0.1rem;
       padding: 4px 0;
+      font-size: 0.9rem;
+      letter-spacing: 0.05rem;
+    }
+    h2 {
+      font-size: 0.75rem;
+      letter-spacing: 0.05rem;
     }
     .wrapper {
       padding: 10px;
@@ -482,8 +599,18 @@
     p.intro {
       font-size: 0.8rem;
     }
-    .summary {
-      top: 0;
+    .representatives {
+      .avatar {
+        height: 30px;
+        width: 30px;
+        top: 0;
+        margin-right: 8px;
+      }
+      .summary {
+        top: 0;
+        overflow: hidden;
+        max-width: calc(100% - 55px);
+      }
     }
     .powered-by {
       left: 10px;
@@ -496,6 +623,42 @@
     a.add-to-site {
       right: 10px;
       bottom: 10px;
+    }
+    .representative {
+      .summary-name {
+        font-size: 1.3rem;
+      }
+      a.action-button {
+        padding: 6px 15px;
+        font-size: 16px;
+      }
+      .support {
+        font-size: 0.7rem;
+      }
+    }
+    .supported-cty {
+
+      .modal-close {
+        padding: 12px;
+        font-size: 16px;
+      }
+
+      h2, p, input {
+        margin-bottom: 16px;
+      }
+
+      p {
+        line-height: 14px;
+      }
+
+      button {
+        letter-spacing: 0rem;
+        font-size: 1rem;
+      }
+
+      h2 {
+        font-size: 0.9rem;
+      }
     }
   }
 
@@ -518,8 +681,49 @@
     .powered-by span {
       display: none;
     }
-    .summary {
-      top: 0;
+    .representatives {
+      .avatar {
+        height: 30px;
+        width: 30px;
+        top: 0;
+        margin-right: 8px;
+      }
+      .summary {
+        top: 0;
+        overflow: hidden;
+        max-width: calc(100% - 55px);
+      }
+    }
+    .representative {
+      .summary-name {
+        font-size: 1.4rem;
+      }
+      a.action-button {
+        padding: 8px 14px;
+        font-size: 18px;
+      }
+      .support {
+        font-size: 0.8rem;
+      }
+    }
+    .supported-cty {
+
+      .modal-close {
+        padding: 12px;
+        font-size: 16px;
+      }
+
+      h2, p, input {
+        margin-bottom: 16px;
+      }
+
+      p {
+        line-height: 14px;
+      }
+
+      h2 {
+        font-size: 1.25rem;
+      }
     }
   }
 
@@ -538,8 +742,39 @@
     .powered-by span {
       display: none;
     }
-    .summary {
-      top: 0;
+    .representatives {
+      .avatar {
+        height: 30px;
+        width: 30px;
+        top: 0;
+        margin-right: 8px;
+      }
+      .summary {
+        top: 0;
+        overflow: hidden;
+        max-width: calc(100% - 55px);
+      }
+    }
+    .representative {
+      .summary-name {
+        font-size: 1.5rem;
+      }
+      a.action-button {
+        padding: 10px 20px;
+      }
+      .support {
+        font-size: 0.9rem;
+      }
+    }
+    .supported-cty {
+
+      h2, p, input {
+        margin-bottom: 16px;
+      }
+
+      h2 {
+        font-size: 1.25rem;
+      }
     }
   }
 
@@ -557,8 +792,28 @@
     a.add-to-site span {
       display: none;
     }
-    .summary {
-      top: 0;
+    .representatives {
+      .avatar {
+        margin-right: 10px;
+      }
+      .summary {
+        top: 0;
+        overflow: hidden;
+        max-width: calc(100% - 55px);
+      }
+    }
+    .representative {
+      .summary-name {
+        font-size: 1.6rem;
+      }
+      a.action-button {
+        padding: 12px 22px;
+      }
+    }
+    .supported-cty {
+      h2 {
+        font-size: 1.25rem;
+      }
     }
   }
 
@@ -570,12 +825,14 @@
     p.intro {
       font-size: 1.2rem;
     }
+    .representatives {
+      .summary {
+        max-width: calc(100% - 60px);
+      }
+    }
     .representative {
       a.action-button {
-        padding: 6px 15px;
-      }
-      .support {
-        font-size: 0.7rem;
+        padding: 12px 24px;
       }
     }
     .summary {
@@ -591,30 +848,28 @@
         max-width: 180px;
       }
     }
+    .supported-cty {
+      h2 {
+        font-size: 1.25rem;
+      }
+    }
   }
 
   /* 380px sizing */
   &.w380 {
-    h2 {
-      font-size: 0.8rem;
-    }
-    p.intro {
-      font-size: 1.3rem;
-    }
     .summary {
       .summary-name, .summary-details {
         max-width: 235px;
       }
     }
+    .representatives {
+      .summary {
+        max-width: calc(100% - 60px);
+      }
+    }
     .representative {
-      a {
-        min-width: 40px;
-        padding: 1px 3px;
-        font-size: 0.6rem;
-
-        &.action-button {
-          padding: 6px 15px;
-        }
+      a.action-button {
+        padding: 12px 26px;
       }
 
       .support {
@@ -623,6 +878,11 @@
           padding: 1px 2px;
           font-size: 0.6rem;
         }
+      }
+    }
+    .supported-cty {
+      h2 {
+        font-size: 1.25rem;
       }
     }
   }

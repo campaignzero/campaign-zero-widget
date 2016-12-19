@@ -1,4 +1,13 @@
 <div class="wrapper" style="min-height: 343px; background: center center no-repeat; background-size: cover;">
+  <div class="supported-cty">
+    <a href="javascript:void(0)" class="modal-close"><i class="fa fa-times-circle"></i></a>
+    <h2 class="black">Local Data ?</h2>
+    <p>It looks like we have City Council data for your location.  Please Enter your Street Address if you want to Fetch this Local Data.</p>
+    <form action="#" method="post" name="supported-cty" id="address-lookup">
+      <input type="text" name="address" id="address" placeholder="123 Any Street" onfocus="this.placeholder=''" onblur="this.placeholder='123 Any Street'">
+      <button type="submit">Fetch Data</button>
+    </form>
+  </div>
   <div class="results">
     <h2 class="black">Pick a Representative</h2>
     <ul class="representatives"></ul>

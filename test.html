@@ -16,6 +16,19 @@
 
       /* Page Styles */
 
+      ::-webkit-input-placeholder {
+        color: #666666;
+      }
+      ::-moz-placeholder {
+        color: #666666;
+      }
+      :-ms-input-placeholder {
+        color: #666666;
+      }
+      :-moz-placeholder {
+        color: #666666;
+      }
+
       html, body {
         margin: 0;
         padding: 0;
@@ -55,6 +68,17 @@
         color: lime;
         outline: none;
       }
+
+      .test-bar button.active {
+        color: lime;
+        cursor: default;
+      }
+
+      .test-bar button:disabled {
+        color: #666666;
+        cursor: default;
+      }
+
       .test-bar .split {
         border-left: 1px solid rgba(255, 255, 255, 0.33);
         display: inline-block;
@@ -91,40 +115,41 @@
       iframe {
         display: block;
       }
+      #zipcode {
+        float: left;
+        border: none;
+        background: transparent;
+        color: #FFF;
+        font-size: 20px;
+        width: 72px;
+      }
+      #zipcode:focus {
+        outline: none;
+      }
     </style>
   </head>
   <body>
 
     <div class="test-bar">
 
-      <button onclick="reset(); return false;" onmouseover="updateMessage('Reset Widgets');" onmouseout="updateMessage('');">
-        <i class="material-icons">replay</i>
-      </button>
-
-      <button onclick="playThrough(); return false;" onmouseover="updateMessage('Play Tests');" onmouseout="updateMessage('');">
-        <i class="material-icons">play_circle_outline</i>
-      </button>
-
-      <button onclick="pausePlayThrough(); return false;" onmouseover="updateMessage('Pause Tests');" onmouseout="updateMessage('');">
-        <i class="material-icons">pause_circle_outline</i>
-      </button>
+      <input type="text" name="zipcode" id="zipcode" placeholder="10001" patter="[0-9]{0,5}" maxlength="5" onkeyup="this.value = this.value.replace(/[^0-9]/g, '')" onfocus="this.placeholder=''" onblur="this.placeholder='10001'">
 
       <span class="split"></span>
 
-      <button onclick="reset(); setTimeout(testError, 1000);" onmouseover="updateMessage('Test Invalid Location');" onmouseout="updateMessage('');">
-        <i class="material-icons">error_outline</i>
+      <button class="reset" onclick="reset(); return false;" onmouseover="updateMessage('Reset Widgets');" onmouseout="updateMessage('');">
+        <i class="material-icons">replay</i>
       </button>
 
-      <button onclick="reset(); setTimeout(setZipCode, 1000);" onmouseover="updateMessage('Submit With Location');" onmouseout="updateMessage('');">
-        <i class="material-icons">my_location</i>
+      <button class="set-zip-code" onclick="reset(); setTimeout(setZipCode, 1000); return false;" onmouseover="updateMessage('Submit With Location');" onmouseout="updateMessage('');">
+        <i class="material-icons">pin_drop</i>
       </button>
 
-      <button onclick="reset(); setTimeout(setZipCode, 1000); setTimeout(selectFirstRepresentative, 3000); return false;" onmouseover="updateMessage('Select First Representative');" onmouseout="updateMessage('');">
-        <i class="material-icons">face</i>
+      <button class="select-first-representative" disabled="disabled" onclick="selectFirstRepresentative(); return false;" onmouseover="updateMessage('Select First Representative');" onmouseout="updateMessage('');">
+        <i class="material-icons">person_pin</i>
       </button>
 
-      <button onclick="reset(); setTimeout(setZipCode, 1000); setTimeout(selectSecondRepresentative, 3000); return false;" onmouseover="updateMessage('Select Second Representative');" onmouseout="updateMessage('');">
-        <i class="material-icons">insert_emoticon</i>
+      <button class="select-second-representative" disabled="disabled" onclick="selectSecondRepresentative(); return false;" onmouseover="updateMessage('Select Second Representative');" onmouseout="updateMessage('');">
+        <i class="material-icons">person_pin</i>
       </button>
 
       <span id="message"></span>
@@ -191,6 +216,15 @@
       ];
 
       function reset () {
+
+        document.querySelector('.reset').className = 'reset active';
+        document.querySelector('.set-zip-code').className = 'set-zip-code';
+        document.querySelector('.select-first-representative').className = 'select-first-representative';
+        document.querySelector('.select-second-representative').className = 'select-second-representative';
+
+        document.querySelector('.select-first-representative').disabled = 'disabled';
+        document.querySelector('.select-second-representative').disabled = 'disabled';
+
         lastStep = 1;
         currentStep = 1;
 
@@ -200,33 +234,43 @@
         }
       }
 
-      function testError () {
-        updateMessage('Test Invalid Zip Code');
+      function setZipCode (callback) {
+
+        document.querySelector('.reset').className = 'reset';
+        document.querySelector('.set-zip-code').className = 'set-zip-code active';
+        document.querySelector('.select-first-representative').className = 'select-first-representative';
+        document.querySelector('.select-second-representative').className = 'select-second-representative';
+
+        document.querySelector('.select-first-representative').removeAttribute('disabled');
+        document.querySelector('.select-second-representative').removeAttribute('disabled');
+
+        var zipcode = document.getElementById('zipcode').value;
+
+        if (!zipcode) {
+          zipcode = '10001';
+        }
+
+        updateMessage('Submit Zip Code as ' + zipcode);
 
         for (var i = 0; i < frames.length; i++) {
-          document.getElementById(frames[i]).contentWindow.jQuery('input').val('337');
+          document.getElementById(frames[i]).contentWindow.jQuery('input').val(zipcode);
           document.getElementById(frames[i]).contentWindow.jQuery('form').trigger('submit');
         }
-      }
 
-      function setZipCode () {
-        updateMessage('Submit Zip Code as 33701');
-
-        for (var i = 0; i < frames.length; i++) {
-          document.getElementById(frames[i]).contentWindow.jQuery('input').val('33701');
-          document.getElementById(frames[i]).contentWindow.jQuery('form').trigger('submit');
-        }
-      }
-
-      function clickBackButton () {
-        updateMessage('Click Back Button');
-
-        for (var i = 0; i < frames.length; i++) {
-          document.getElementById(frames[i]).contentWindow.jQuery('.back a').trigger('click');
+        if (callback && typeof callback === 'function') {
+          setTimeout(callback, 3000);
         }
       }
 
       function selectFirstRepresentative () {
+
+        document.querySelector('.reset').className = 'reset';
+        document.querySelector('.set-zip-code').className = 'set-zip-code';
+        document.querySelector('.select-first-representative').className = 'select-first-representative active';
+        document.querySelector('.select-second-representative').className = 'select-second-representative';
+
+        document.querySelector('.select-second-representative').disabled = 'disabled';
+
         updateMessage('Select First Representative');
 
         for (var i = 0; i < frames.length; i++) {
@@ -235,6 +279,14 @@
       }
 
       function selectSecondRepresentative () {
+
+        document.querySelector('.reset').className = 'reset';
+        document.querySelector('.set-zip-code').className = 'set-zip-code';
+        document.querySelector('.select-first-representative').className = 'select-first-representative';
+        document.querySelector('.select-second-representative').className = 'select-second-representative active';
+
+        document.querySelector('.select-first-representative').disabled = 'disabled';
+
         updateMessage('Select Second Representative');
 
         for (var i = 0; i < frames.length; i++) {
@@ -244,92 +296,6 @@
 
       function updateMessage (text) {
         document.getElementById('message').innerText = text;
-      }
-
-      function previous () {
-        currentStep--;
-
-        if (currentStep < 1) {
-          currentStep = 1;
-        }
-
-        if (currentStep !== lastStep) {
-          playStep(currentStep);
-        }
-      }
-
-      function next () {
-        currentStep++;
-
-        if (currentStep > maxSteps) {
-          clearTimeout(timeout);
-          currentStep = maxSteps;
-        }
-
-        if (currentStep !== lastStep) {
-          playStep(currentStep);
-        }
-      }
-
-      function playStep (step) {
-        lastStep = step;
-
-        switch (step) {
-          case 1:
-            reset();
-            break;
-
-          case 2:
-            testError();
-            break;
-
-          case 3:
-            setZipCode();
-            break;
-
-          case 4:
-            selectFirstRepresentative();
-            break;
-
-          case 5:
-            clickBackButton();
-            break;
-
-          case 6:
-            selectSecondRepresentative();
-            break;
-
-          case 7:
-            clickBackButton();
-            break;
-
-          case 8:
-            clickBackButton();
-            updateMessage('Test Complete');
-
-            setTimeout(function () {
-              currentStep  = 1;
-              lastStep = 1;
-            }, stepTime);
-
-            break;
-        }
-      }
-
-      function playThrough () {
-        clearInterval(timeout);
-        next();
-
-        if (currentStep < maxSteps) {
-          timeout = setInterval(function () {
-            next();
-          }, stepTime);
-        }
-      }
-
-      function pausePlayThrough () {
-        clearInterval(timeout);
-        updateMessage('Play Through Paused');
       }
 
     </script>
