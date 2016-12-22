@@ -5,7 +5,7 @@ Campaign Zero Widget
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://raw.githubusercontent.com/campaignzero/campaign-zero-widget/master/LICENSE)  [![GitHub contributors](https://img.shields.io/github/contributors/campaignzero/campaign-zero-widget.svg)](https://github.com/campaignzero/campaign-zero-widget/graphs/contributors)
 
-![Demo](https://cloud.githubusercontent.com/assets/508411/20238410/f639d34e-a8b8-11e6-9aeb-4a1169b6b8ce.gif "Demo")
+![Demo](app-image.gif "Demo")
 
 
 Usage Instructions
