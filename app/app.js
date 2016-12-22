@@ -1,11 +1,9 @@
 var appWidget = {
 
-  geoEnabled: null,
-  geoLocation: {},
-  geoErrorMessage: null,
   timeout: null,
   promptedCityData: false,
   elementName: 'campaign-zero-widget',
+  selectedTab: 'city-council',
   storedResponse: {},
   settings: window.CAMPAIGN_ZERO_WIDGET,
 
@@ -19,69 +17,6 @@ var appWidget = {
   trackEvent: function (category, action, label, value) {
     if (typeof window.ga !== 'undefined') {
       ga('campaignZeroWidget.send', 'event', category, action, label, value);
-    }
-  },
-
-  /**
-   * Get Geo Location
-   */
-  getLocation: function () {
-    if (appWidget.geoLocation && appWidget.geoLocation.latitude && appWidget.geoLocation.longitude) {
-      appWidget.geoSuccess({
-        coords: appWidget.geoLocation
-      });
-    } else if (appWidget.supportsGeolocation()) {
-      navigator.geolocation.getCurrentPosition(appWidget.geoSuccess, appWidget.geoError);
-      appWidget.geoEnabled = true;
-    } else {
-      appWidget.geoEnabled = false;
-    }
-  },
-
-  /**
-   * Geo Location Success
-   * @param position
-   */
-  geoSuccess: function (position) {
-    if (position) {
-      appWidget.geoLocation = position.coords;
-      appWidget.getRepresentatives(appWidget.geoLocation);
-    } else {
-      appWidget.showError('Unable to Determine Location');
-      appWidget.trackEvent('Error', 'Geolocation', 'Unable to Determine Location');
-    }
-  },
-
-  /**
-   * Geo Location Error
-   * @param error
-   */
-  geoError: function (error) {
-    if (error) {
-      switch(error.code) {
-        case error.PERMISSION_DENIED:
-          appWidget.geoErrorMessage = 'Denied Request for Geolocation.';
-          break;
-
-        case error.POSITION_UNAVAILABLE:
-          appWidget.geoErrorMessage = 'Location Information Unavailable.';
-          break;
-
-        case error.TIMEOUT:
-          appWidget.geoErrorMessage = 'Location Request Timed Out.';
-          break;
-
-        case error.UNKNOWN_ERROR:
-          appWidget.geoErrorMessage = 'Unable to Determine Location.';
-          break;
-      }
-
-      appWidget.trackEvent('Error', 'Geolocation', appWidget.geoErrorMessage);
-      appWidget.showError(appWidget.geoErrorMessage);
-
-      if (typeof Bugsnag !== 'undefined') {
-        Bugsnag.notify('geoError', error);
-      }
     }
   },
 
@@ -102,7 +37,7 @@ var appWidget = {
     clearTimeout(appWidget.timeout);
 
     appWidget.timeout = setTimeout(function () {
-      var note = (appWidget.supportsGeolocation()) ? 'leave empty to use your current location' : '';
+      var note = '';
       jQuery('small.note', elm).removeClass('error animated shake').html(note);
     }, 5000);
   },
@@ -351,10 +286,6 @@ var appWidget = {
             }
           }
 
-          if (response.cityCouncil && response.cityCouncil.length > 0) {
-            jQuery('.section-header', elm).show();
-          }
-
           jQuery('a', elm).off('click.widget');
           jQuery('a', elm).on('click.widget', function () {
             appWidget.trackEvent('Nav', 'Link Clicked', jQuery(this).text());
@@ -395,6 +326,36 @@ var appWidget = {
             appWidget.init();
             appWidget.trackEvent('Nav', 'Back Button', 'Main Page');
           });
+
+          if (response.cityCouncil && response.cityCouncil.length > 0) {
+
+            jQuery('a.tab-button', elm).removeClass('active');
+            jQuery('#' + appWidget.selectedTab + '-button', elm).addClass('active');
+
+            jQuery('.tab-content', elm).removeClass('active');
+            jQuery('#' + appWidget.selectedTab + '-tab', elm).addClass('active');
+
+            jQuery('.tab-set', elm).show();
+
+            jQuery('a.tab-button', elm).off('click.widget');
+            jQuery('a.tab-button', elm).on('click.widget', function () {
+              var id = jQuery(this).attr('id');
+              var text = jQuery(this).text();
+
+              appWidget.selectedTab = id.replace('-button', '');
+
+              jQuery('a.tab-button', elm).removeClass('active');
+              jQuery(this).addClass('active');
+
+              jQuery('.tab-content', elm).removeClass('active');
+              jQuery('#' + id.replace('-button', '-tab')).addClass('active');
+
+              appWidget.trackEvent('Nav', 'Selected Tab', text);
+            });
+          } else {
+            jQuery('.city-council-tab', elm).removeClass('active');
+            jQuery('.representatives-tab', elm).addClass('active');
+          }
 
           if (appWidget.storedResponse.supportedCity && !appWidget.promptedCityData) {
             appWidget.promptedCityData = true;
@@ -553,14 +514,6 @@ var appWidget = {
   },
 
   /**
-   * Prevent Geolocation usage unless the user is using HTTPS protocol
-   * @returns {boolean}
-   */
-  supportsGeolocation: function () {
-    return (navigator.geolocation && window.location.protocol ==='https:');
-  },
-
-  /**
    * Geocode Address
    * @param address
    * @param city
@@ -617,8 +570,6 @@ var appWidget = {
           if (response.data && response.data.mayor) {
             var mayor = response.data.mayor;
 
-
-
             appWidget.storedResponse.cityCouncil.push({
               full_name: 'Mayor ' + mayor.representative,
               party: mayor.party,
@@ -660,7 +611,7 @@ var appWidget = {
             var council_member = response.data.council_member;
 
             appWidget.storedResponse.cityCouncil.push({
-              full_name: 'Councilman ' + council_member.representative,
+              full_name: 'Councilor ' + council_member.representative,
               party: council_member.party,
               district: council_member.district_number,
               chamber: '',
@@ -818,9 +769,10 @@ var appWidget = {
    */
   init: function () {
     var elm = jQuery('#' + appWidget.elementName);
-    var note = (appWidget.supportsGeolocation()) ? 'leave empty to use your current location' : '';
+    var note = '';
 
     appWidget.promptedCityData = false;
+    appWidget.selectedTab = 'city-council';
 
     jQuery(elm).html('');
     jQuery(elm).load(appWidget.settings.base + 'template/form.html', function () {
@@ -848,7 +800,6 @@ var appWidget = {
 
         var zipcode = jQuery('#zip-code').val();
         var pattern = /[0-9]{5}/g;
-        var allowGPS = appWidget.supportsGeolocation();
 
         appWidget.trackEvent('Form', 'Submit', zipcode);
 
@@ -860,8 +811,6 @@ var appWidget = {
           if (typeof Bugsnag !== 'undefined') {
             Bugsnag.notify('invalidZipCode', zipcode);
           }
-        } else if(zipcode === '' && allowGPS) {
-          appWidget.getLocation();
         } else {
           appWidget.showError('Enter a Zip Code ( e.g. 90210 )');
           appWidget.trackEvent('Error', 'Submit Form', 'No Zip Code Entered');

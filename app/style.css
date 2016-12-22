@@ -123,9 +123,9 @@
       margin-top: 12px; }
       #campaign-zero-widget .wrapper ul li {
         width: 100%;
-        margin-bottom: 20px; }
+        margin-bottom: 8px; }
         #campaign-zero-widget .wrapper ul li:last-child {
-          margin-bottom: 40px; }
+          margin-bottom: 0; }
         #campaign-zero-widget .wrapper ul li a {
           width: 100%;
           background: rgba(255, 255, 255, 0.7);
@@ -239,18 +239,24 @@
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch; }
-    #campaign-zero-widget .representative-results .section-header {
-      margin: 0 auto;
-      width: 90%;
-      margin-top: 8px;
-      display: none; }
-      #campaign-zero-widget .representative-results .section-header h2 {
+    #campaign-zero-widget .representative-results .tab-set {
+      display: none;
+      margin-top: 6px; }
+      #campaign-zero-widget .representative-results .tab-set a {
         color: #DDD;
         font-weight: 400;
         font-size: 12px;
         letter-spacing: 0.1rem;
-        padding: 4px;
-        background: rgba(0, 0, 0, 0.5); }
+        padding: 4px 8px;
+        background: rgba(0, 0, 0, 0.5);
+        text-transform: uppercase;
+        text-decoration: none; }
+        #campaign-zero-widget .representative-results .tab-set a.active {
+          background: rgba(0, 0, 0, 0.85); }
+    #campaign-zero-widget .representative-results .tab-content {
+      display: none; }
+      #campaign-zero-widget .representative-results .tab-content.active {
+        display: block; }
   #campaign-zero-widget .representative .summary-name {
     font-weight: 500;
     font-size: 1.8rem;

@@ -12,17 +12,20 @@
     <h2 class="black">Pick a Representative</h2>
 
     <div class="representative-results">
-      <div class="section-header city-council-header">
-        <h2>City Council Members</h2>
+      <div class="tab-set">
+        <a href="javascript:void(0);" id="city-council-button" class="tab-button city-council-tab-button">City</a>
+        <a href="javascript:void(0);" id="representatives-button" class="tab-button representatives-tab-button">State</a>
       </div>
-      <ul class="city-council"></ul>
 
-      <div class="section-header representatives-header">
-        <h2>State Representatives</h2>
+      <div class="tab-content city-council-tab active" id="city-council-tab">
+        <ul class="city-council"></ul>
       </div>
-      <ul class="representatives"></ul>
+
+      <div class="tab-content representatives-tab" id="representatives-tab">
+        <ul class="representatives"></ul>
+      </div>
+
     </div>
-
   </div>
 </div>
 
