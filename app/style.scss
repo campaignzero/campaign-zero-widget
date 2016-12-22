@@ -282,6 +282,10 @@
     position: relative;
     top: -5px;
     text-align: left;
+    max-width: calc(100% - 60px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     .summary-details {
       font-weight: 300;
@@ -301,7 +305,6 @@
     .summary-name {
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 275px;
       white-space: nowrap;
 
       .republican {
@@ -314,11 +317,27 @@
     }
   }
 
-  .representatives {
+  .representative-results {
     max-height: 265px;
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+
+    .section-header {
+      margin: 0 auto;
+      width: 90%;
+      margin-top: 8px;
+      display: none;
+
+      h2 {
+        color: #DDD;
+        font-weight: 400;
+        font-size: 12px;
+        letter-spacing: 0.1rem;
+        padding: 4px;
+        background: rgba(0,0,0,0.5);
+      }
+    }
   }
 
   .representative {
@@ -799,7 +818,7 @@
       .summary {
         top: 0;
         overflow: hidden;
-        max-width: calc(100% - 55px);
+        max-width: calc(100% - 60px);
       }
     }
     .representative {
@@ -845,7 +864,7 @@
       }
 
       .summary-name, .summary-details {
-        max-width: 180px;
+        max-width: 175px;
       }
     }
     .supported-cty {
