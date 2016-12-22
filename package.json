@@ -1,0 +1,26 @@
+{
+  "name": "campaign-zero-widget",
+  "version": "1.2.0",
+  "description": "Electoral College Widget",
+  "homepage": "https://github.com/campaignzero/campaign-zero-widget#readme",
+  "license": "MIT",
+  "main": "widget.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/campaignzero/campaign-zero-widget.git"
+  },
+  "author": {
+    "name": "Peter Schmalfeldt",
+    "email": "me@peterschmalfeldt.com",
+    "url": "https://peterschmalfeldt.com"
+  },
+  "contributors": [
+    {
+      "name": "Samuel Sinyangwe",
+      "url": "https://joincampaignzero.org"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/campaignzero/campaign-zero-widget/issues"
+  }
+}
