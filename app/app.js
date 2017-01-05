@@ -78,11 +78,12 @@ var appWidget = {
           }
         } else if(response.data.results && response.data.results && response.data.results.length > 0) {
 
+          appWidget.storedResponse = response.data;
+
           appWidget.getBills(response.data.results[0].state);
+          appWidget.getSenators(response.data.results[0].state);
           appWidget.getPoliceKillings(response.data.results[0].state);
           appWidget.detectSupportedCity(response.data.request.state, response.data.request.city);
-
-          appWidget.storedResponse = response.data;
 
           setTimeout(function () {
             appWidget.generateResults(response.data);
@@ -95,6 +96,56 @@ var appWidget = {
       error: function (jqXHR, textStatus, errorThrown) {
         appWidget.showError('ERROR: ' + errorThrown);
         appWidget.trackEvent('Error', 'Reps Error', errorThrown);
+      }
+    });
+  },
+
+  /**
+   * Get Senators for given State
+   * @param state
+   */
+  getSenators: function (state) {
+    var jsonpUrl = appWidget.settings.api.base + 'senate/?state=' + state + '&apikey=' + appWidget.settings.api.key;
+
+    jQuery.ajax({
+      url: jsonpUrl,
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        appWidget.storedResponse.senators = [];
+
+        if(response && response.error) {
+          appWidget.showError(response.errors[0]);
+          appWidget.trackEvent('Error', 'Senators Error', response.errors);
+
+          if (typeof Bugsnag !== 'undefined') {
+            Bugsnag.notify('getSenatorsError', response);
+          }
+        } else {
+          for (var i = 0; i < response.data.length; i++) {
+            var senator = response.data[i];
+
+            appWidget.storedResponse.senators.push({
+              full_name: 'Senator ' + senator.name,
+              party: senator.party,
+              district: null,
+              chamber: null,
+              photo_url: (senator.photo_url) ? senator.photo_url : null,
+              state: senator.state,
+              offices: [
+                {
+                  name: 'Senate Office',
+                  email: null,
+                  phone: senator.phone
+                }
+              ]
+            });
+          }
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        appWidget.showError('ERROR: ' + errorThrown);
+        appWidget.trackEvent('Error', 'Senators Error', errorThrown);
       }
     });
   },
@@ -286,6 +337,39 @@ var appWidget = {
             }
           }
 
+          for (var key in response.senators) {
+            if (response.senators.hasOwnProperty(key)) {
+
+              var rep = response.senators[key];
+              var $li = $template.clone();
+
+              jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + key).addClass(rep.party.toLowerCase());
+              jQuery('.representative-summary', $li).data('type', 'senator');
+              jQuery('.representative-summary', $li).data('id', key).addClass(rep.party.toLowerCase());
+
+              jQuery('.representative-summary .summary-name', $li).text(rep.full_name).addClass(rep.party.toLowerCase());
+              jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
+              jQuery('.representative-summary .summary-details .district', $li).text(rep.district);
+              jQuery('.representative-summary .summary-details .chamber', $li).text(rep.chamber);
+
+              // Hide Element Not Needed
+              if (!rep.district || rep.district === '') {
+                jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
+              }
+
+              if (!rep.chamber || rep.chamber === '') {
+                jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
+              }
+
+              if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
+                var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
+                jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
+              }
+
+              jQuery('ul.federal', elm).append($li);
+            }
+          }
+
           jQuery('a', elm).off('click.widget');
           jQuery('a', elm).on('click.widget', function () {
             appWidget.trackEvent('Nav', 'Link Clicked', jQuery(this).text());
@@ -308,6 +392,10 @@ var appWidget = {
               rep = response.results[id];
               chamber = response.results[id]['chamber'];
               bills = response.bills[chamber] || [];
+            } else if (type === 'senator') {
+              rep = response.senators[id];
+              chamber = null;
+              bills = [];
             }
 
             appWidget.trackEvent('Nav', 'Selected Rep', rep.full_name);
@@ -327,7 +415,7 @@ var appWidget = {
             appWidget.trackEvent('Nav', 'Back Button', 'Main Page');
           });
 
-          if (response.cityCouncil && response.cityCouncil.length > 0) {
+          if ((response.cityCouncil && response.cityCouncil.length > 0) || (response.senators && response.senators.length > 0)) {
 
             jQuery('a.tab-button', elm).removeClass('active');
             jQuery('#' + appWidget.selectedTab + '-button', elm).addClass('active');
@@ -353,6 +441,7 @@ var appWidget = {
               appWidget.trackEvent('Nav', 'Selected Tab', text);
             });
           } else {
+            jQuery('.federal-tab', elm).removeClass('active');
             jQuery('.city-council-tab', elm).removeClass('active');
             jQuery('.representatives-tab', elm).addClass('active');
           }
@@ -378,6 +467,14 @@ var appWidget = {
               appWidget.geoCodeAddress(address);
               return false;
             });
+          } else if (!response.cityCouncil || response.cityCouncil.length === 0) {
+            appWidget.selectedTab = 'representatives';
+
+            jQuery('.federal-tab', elm).removeClass('active');
+            jQuery('.city-council-tab', elm).removeClass('active').hide();
+            jQuery('#city-council-button', elm).removeClass('active').hide();
+            jQuery('.representatives-tab', elm).addClass('active');
+            jQuery('#representatives-button', elm).addClass('active');
           }
         });
       });
