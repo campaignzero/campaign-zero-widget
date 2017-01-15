@@ -29,6 +29,14 @@ var appWidget = {
       Bugsnag.notifyException(error);
     }
 
+    if (typeof console !== 'undefined') {
+      console.error(error);
+    }
+
+    if (typeof error !== 'string') {
+      return false;
+    }
+
     var elm = jQuery('#' + appWidget.elementName);
 
     jQuery('small.note', elm).html('<i class="fa fa-exclamation-triangle"></i>&nbsp; ' + error).addClass('error animated shake');
@@ -333,7 +341,14 @@ var appWidget = {
                 jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
               }
 
-              jQuery('ul.city-council', elm).append($li);
+              // fix for issue #10 to set order in which city council members are ordered
+              if (rep.position === 'mayor') {
+                jQuery('ul.city-council-mayor', elm).append($li);
+              } else if (rep.position === 'councilor') {
+                jQuery('ul.city-council-councilor', elm).append($li);
+              } else if (rep.position === 'district-attorney') {
+                jQuery('ul.city-council-district-attorney', elm).append($li);
+              }
             }
           }
 
@@ -556,6 +571,12 @@ var appWidget = {
         jQuery('.summary-details .chamber, .summary-details .chamber-label', elm).hide();
       }
 
+      if (rep.offices && rep.offices[0].address) {
+        jQuery('.action-buttons .widget-map', elm).attr('href', 'https://maps.google.com/maps?q=' + encodeURIComponent(rep.offices[0].address.replace('\n', ', ')));
+      } else {
+        jQuery('.action-buttons .widget-map', elm).hide();
+      }
+
       // Event Handlers
       jQuery('a', elm).off('click.widget');
       jQuery('a', elm).on('click.widget', function () {
@@ -674,6 +695,7 @@ var appWidget = {
               chamber: '',
               photo_url: (mayor.photo_url) ? mayor.photo_url : null,
               state: appWidget.storedResponse.request.state,
+              position: 'mayor',
               offices: [
                 {
                   name: 'City Council',
@@ -694,6 +716,7 @@ var appWidget = {
               chamber: '',
               photo_url: (district_attorney.photo_url) ? district_attorney.photo_url : null,
               state: appWidget.storedResponse.request.state,
+              position: 'district-attorney',
               offices: [
                 {
                   name: 'City Council',
@@ -714,6 +737,7 @@ var appWidget = {
               chamber: '',
               photo_url: (council_member.photo_url) ? council_member.photo_url : null,
               state: appWidget.storedResponse.request.state,
+              position: 'councilor',
               offices: [
                 {
                   name: 'City Council',

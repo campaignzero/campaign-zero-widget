@@ -410,8 +410,8 @@
   #campaign-zero-widget.w200 .representative .summary-name {
     font-size: 1.2rem; }
   #campaign-zero-widget.w200 .representative a.action-button {
-    padding: 6px 15px;
-    font-size: 14px; }
+    padding: 6px 12px;
+    font-size: 12px; }
   #campaign-zero-widget.w200 .representative .support {
     font-size: 0.7rem; }
   #campaign-zero-widget.w200 a.add-to-site {
@@ -462,8 +462,8 @@
   #campaign-zero-widget.w220 .representative .summary-name {
     font-size: 1.3rem; }
   #campaign-zero-widget.w220 .representative a.action-button {
-    padding: 6px 15px;
-    font-size: 16px; }
+    padding: 6px 13px;
+    font-size: 13px; }
   #campaign-zero-widget.w220 .representative .support {
     font-size: 0.7rem; }
   #campaign-zero-widget.w220 .supported-cty .modal-close {
@@ -502,8 +502,8 @@
   #campaign-zero-widget.w240 .representative .summary-name {
     font-size: 1.4rem; }
   #campaign-zero-widget.w240 .representative a.action-button {
-    padding: 8px 14px;
-    font-size: 18px; }
+    padding: 8px 12px;
+    font-size: 16px; }
   #campaign-zero-widget.w240 .representative .support {
     font-size: 0.8rem; }
   #campaign-zero-widget.w240 .supported-cty .modal-close {
@@ -536,7 +536,7 @@
   #campaign-zero-widget.w280 .representative .summary-name {
     font-size: 1.5rem; }
   #campaign-zero-widget.w280 .representative a.action-button {
-    padding: 10px 20px; }
+    padding: 10px 14px; }
   #campaign-zero-widget.w280 .representative .support {
     font-size: 0.9rem; }
   #campaign-zero-widget.w280 .supported-cty h2, #campaign-zero-widget.w280 .supported-cty p, #campaign-zero-widget.w280 .supported-cty input {
@@ -560,7 +560,7 @@
   #campaign-zero-widget.w300 .representative .summary-name {
     font-size: 1.6rem; }
   #campaign-zero-widget.w300 .representative a.action-button {
-    padding: 12px 22px; }
+    padding: 12px 16px; }
   #campaign-zero-widget.w300 .supported-cty h2 {
     font-size: 1.25rem; }
   #campaign-zero-widget.w320 h2 {
@@ -570,7 +570,7 @@
   #campaign-zero-widget.w320 .representatives .summary {
     max-width: calc(100% - 60px); }
   #campaign-zero-widget.w320 .representative a.action-button {
-    padding: 12px 24px; }
+    padding: 12px 18px; }
   #campaign-zero-widget.w320 .summary .summary-details {
     font-size: 0.6rem; }
     #campaign-zero-widget.w320 .summary .summary-details strong {
