@@ -9,7 +9,7 @@
   var elementName = 'campaign-zero-widget';
   var loadedCSS = false;
   var loadedJS = false;
-  var version = '1.2.4';
+  var version = '1.2.5';
 
   /** Get reference to self (scriptTag) */
   var allScripts = document.getElementsByTagName('script');
@@ -120,10 +120,10 @@
       window.addEventListener('resize', resizeHandeler);
 
       var isProduction = (scriptTag.src === 'https://embed.joincampaignzero.org/widget.js');
-      var widgetTitleText = (window.frameElement.getAttribute('data-widget-title-text')) ? window.frameElement.getAttribute('data-widget-title-text') : 'End Police Violence';
-      var widgetSubTitleText = (window.frameElement.getAttribute('data-widget-subtitle-text')) ? window.frameElement.getAttribute('data-widget-subtitle-text') : 'Where does your rep stand?';
-      var widgetButtonText = (window.frameElement.getAttribute('data-widget-button-text')) ? window.frameElement.getAttribute('data-widget-button-text') : 'Find your rep';
-      var widgetPicRepText = (window.frameElement.getAttribute('data-widget-pick-rep-text')) ? window.frameElement.getAttribute('data-widget-pick-rep-text') : 'Find your rep';
+      var widgetTitleText = (window.frameElement && window.frameElement.getAttribute('data-widget-title-text')) ? window.frameElement.getAttribute('data-widget-title-text') : 'End Police Violence';
+      var widgetSubTitleText = (window.frameElement && window.frameElement.getAttribute('data-widget-subtitle-text')) ? window.frameElement.getAttribute('data-widget-subtitle-text') : 'Where does your rep stand?';
+      var widgetButtonText = (window.frameElement && window.frameElement.getAttribute('data-widget-button-text')) ? window.frameElement.getAttribute('data-widget-button-text') : 'Find your rep';
+      var widgetPicRepText = (window.frameElement && window.frameElement.getAttribute('data-widget-pick-rep-text')) ? window.frameElement.getAttribute('data-widget-pick-rep-text') : 'Find your rep';
 
       if(jQuery('#' + elementName).data('widget-title-text')) {
         widgetTitleText = jQuery('#' + elementName).data('widget-title-text');
