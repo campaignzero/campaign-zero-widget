@@ -9,7 +9,7 @@
   var elementName = 'campaign-zero-widget';
   var loadedCSS = false;
   var loadedJS = false;
-  var version = '1.2.5';
+  var version = '1.2.6';
 
   /** Get reference to self (scriptTag) */
   var allScripts = document.getElementsByTagName('script');
@@ -129,11 +129,11 @@
         widgetTitleText = jQuery('#' + elementName).data('widget-title-text');
       }
 
-      if(jQuery('#' + elementName).data('widget-title-text')) {
+      if(jQuery('#' + elementName).data('widget-subtitle-text')) {
         widgetSubTitleText = jQuery('#' + elementName).data('widget-subtitle-text');
       }
 
-      if(jQuery('#' + elementName).data('widget-title-text')) {
+      if(jQuery('#' + elementName).data('widget-button-text')) {
         widgetButtonText = jQuery('#' + elementName).data('widget-button-text');
       }
 
