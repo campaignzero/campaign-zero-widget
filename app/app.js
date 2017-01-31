@@ -273,6 +273,8 @@ var appWidget = {
     if(response && response.results.length >= 1) {
       jQuery(elm).load(appWidget.settings.base + 'template/results.html', function () {
 
+        jQuery('.pick-rep', elm).text(appWidget.settings.labels.pickRep);
+
         jQuery('.wrapper', elm).css('background-image', 'url(https://maps.googleapis.com/maps/api/staticmap?center=' + response.request.latitude + ',' + response.request.longitude + '&zoom=10&maptype=roadmap&size=800x600&sensor=false&style=feature:administrative|visibility:off&style=feature:landscape.natural.terrain|visibility:off&style=feature:poi|visibility:off&style=element:labels|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:transit|visibility:off&style=feature:road|element:geometry|visibility:simplified|color:0x999999&style=feature:water|element:geometry|color:0xcccccc&style=feature:landscape|element:geometry.fill|color:0xaaaaaa&key=AIzaSyBlgFUsVry1HfM7cbWEfNmbu_RSPNQin9o)');
 
         var $template = $('<li>');
@@ -897,6 +899,10 @@ var appWidget = {
 
     jQuery(elm).html('');
     jQuery(elm).load(appWidget.settings.base + 'template/form.html', function () {
+
+      jQuery('h2', elm).text(appWidget.settings.labels.title);
+      jQuery('p.intro', elm).text(appWidget.settings.labels.subtitle);
+      jQuery('button.submit', elm).text(appWidget.settings.labels.button);
 
       // Update Content
       jQuery('.note', elm).html(note);

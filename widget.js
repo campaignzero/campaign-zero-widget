@@ -9,7 +9,7 @@
   var elementName = 'campaign-zero-widget';
   var loadedCSS = false;
   var loadedJS = false;
-  var version = '1.2.3';
+  var version = '1.2.4';
 
   /** Get reference to self (scriptTag) */
   var allScripts = document.getElementsByTagName('script');
@@ -120,6 +120,26 @@
       window.addEventListener('resize', resizeHandeler);
 
       var isProduction = (scriptTag.src === 'https://embed.joincampaignzero.org/widget.js');
+      var widgetTitleText = (window.frameElement.getAttribute('data-widget-title-text')) ? window.frameElement.getAttribute('data-widget-title-text') : 'End Police Violence';
+      var widgetSubTitleText = (window.frameElement.getAttribute('data-widget-subtitle-text')) ? window.frameElement.getAttribute('data-widget-subtitle-text') : 'Where does your rep stand?';
+      var widgetButtonText = (window.frameElement.getAttribute('data-widget-button-text')) ? window.frameElement.getAttribute('data-widget-button-text') : 'Find your rep';
+      var widgetPicRepText = (window.frameElement.getAttribute('data-widget-pick-rep-text')) ? window.frameElement.getAttribute('data-widget-pick-rep-text') : 'Find your rep';
+
+      if(jQuery('#' + elementName).data('widget-title-text')) {
+        widgetTitleText = jQuery('#' + elementName).data('widget-title-text');
+      }
+
+      if(jQuery('#' + elementName).data('widget-title-text')) {
+        widgetSubTitleText = jQuery('#' + elementName).data('widget-subtitle-text');
+      }
+
+      if(jQuery('#' + elementName).data('widget-title-text')) {
+        widgetButtonText = jQuery('#' + elementName).data('widget-button-text');
+      }
+
+      if(jQuery('#' + elementName).data('widget-pick-rep-text')) {
+        widgetPicRepText = jQuery('#' + elementName).data('widget-pick-rep-text');
+      }
 
       window.CAMPAIGN_ZERO_WIDGET = {
         environment: isProduction ? 'production' : 'development',
@@ -128,7 +148,13 @@
           base: isProduction ? 'https://api.joincampaignzero.org/v1/' : 'http://127.0.0.1:5000/v1/',
           key: '7E07D864-209A-F9E4-819F-2DD7E76B6F24'
         },
-        version: version
+        version: version,
+        labels: {
+          title: widgetTitleText,
+          subtitle: widgetSubTitleText,
+          button: widgetButtonText,
+          pickRep: widgetPicRepText
+        }
       };
 
       // check for existing element, otherwise create it

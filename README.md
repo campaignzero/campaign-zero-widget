@@ -92,6 +92,31 @@ For browsers that let you use iFrames, you can also use:
 ```
 
 
+Customize Labels
+---
+
+If you are unable to place JavaScript where you want the widget to go, you can use the following HTML directly:
+
+You can add one or all of the following Data Attributes on either the iFrame or `<div id="campaign-zero-widget">` to customize the text:
+
+Data Attribute              | Default                    | Description
+----------------------------|----------------------------|-------------
+`data-widget-title-text`    | End Police Violence        | This is the Title at the Top of the Widget
+`data-widget-subtitle-text` | Where does your rep stand? | This is the Call to Action Text above the Search Field
+`data-widget-button-text`   | Find your rep              | The is the Button on the Main Page
+`data-widget-pick-rep-text` | Pick a Representative      | This is the Text at the top of the page after doing a search
+
+### Samples:
+
+```html
+<div id="campaign-zero-widget" data-widget-title-text="Custom Title" data-widget-subtitle-text="Custom Subtitle" data-widget-button-text="Custom Button" data-widget-pick-rep-text="Custom Rep Header"></div>
+```
+
+```html
+<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="200" height="345" frameborder="0" data-widget-title-text="Custom Title" data-widget-subtitle-text="Custom Subtitle" data-widget-button-text="Custom Button" data-widget-pick-rep-text="Custom Rep Header"></iframe>
+```
+
+
 Demos
 ---
 
