@@ -25,10 +25,6 @@ var appWidget = {
    * @param error
    */
   showError: function (error) {
-    if (typeof Bugsnag !== 'undefined') {
-      Bugsnag.notifyException(error);
-    }
-
     if (typeof console !== 'undefined') {
       console.error(error);
     }
@@ -80,10 +76,6 @@ var appWidget = {
         if(response && response.error) {
           appWidget.showError(response.errors[0]);
           appWidget.trackEvent('Error', 'Reps Error', response.errors);
-
-          if (typeof Bugsnag !== 'undefined') {
-            Bugsnag.notify('getRepresentativesError', response);
-          }
         } else if(response.data.results && response.data.results && response.data.results.length > 0) {
 
           appWidget.storedResponse = response.data;
@@ -125,10 +117,6 @@ var appWidget = {
         if(response && response.error) {
           appWidget.showError(response.errors[0]);
           appWidget.trackEvent('Error', 'Senators Error', response.errors);
-
-          if (typeof Bugsnag !== 'undefined') {
-            Bugsnag.notify('getSenatorsError', response);
-          }
         } else {
           for (var i = 0; i < response.data.length; i++) {
             var senator = response.data[i];
@@ -173,10 +161,6 @@ var appWidget = {
         if(response && response.error) {
           appWidget.showError(response.errors[0]);
           appWidget.trackEvent('Error', 'Reps Error', response.errors);
-
-          if (typeof Bugsnag !== 'undefined') {
-            Bugsnag.notify('getRepresentativesError', response);
-          }
           appWidget.storedResponse.bills = {};
         } else {
           appWidget.storedResponse.bills = response.data;
@@ -209,10 +193,6 @@ var appWidget = {
       success: function (response) {
         if(response && response.error) {
           appWidget.trackEvent('Error', 'Support City Error', response.errors);
-
-          if (typeof Bugsnag !== 'undefined') {
-            Bugsnag.notify('detectSupportedCityError', response);
-          }
           appWidget.storedResponse.supportedCity = false;
         } else {
           appWidget.storedResponse.supportedCity = response.data.supported;
@@ -500,10 +480,6 @@ var appWidget = {
     if (!response) {
       appWidget.trackEvent('Error', 'Representatives Error', 'No Representatives Found.');
       appWidget.showError('Currently Unable to Fetch Results');
-
-      if (typeof Bugsnag !== 'undefined') {
-        Bugsnag.notify('generateResultsError', response);
-      }
     }
   },
 
@@ -679,10 +655,6 @@ var appWidget = {
       success: function (response) {
         if(response && response.error) {
           appWidget.trackEvent('Error', 'Get City Council Data Error', response.errors);
-
-          if (typeof Bugsnag !== 'undefined') {
-            Bugsnag.notify('detectSupportedCityError', response);
-          }
         } else {
 
           appWidget.storedResponse.cityCouncil = [];
@@ -935,9 +907,6 @@ var appWidget = {
         } else if(zipcode !== '' && !pattern.test(zipcode)) {
           appWidget.showError('Invalid Zip Code ( e.g. 90210 )');
           appWidget.trackEvent('Error', 'Submit Form', 'Invalid Zip Code');
-          if (typeof Bugsnag !== 'undefined') {
-            Bugsnag.notify('invalidZipCode', zipcode);
-          }
         } else {
           appWidget.showError('Enter a Zip Code ( e.g. 90210 )');
           appWidget.trackEvent('Error', 'Submit Form', 'No Zip Code Entered');
