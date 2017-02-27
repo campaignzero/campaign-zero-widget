@@ -127,7 +127,7 @@ var appWidget = {
               district: null,
               chamber: null,
               photo_url: (senator.photo_url) ? senator.photo_url : null,
-              state: senator.state,
+              state: senator.address_state,
               offices: [
                 {
                   name: 'Senate Office',
@@ -151,7 +151,12 @@ var appWidget = {
    * @param state
    */
   getBills: function (state) {
-    var jsonpUrl = appWidget.settings.api.base + 'bills/?state=' + state + '&apikey=' + appWidget.settings.api.key;
+    var jsonpUrl;
+    if (appWidget.settings.type === 'default') {
+      jsonpUrl = appWidget.settings.data + 'bills.php?state=' + state;
+    } else if (appWidget.settings.type === 'resistance') {
+      jsonpUrl = appWidget.settings.data + 'resistance.php?state=' + state;
+    }
 
     jQuery.ajax({
       url: jsonpUrl,
@@ -207,8 +212,29 @@ var appWidget = {
   /**
    * Get Police Killings
    */
-  getPoliceKillings: function () {
+  getPoliceKillings: function (state) {
     appWidget.storedResponse.killings = {};
+
+    var jsonpUrl = appWidget.settings.data + 'police_killings.php?state=' + state;
+
+    jQuery.ajax({
+      url: jsonpUrl,
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        if(response && response.error) {
+          appWidget.showError('Invalid Police Killings');
+          appWidget.trackEvent('Error', 'Police Killings Error');
+          appWidget.storedResponse.killings = {};
+        } else {
+          appWidget.storedResponse.killings = response.data;
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        appWidget.showError('ERROR: ' + errorThrown);
+        appWidget.trackEvent('Error', 'Reps Error', errorThrown);
+      }
+    });
   },
 
   /**
@@ -378,7 +404,7 @@ var appWidget = {
 
             var id = jQuery(this).data('id');
             var type = jQuery(this).data('type');
-            var killings = response.killings || { count: 0 };
+            var killings = appWidget.storedResponse.killings || { count: 0 };
             var rep, chamber, bill;
 
             if (type === 'city-council') {
@@ -502,14 +528,14 @@ var appWidget = {
         }
       }
 
-      var emailSubject = encodeURIComponent('We need urgent action to end police violence in our district.');
+      var emailSubject = encodeURIComponent(appWidget.settings.email.subject);
       var emailMessage = '';
 
-      if(killings && killings.count > 0) {
+      if(killings && killings.count > 0 && appWidget.settings.type === 'default') {
         var label = (killings.count === 1) ? 'person' : 'people';
-        emailMessage = encodeURIComponent("Greetings " + rep.full_name +  ",\r\n\r\nI'm from your district, and police violence needs to be urgently addressed in my community. This year alone, police in " + killings.state + " have killed at least " + killings.count + " " + label + ". We need comprehensive legislation to make deadly force a last resort for police officers, establish alternative responses to minor offenses, demilitarize police departments, ensure independent investigations and prosecutions of police killings, as well as other solutions proposed by Campaign Zero. Here's my story:\r\n\r\n[YOUR_REASON_HERE]");
+        emailMessage = encodeURIComponent(appWidget.settings.email.greeting + " " + rep.full_name +  ",\r\n\r\n" + appWidget.settings.email.body + " This year alone, police in " + killings.state + " have killed at least " + killings.count + " " + label + ". We need comprehensive legislation to make deadly force a last resort for police officers, establish alternative responses to minor offenses, demilitarize police departments, ensure independent investigations and prosecutions of police killings, as well as other solutions proposed by Campaign Zero.\r\n\r\n" + appWidget.settings.email.action);
       } else {
-        emailMessage = encodeURIComponent("Greetings " + rep.full_name +  ",\r\n\r\nI'm from your district, and police violence needs to be urgently addressed through comprehensive legislation as proposed by Campaign Zero. Here's why:\r\n\r\n[YOUR_REASON_HERE]");
+        emailMessage = encodeURIComponent(appWidget.settings.email.greeting + " " + rep.full_name +  ",\r\n\r\n" + appWidget.settings.email.body + "\r\n\r\n" + appWidget.settings.email.action);
       }
 
       var emailAddress = '';
@@ -522,8 +548,6 @@ var appWidget = {
         emailAddress = '<div class="address-email"><a href="javascript:void(0)">No email address currently available</a></div>';
       }
 
-      var status = appWidget.templateBills(bills, rep.id);
-
       if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
         var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
         jQuery('#rep-image', elm).addClass(rep.party.toLowerCase()).css('background-image', 'url(' + image + ')');
@@ -535,10 +559,17 @@ var appWidget = {
       jQuery('.summary-details .party', elm).text(rep.party);
       jQuery('.summary-details .district', elm).text(rep.district);
       jQuery('.summary-details .chamber', elm).text(rep.chamber);
-      jQuery('.summary-details .widget-bill-results', elm).html(status);
+
+      jQuery('a.widget-twitter', elm).attr('href', 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(appWidget.settings.twitter.text) + '&hashtags=' + encodeURIComponent(appWidget.settings.twitter.hashtags));
+      jQuery('a.widget-facebook', elm).attr('href', 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(appWidget.settings.facebook.link) + '&description=' + encodeURIComponent(appWidget.settings.facebook.description));
+
+      appWidget.templateBills(bills, rep.id);
 
       jQuery('.widget-modal .phone-numbers', elm).html(phoneNumbers);
       jQuery('.widget-modal .email-addresses', elm).html(emailAddress);
+
+      jQuery('.widget-modal-phone h1', elm).text(appWidget.settings.labels.call);
+      jQuery('.widget-modal-email h1', elm).text(appWidget.settings.labels.email);
 
       // Hide Element Not Needed
       if (!rep.district || rep.district === '') {
@@ -742,7 +773,7 @@ var appWidget = {
     var html = '';
 
     if( !bills || bills.length === 0) {
-      html = html.concat('<div class="support text-center">No bills on this issue.</div>');
+      jQuery('#widget-bill-results', elm).append('<div class="support text-center">No bills on this issue.</div>');
     } else {
 
       bills.sort(function (a, b) {
@@ -753,9 +784,9 @@ var appWidget = {
 
       for(var i = 0; i < bills.length; i++) {
         if(bills[i].status === 'considering') {
-          html = html.concat('<div class="support"><span class="status ' + bills[i].status + '">' + bills[i].status + '</span> <a target="_blank" rel="noopener" href="' + bills[i].details_url + '">' + bills[i].bill_id + '</a> ' + bills[i].short_description + '</div>');
+          jQuery('#widget-bill-results', elm).append('<div class="support"><span class="status ' + bills[i].status + '">' + bills[i].status + '</span> <a target="_blank" rel="noopener" href="' + bills[i].url + '">' + bills[i].bill + '</a> ' + bills[i].label + '</div>');
         } else {
-          var billID = bills[i].bill_id;
+          var billID = bills[i].bill;
           setTimeout(function () {
             jQuery('#widget-bill-results', elm).append('<div id="loading-results" class="support text-center"><i class="fa fa-spinner fa-pulse fa-fw"></i> Checking status of ' + billID + ' ...</div>');
           }, 100);
@@ -765,21 +796,19 @@ var appWidget = {
               jQuery('#loading-results', elm).remove();
             }, 500);
             var label = (status !== 'unknown') ? status : 'did not vote';
-            jQuery('#widget-bill-results', elm).append('<div class="support"><span class="status ' + status + ' ' + bill.progress + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.details_url + '">' + bill.bill_id + '</a> ' + bill.short_description + '</div>');
+            jQuery('#widget-bill-results', elm).append('<div class="support"><span class="status ' + status + ' ' + bill.progress + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> ' + bill.label + '</div>');
 
             jQuery('#widget-bill-results a', elm).off('click.widget');
             jQuery('#widget-bill-results a', elm).on('click.widget', function () {
               appWidget.trackEvent('Nav', 'Bill Opened (State)', bill.state);
               appWidget.trackEvent('Nav', 'Bill Opened (Status)', status);
-              appWidget.trackEvent('Nav', 'Bill Opened (Bill)', bill.bill_id);
-              appWidget.trackEvent('Nav', 'Bill Opened (Session)', bill.session_id);
+              appWidget.trackEvent('Nav', 'Bill Opened (Bill)', bill.bill);
+              appWidget.trackEvent('Nav', 'Bill Opened (Session)', bill.session);
             });
           });
         }
       }
     }
-
-    return html;
   },
 
   /**
@@ -789,14 +818,20 @@ var appWidget = {
    * @param callback
    */
   voteStatus: function (bill, rep_id, callback) {
-    var jsonpUrl = appWidget.settings.api.base + 'bills/?state=' + bill.state + '&sessionId=' + bill.session_id + '&billId=' + bill.bill_id + '&repId=' + rep_id + '&apikey=' + appWidget.settings.api.key;
+    var jsonpUrl;
+
+    if (appWidget.settings.type === 'default') {
+      jsonpUrl = appWidget.settings.data + 'bills.php?state=' + bill.state + '&session=' + bill.session + '&bill=' + bill.bill + '&rep=' + rep_id;
+    } else if (appWidget.settings.type === 'resistance') {
+      jsonpUrl = appWidget.settings.data + 'resistance.php?state=' + bill.state + '&session=' + bill.session + '&bill=' + bill.bill + '&rep=' + rep_id;
+    }
 
     $.when( jQuery.ajax(jsonpUrl) ).then(function ( response ) {
-      appWidget.trackEvent('Vote', 'Status', response.data[bill.chamber][0].vote);
+      appWidget.trackEvent('Vote', 'Status', response.results.status);
       appWidget.trackEvent('Vote', 'Bill', bill.bill);
       appWidget.trackEvent('Vote', 'State', bill.state);
       appWidget.trackEvent('Vote', 'Session', bill.session);
-      return callback(bill, response.data[bill.chamber][0].vote);
+      return callback(bill, response.results.status);
     });
   },
 

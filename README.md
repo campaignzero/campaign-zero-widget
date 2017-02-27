@@ -8,6 +8,14 @@ Campaign Zero Widget
 ![Demo](app-image.gif "Demo")
 
 
+Widget Data
+---
+
+This Widget gets it's Elected Official data from the __[Civil Services API](https://github.com/civilserviceusa/api)__. 
+
+The specific bills we keep track of are managed internally by our team.
+
+
 Usage Instructions
 ---
 
@@ -41,70 +49,32 @@ If you are using something like WordPress that just asks you for the URL for the
 https://embed.joincampaignzero.org/widget.js
 ```
 
-For browsers that let you use iFrames, you can also use:
-
-#### XXXS - 200 x 345:
-
-```html
-<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="200" height="345" frameborder="0"></iframe>
-```
-
-#### XXS - 220 x 345:
-
-```html
-<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="220" height="345" frameborder="0"></iframe>
-```
-
-#### XS - 240 x 345:
-
-```html
-<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="240" height="345" frameborder="0"></iframe>
-```
-
-#### S - 280 x 345:
-
-```html
-<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="280" height="345" frameborder="0"></iframe>
-```
-
-#### M - 300 x 345:
-
-```html
-<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="300" height="345" frameborder="0"></iframe>
-```
-
-#### L - 320 x 345:
-
-```html
-<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="320" height="345" frameborder="0"></iframe>
-```
-
-#### XL - 380 x 345:
-
-```html
-<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="400" height="380" frameborder="0"></iframe>
-```
-
-#### XXL - 400 x 345:
-
-```html
-<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="400" height="380" frameborder="0"></iframe>
-```
+__NOTE__:  We no longer recommend the use of iFrames as they have proven to be be unreliable on most websites.
 
 
-Customize Labels
+Customize Widget
 ---
 
-If you are unable to place JavaScript where you want the widget to go, you can use the following HTML directly:
 
-You can add one or all of the following Data Attributes on either the iFrame or `<div id="campaign-zero-widget">` to customize the text:
+You can add one or all of the following Data Attributes on either our `<script>` or `<div id="campaign-zero-widget">` Element to customize the text:
 
-Data Attribute              | Default                    | Description
-----------------------------|----------------------------|-------------
-`data-widget-title-text`    | End Police Violence        | This is the Title at the Top of the Widget
-`data-widget-subtitle-text` | Where does your rep stand? | This is the Call to Action Text above the Search Field
-`data-widget-button-text`   | Find your rep              | The is the Button on the Main Page
-`data-widget-pick-rep-text` | Pick a Representative      | This is the Text at the top of the page after doing a search
+Data Attribute                     | Default                                                                                                                                    | Description
+-----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|-------------
+`data-widget-type`                 | `default`                                                                                                                                  | This should be either `default` or `resistance` depending on which data source you want to use
+`data-widget-title-text`           | End Police Violence                                                                                                                        | This is the Title at the Top of the Widget
+`data-widget-subtitle-text`        | Where does your rep stand?                                                                                                                 | This is the Call to Action Text above the Search Field
+`data-widget-button-text`          | Find your rep                                                                                                                              | The is the Button on the Main Page
+`data-widget-pick-rep-text`        | Pick a Representative                                                                                                                      | This is the Text at the top of the page after doing a search
+`data-widget-call-action-text`     | Call and demand action:                                                                                                                    | This is the Text above the Phone Number List
+`data-widget-email-action-text`    | Email and demand action:                                                                                                                   | This is the Text above the Email List
+`data-widget-email-subject`        | We need urgent action to end police violence in our district.                                                                              | This is the Email Subject for Contacting an Elected Official
+`data-widget-email-greeting`       | Greetings                                                                                                                                  | This is the word before the Elected Official's name, e.g. `Greetings Jane Doe,`
+`data-widget-email-body`           | I'm from your district, and police violence needs to be urgently addressed through comprehensive legislation as proposed by Campaign Zero. | This is the Body of the Email for sent to the Elected Official
+`data-widget-email-action`         | [YOUR_MESSAGE_HERE]                                                                                                                        | This is text at the end of the Email Body where you can encourage the user to add their own message
+`data-widget-twitter-text`         | Learn where your representatives stand on police violence and demand action now! http://JoinCampaignZero.org/action                        | This is the Message in Tweet
+`data-widget-twitter-hashtags`     | CampaignZero                                                                                                                               | These are the Hashtags used in the Tweet, you can use more than one by using a comma between words
+`data-widget-facebook-link`        | http://www.joincampaignzero.org/action                                                                                                     | This is the URL you want to link to for the Facebook Post
+`data-widget-facebook-description` | Learn where your representatives stand on police violence and demand action now!                                                           | This is the Description you want shown for the Facebook Post
 
 ### Samples:
 
@@ -113,7 +83,7 @@ Data Attribute              | Default                    | Description
 ```
 
 ```html
-<iframe src="https://embed.joincampaignzero.org" id="campaign-zero" width="200" height="345" frameborder="0" data-widget-title-text="Custom Title" data-widget-subtitle-text="Custom Subtitle" data-widget-button-text="Custom Button" data-widget-pick-rep-text="Custom Rep Header"></iframe>
+<script async src="https://embed.joincampaignzero.org/widget.js" charset="utf-8" data-widget-title-text="Custom Title" data-widget-subtitle-text="Custom Subtitle" data-widget-button-text="Custom Button" data-widget-pick-rep-text="Custom Rep Header"></script>
 ```
 
 
@@ -121,12 +91,3 @@ Demos
 ---
 
 * [DEMO](https://embed.joincampaignzero.org)
-
-Developers
----
-
-This Widget gets it's data from our [Campaign Zero API](https://github.com/campaignzero/api).  
-
-Both this Widget and its API are open for Developer Contribution.
-
-If you wish to contribute to Campaign Zero development, you will need to request an API Key from [Peter Schmalfeldt](https://twitter.com/mrmidi).

@@ -409,6 +409,7 @@
       overflow-x: hidden;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+      padding-bottom: 30px;
     }
     .support {
       font-weight: 400;
@@ -436,6 +437,8 @@
         min-width: 50px;
         display: inline-block;
         text-align: center;
+        line-height: 11px;
+        min-height: 12px;
 
         &:hover {
           color: #333;

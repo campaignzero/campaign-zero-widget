@@ -9,7 +9,7 @@
   var elementName = 'campaign-zero-widget';
   var loadedCSS = false;
   var loadedJS = false;
-  var version = '1.2.8';
+  var version = '1.3.0';
 
   /** Get reference to self (scriptTag) */
   var allScripts = document.getElementsByTagName('script');
@@ -120,45 +120,170 @@
       window.addEventListener('resize', resizeHandeler);
 
       var isProduction = (scriptTag.src === 'https://embed.joincampaignzero.org/widget.js');
-      var widgetTitleText = (window.frameElement && window.frameElement.getAttribute('data-widget-title-text')) ? window.frameElement.getAttribute('data-widget-title-text') : 'End Police Violence';
-      var widgetSubTitleText = (window.frameElement && window.frameElement.getAttribute('data-widget-subtitle-text')) ? window.frameElement.getAttribute('data-widget-subtitle-text') : 'Where does your rep stand?';
-      var widgetButtonText = (window.frameElement && window.frameElement.getAttribute('data-widget-button-text')) ? window.frameElement.getAttribute('data-widget-button-text') : 'Find your rep';
-      var widgetPicRepText = (window.frameElement && window.frameElement.getAttribute('data-widget-pick-rep-text')) ? window.frameElement.getAttribute('data-widget-pick-rep-text') : 'Find your rep';
 
-      if(jQuery('#' + elementName).data('widget-title-text')) {
-        widgetTitleText = jQuery('#' + elementName).data('widget-title-text');
+      var validWidgetTypes = ['default', 'resistance'];
+
+      var widgetTitleText = 'End Police Violence';
+      var widgetSubTitleText = 'Where does your rep stand?';
+      var widgetButtonText = 'Find your rep';
+      var widgetPicRepText = 'Find your rep';
+      var widgetType = 'default';
+      var widgetCallText = 'Call and demand action:';
+      var widgetEmailText = 'Email and demand action:';
+
+      var emailSubject = 'We need urgent action to end police violence in our district.';
+      var emailGreeting = 'Greetings';
+      var emailBody = 'I\'m from your district, and police violence needs to be urgently addressed through comprehensive legislation as proposed by Campaign Zero.';
+      var emailAction = '[YOUR_MESSAGE_HERE]';
+
+      var twitterText = 'Learn where your representatives stand on police violence and demand action now! http://JoinCampaignZero.org/action';
+      var twitterHashTags = 'CampaignZero';
+
+      var facebookLink = 'http://www.joincampaignzero.org/action';
+      var facebookDescription = 'Learn where your representatives stand on police violence and demand action now!';
+
+      var $elm = jQuery('#' + elementName);
+
+      /**
+       * Check for Data Attributes on Element
+       */
+      if($elm.data('widget-title-text')) {
+        widgetTitleText = $elm.data('widget-title-text');
+      }
+      if($elm.data('widget-subtitle-text')) {
+        widgetSubTitleText = $elm.data('widget-subtitle-text');
+      }
+      if($elm.data('widget-button-text')) {
+        widgetButtonText = $elm.data('widget-button-text');
+      }
+      if($elm.data('widget-pick-rep-text')) {
+        widgetPicRepText = $elm.data('widget-pick-rep-text');
+      }
+      if($elm.data('widget-type') && validWidgetTypes.indexOf($elm.data('widget-type')) > -1) {
+        widgetType = $elm.data('widget-type');
+      }
+      if($elm.data('widget-call-action-text')) {
+        widgetCallText = $elm.data('widget-call-action-text');
+      }
+      if($elm.data('widget-email-action-text')) {
+        widgetEmailText = $elm.data('widget-email-action-text');
       }
 
-      if(jQuery('#' + elementName).data('widget-subtitle-text')) {
-        widgetSubTitleText = jQuery('#' + elementName).data('widget-subtitle-text');
+      if($elm.data('widget-email-subject')) {
+        emailSubject = $elm.data('widget-email-subject');
+      }
+      if($elm.data('widget-email-greeting')) {
+        emailGreeting = $elm.data('widget-email-greeting');
+      }
+      if($elm.data('widget-email-body')) {
+        emailBody = $elm.data('widget-email-body');
+      }
+      if($elm.data('widget-email-action')) {
+        emailAction = $elm.data('widget-email-action');
       }
 
-      if(jQuery('#' + elementName).data('widget-button-text')) {
-        widgetButtonText = jQuery('#' + elementName).data('widget-button-text');
+      if($elm.data('widget-twitter-text')) {
+        twitterText = $elm.data('widget-twitter-text');
+      }
+      if($elm.data('widget-twitter-hashtags')) {
+        twitterHashTags = $elm.data('widget-twitter-hashtags');
       }
 
-      if(jQuery('#' + elementName).data('widget-pick-rep-text')) {
-        widgetPicRepText = jQuery('#' + elementName).data('widget-pick-rep-text');
+      if($elm.data('widget-facebook-link')) {
+        facebookLink = $elm.data('widget-facebook-link');
+      }
+      if($elm.data('widget-facebook-description')) {
+        facebookDescription = $elm.data('widget-facebook-description');
+      }
+
+      /**
+       * Check for Data Attributes on Script Tag
+       */
+      if(scriptTag.getAttribute('data-widget-title-text')) {
+        widgetTitleText = scriptTag.getAttribute('data-widget-title-text');
+      }
+      if(scriptTag.getAttribute('data-widget-subtitle-text')) {
+        widgetSubTitleText = scriptTag.getAttribute('data-widget-subtitle-text');
+      }
+      if(scriptTag.getAttribute('data-widget-button-text')) {
+        widgetButtonText = scriptTag.getAttribute('data-widget-button-text');
+      }
+      if(scriptTag.getAttribute('data-widget-pick-rep-text')) {
+        widgetPicRepText = scriptTag.getAttribute('data-widget-pick-rep-text');
+      }
+      if(scriptTag.getAttribute('data-widget-type') && validWidgetTypes.indexOf(scriptTag.getAttribute('data-widget-type')) > -1) {
+        widgetType = scriptTag.getAttribute('data-widget-type');
+      }
+      if(scriptTag.getAttribute('data-widget-call-action-text')) {
+        widgetCallText = scriptTag.getAttribute('data-widget-call-action-text');
+      }
+      if(scriptTag.getAttribute('data-widget-email-action-text')) {
+        widgetEmailText = scriptTag.getAttribute('data-widget-email-action-text');
+      }
+
+      if(scriptTag.getAttribute('data-widget-email-subject')) {
+        emailSubject = scriptTag.getAttribute('data-widget-email-subject');
+      }
+      if(scriptTag.getAttribute('data-widget-email-greeting')) {
+        emailGreeting = scriptTag.getAttribute('data-widget-email-greeting');
+      }
+      if(scriptTag.getAttribute('data-widget-email-body')) {
+        emailBody = scriptTag.getAttribute('data-widget-email-body');
+      }
+      if(scriptTag.getAttribute('data-widget-email-action')) {
+        emailAction = scriptTag.getAttribute('data-widget-email-action');
+      }
+
+      if(scriptTag.getAttribute('data-widget-twitter-text')) {
+        twitterText = scriptTag.getAttribute('data-widget-twitter-text');
+      }
+      if(scriptTag.getAttribute('data-widget-twitter-hashtags')) {
+        twitterHashTags = scriptTag.getAttribute('data-widget-twitter-hashtags');
+      }
+
+      if(scriptTag.getAttribute('data-widget-facebook-link')) {
+        facebookLink = scriptTag.getAttribute('data-widget-facebook-link');
+      }
+      if(scriptTag.getAttribute('data-widget-facebook-description')) {
+        facebookDescription = scriptTag.getAttribute('data-widget-facebook-description');
       }
 
       window.CAMPAIGN_ZERO_WIDGET = {
         environment: isProduction ? 'production' : 'development',
         base: isProduction ? 'https://embed.joincampaignzero.org/app/' : './app/',
+        data: isProduction ? 'https://embed.joincampaignzero.org/data/' : './data/',
+        type: widgetType,
         api: {
-          base: isProduction ? 'https://api.joincampaignzero.org/v1/' : 'http://127.0.0.1:5000/v1/',
-          key: '7E07D864-209A-F9E4-819F-2DD7E76B6F24'
+          base: isProduction ? 'https://api.civil.services/v1/' : 'http://127.0.0.1:5000/v1/',
+          key: isProduction ? '99BB6429-D251-6AF4-D9F2-6FE3D79DF034' : '7E07D864-209A-F9E4-819F-2DD7E76B6F24'
         },
         version: version,
         labels: {
           title: widgetTitleText,
           subtitle: widgetSubTitleText,
           button: widgetButtonText,
-          pickRep: widgetPicRepText
+          pickRep: widgetPicRepText,
+          call: widgetCallText,
+          email: widgetEmailText
+        },
+        email: {
+          subject: emailSubject,
+          greeting: emailGreeting,
+          body: emailBody,
+          action: emailAction
+        },
+        twitter: {
+          text: twitterText,
+          hashtags: twitterHashTags
+        },
+        facebook: {
+          link: facebookLink,
+          description: facebookDescription
         }
       };
 
       // check for existing element, otherwise create it
-      if(jQuery('#' + elementName).length === 0){
+      if($elm.length === 0){
         jQuery('<div id="' + elementName + '"></div>').insertBefore(scriptTag);
       }
 

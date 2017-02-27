@@ -298,7 +298,8 @@
     max-height: 110px;
     overflow-x: hidden;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch; }
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 30px; }
   #campaign-zero-widget .representative .support {
     font-weight: 400;
     color: #272727;
@@ -321,7 +322,9 @@
       text-decoration: none;
       min-width: 50px;
       display: inline-block;
-      text-align: center; }
+      text-align: center;
+      line-height: 11px;
+      min-height: 12px; }
       #campaign-zero-widget .representative .support a:hover {
         color: #333;
         background-color: #fff; }
