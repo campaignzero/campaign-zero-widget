@@ -1,7 +1,7 @@
 {
   "name": "campaign-zero-widget",
-  "version": "1.3.0",
-  "description": "Electoral College Widget",
+  "version": "1.3.1",
+  "description": "Campaign Zero Widget",
   "homepage": "https://github.com/campaignzero/campaign-zero-widget#readme",
   "license": "MIT",
   "main": "widget.js",

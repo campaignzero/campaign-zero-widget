@@ -533,7 +533,7 @@ var appWidget = {
 
       if(killings && killings.count > 0 && appWidget.settings.type === 'default') {
         var label = (killings.count === 1) ? 'person' : 'people';
-        emailMessage = encodeURIComponent(appWidget.settings.email.greeting + " " + rep.full_name +  ",\r\n\r\n" + appWidget.settings.email.body + " This year alone, police in " + killings.state + " have killed at least " + killings.count + " " + label + ". We need comprehensive legislation to make deadly force a last resort for police officers, establish alternative responses to minor offenses, demilitarize police departments, ensure independent investigations and prosecutions of police killings, as well as other solutions proposed by Campaign Zero.\r\n\r\n" + appWidget.settings.email.action);
+        emailMessage = encodeURIComponent(appWidget.settings.email.greeting + " " + rep.full_name +  ",\r\n\r\n" + appWidget.settings.email.body + " In 2016, police in " + killings.state + " have killed at least " + killings.count + " " + label + ". We need comprehensive legislation to make deadly force a last resort for police officers, establish alternative responses to minor offenses, demilitarize police departments, ensure independent investigations and prosecutions of police killings, as well as other solutions proposed by Campaign Zero.\r\n\r\n" + appWidget.settings.email.action);
       } else {
         emailMessage = encodeURIComponent(appWidget.settings.email.greeting + " " + rep.full_name +  ",\r\n\r\n" + appWidget.settings.email.body + "\r\n\r\n" + appWidget.settings.email.action);
       }
