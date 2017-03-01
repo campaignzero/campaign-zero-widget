@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customize Widget</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+
+    <meta property="og:url" content="https://joincampaignzero.org">
+    <meta property="og:title" content="Campaign Zero Widget">
+    <meta property="og:description"
+          content="We can live in a world where the police don't kill people by limiting police interventions, improving community interactions, and ensuring accountability."/>
+    <meta property="og:image" content="https://embed.joincampaignzero.org/app-image.gif">
+
+    <meta name="twitter:image" content="https://embed.joincampaignzero.org/app-image.gif">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@samswey">
+    <meta name="twitter:domain" content="joincampaignzero.org">
+    <meta name="twitter:creator" content="@mrmidi">
+
+    <link rel="shortcut icon" href="https://embed.joincampaignzero.org/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+    <style>
+        .panel-title > a {
+            width: 100%;
+            display: block;
+        }
+
+        .panel-title > a span {
+            opacity: 0.33;
+            transition: opacity 0.25s ease;
+        }
+
+        .panel-title > a:hover span {
+            opacity: 1;
+        }
+
+        .panel-title > a:hover, .panel-title > a:active, .panel-title > a:focus {
+            text-decoration: none;
+        }
+
+        .form-group .help-block {
+            opacity: 0.25;
+            transition: opacity 0.25s ease;
+        }
+
+        .form-group:hover .help-block {
+            opacity: 1;
+        }
+
+        pre {
+            background: #f8f8f8;
+            margin-top: 30px;
+        }
+
+        .form-inline .checkbox {
+            margin-right: 20px;
+        }
+
+        .push-bottom {
+            margin-bottom: 20px;
+        }
+
+        .markup {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container main" role="main">
+    <div class="page-header">
+        <h1>Customize Widget</h1>
+    </div>
+    <div class="row">
+        <form>
+            <div class="col-md-6">
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="widgetSettingsHeader">
+                            <h3 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#widgetSettings" aria-expanded="false" aria-controls="widgetSettings">
+                                    <span class="glyphicon glyphicon-expand" aria-hidden="true"></span> Widget Settings
+                                </a>
+                            </h3>
+                        </div>
+                        <div id="widgetSettings" class="panel-collapse collapse" role="tabpanel"
+                             aria-labelledby="widgetSettingsHeader">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label>Widget Type</label>
+                                    <select class="form-control" id="widget-type">
+                                        <option value="default" selected>End Police Violence</option>
+                                        <option value="resistance">Resistance</option>
+                                    </select>
+                                    <span class="help-block">This should be either default or resistance depending on which data source you want to use</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Title Text</label>
+                                    <input type="text" class="form-control" id="widget-title-text" placeholder="End Police Violence">
+                                    <span class="help-block">This is the Title at the Top of the Widget</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Subtitle Text</label>
+                                    <input type="text" class="form-control" id="widget-subtitle-text" placeholder="Where does your rep stand?">
+                                    <span class="help-block">This is the Call to Action Text above the Search Field</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Button Text</label>
+                                    <input type="text" class="form-control" id="widget-button-text" placeholder="Find your rep">
+                                    <span class="help-block">The is the Button on the Main Page</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Pick Rep Text</label>
+                                    <input type="text" class="form-control" id="widget-pick-rep-text" placeholder="Pick a Representative">
+                                    <span class="help-block">This is the Text at the top of the page after doing a search</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Call Action Text</label>
+                                    <input type="text" class="form-control" id="widget-call-action-text" placeholder="Call and demand action:">
+                                    <span class="help-block">This is the Text above the Phone Number List</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email Action Text</label>
+                                    <input type="text" class="form-control" id="widget-email-action-text" placeholder="Email and demand action:">
+                                    <span class="help-block">This is the Text above the Email List</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="emailSettingsHeader">
+                            <h3 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#emailSettings" aria-expanded="false" aria-controls="emailSettings">
+                                    <span class="glyphicon glyphicon-expand" aria-hidden="true"></span> Email Settings
+                                </a>
+                            </h3>
+                        </div>
+                        <div id="emailSettings" class="panel-collapse collapse" role="tabpanel"
+                             aria-labelledby="emailSettingsHeader">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label>Email Subject</label>
+                                    <input type="text" class="form-control" id="widget-email-subject" placeholder="We need urgent action to end police violence in our district.">
+                                    <span class="help-block">This is the Email Subject for Contacting an Elected Official</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email Greeting</label>
+                                    <input type="text" class="form-control" id="widget-email-greeting" placeholder="Greetings">
+                                    <span class="help-block">This is the word before the Elected Official's name, e.g. Greetings Jane Doe,</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email Body</label>
+                                    <textarea class="form-control" id="widget-email-body" placeholder="I'm from your district, and police violence needs to be urgently addressed through comprehensive legislation as proposed by Campaign Zero."></textarea>
+                                    <span class="help-block">This is the Body of the Email for sent to the Elected Official</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email Action</label>
+                                    <textarea class="form-control" id="widget-email-action" placeholder="[YOUR_MESSAGE_HERE]"></textarea>
+                                    <span class="help-block">This is text at the end of the Email Body where you can encourage the user to add their own message</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="twitterSettingsHeader">
+                            <h3 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#twitterSettings" aria-expanded="false" aria-controls="twitterSettingsHeader">
+                                    <span class="glyphicon glyphicon-expand" aria-hidden="true"></span> Twitter Settings
+                                </a>
+                            </h3>
+                        </div>
+                        <div id="twitterSettings" class="panel-collapse collapse" role="tabpanel"
+                             aria-labelledby="emailSettingsHeader">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label>Twitter Text</label>
+                                    <textarea class="form-control" id="widget-twitter-text" placeholder="Learn where your representatives stand on police violence and demand action now! http://JoinCampaignZero.org/action"></textarea>
+                                    <span class="help-block">This is the Message in Tweet</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Twitter Hashtags</label>
+                                    <input type="text" class="form-control" id="widget-twitter-hashtags" placeholder="CampaignZero">
+                                    <span class="help-block">These are the Hashtags used in the Tweet, you can use more than one by using a comma between words</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="facebookSettingsHeader">
+                            <h3 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#facebookSettings" aria-expanded="false" aria-controls="facebookSettingsHeader">
+                                    <span class="glyphicon glyphicon-expand" aria-hidden="true"></span> Facebook
+                                    Settings
+                                </a>
+                            </h3>
+                        </div>
+                        <div id="facebookSettings" class="panel-collapse collapse" role="tabpanel"
+                             aria-labelledby="facebookSettingsHeader">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label>Facebook Link</label>
+                                    <input type="text" class="form-control" id="widget-facebook-link" placeholder="http://www.joincampaignzero.org/action">
+                                    <span class="help-block">This is the URL you want to link to for the Facebook Post</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Facebook Description</label>
+                                    <textarea class="form-control" id="widget-facebook-description" placeholder="Learn where your representatives stand on police violence and demand action now!"></textarea>
+                                    <span class="help-block">This is the Description you want shown for the Facebook Post</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right push-bottom">
+                    <div class="form-inline">
+                        <div class="checkbox">
+                            <label>
+                                I prefer <code>&lt;script></code> in footer &nbsp; <input type="checkbox" id="split-markup">
+                            </label>
+                        </div>
+                        <button type="reset" class="btn btn-default">Reset</button>
+                        <button type="button" class="btn btn-primary" id="generate-markup">Generate</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+
+                <div id="widget-preview">
+
+                </div>
+
+                <div id="markup" class="markup">
+                    <div class="form-group">
+                        <pre><code class="html" id="script-markup"></code></pre>
+                        <span class="help-block">Place this <code>&lt;script></code> wherever you want the Widget to Render.</span>
+                    </div>
+                </div>
+
+                <div id="markup-custom" class="markup">
+                    <div class="form-group">
+                        <pre><code class="html" id="div-markup-custom"></code></pre>
+                        <span class="help-block">Place this <code>&lt;div></code> wherever you want the Widget to Render.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <pre><code class="html">&lt;script async src="https://embed.joincampaignzero.org/widget.js" charset="utf-8">&lt;/script></code></pre>
+                        <span class="help-block">Place this <code>&lt;script></code> just before the closing <code>&lt;/body></code> tag.</span>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+
+<script>
+  (function () {
+
+    function generateWidgetCode () {
+      var data_attr = [];
+      var widget_type = $('#widget-type').val();
+      var widget_title_text = $('#widget-title-text').val();
+      var widget_subtitle_text = $('#widget-subtitle-text').val();
+      var widget_button_text = $('#widget-button-text').val();
+      var widget_pick_rep_text = $('#widget-pick-rep-text').val();
+      var widget_call_action_text = $('#widget-call-action-text').val();
+      var widget_email_action_text = $('#widget-email-action-text').val();
+      var widget_email_subject = $('#widget-email-subject').val();
+      var widget_email_greeting = $('#widget-email-greeting').val();
+      var widget_email_body = $('#widget-email-body').val();
+      var widget_email_action = $('#widget-email-action').val();
+      var widget_twitter_text = $('#widget-twitter-text').val();
+      var widget_twitter_hashtags = $('#widget-twitter-hashtags').val();
+      var widget_facebook_link = $('#widget-facebook-link').val();
+      var widget_facebook_description = $('#widget-facebook-description').val();
+
+      if (widget_type && widget_type !== 'default') {
+        data_attr.push('data-widget-type="' + widget_type + '"');
+      }
+      if (widget_title_text) {
+        data_attr.push('data-widget-title-text="' + widget_title_text + '"');
+      }
+      if (widget_subtitle_text) {
+        data_attr.push('data-widget-subtitle-text="' + widget_subtitle_text + '"');
+      }
+      if (widget_button_text) {
+        data_attr.push('data-widget-button-text="' + widget_button_text + '"');
+      }
+      if (widget_pick_rep_text) {
+        data_attr.push('data-widget-pick-rep-text="' + widget_pick_rep_text + '"');
+      }
+      if (widget_call_action_text) {
+        data_attr.push('data-widget-call-action-text="' + widget_call_action_text + '"');
+      }
+      if (widget_email_action_text) {
+        data_attr.push('data-widget-email-action-text="' + widget_email_action_text + '"');
+      }
+      if (widget_email_subject) {
+        data_attr.push('data-widget-email-subject="' + widget_email_subject + '"');
+      }
+      if (widget_email_greeting) {
+        data_attr.push('data-widget-email-greeting="' + widget_email_greeting + '"');
+      }
+      if (widget_email_body) {
+        data_attr.push('data-widget-email-body="' + widget_email_body + '"');
+      }
+      if (widget_email_action) {
+        data_attr.push('data-widget-email-action="' + widget_email_action + '"');
+      }
+      if (widget_twitter_text) {
+        data_attr.push('data-widget-twitter-text="' + widget_twitter_text + '"');
+      }
+      if (widget_twitter_hashtags) {
+        data_attr.push('data-widget-twitter-hashtags="' + widget_twitter_hashtags + '"');
+      }
+      if (widget_facebook_link) {
+        data_attr.push('data-widget-facebook-link="' + widget_facebook_link + '"');
+      }
+      if (widget_facebook_description) {
+        data_attr.push('data-widget-facebook-description="' + widget_facebook_description + '"');
+      }
+
+      var attributes = (data_attr.length > 0) ? ' ' + data_attr.join(' ') : '';
+
+      $('.markup').hide();
+      if (jQuery('#split-markup:checked').length === 1) {
+        $('#div-markup-custom').text('<div id="campaign-zero-widget"' + attributes + '></div>');
+        $('#markup-custom').show();
+      } else {
+        $('#script-markup').text('<scr' + 'ipt async src="https://embed.joincampaignzero.org/widget.js" charset="utf-8"' + attributes + '></scr' + 'ipt>');
+        $('#markup').show();
+      }
+
+      $('#widget-preview').html('<div id="campaign-zero-widget"' + attributes + '></div>');
+      loadScript('https://embed.joincampaignzero.org/widget.js?ac=' + Date.now())
+
+      $('pre code').each(function (i, block) {
+        $(block).removeClass('hljs xml');
+        hljs.highlightBlock(block);
+      });
+    }
+
+    function loadScript(src, onLoad) {
+      var script_tag = document.createElement('script');
+      script_tag.setAttribute('type', 'text/javascript');
+      script_tag.setAttribute('src', src);
+
+      if (script_tag.readyState) {
+        script_tag.onreadystatechange = function () {
+          if (this.readyState == 'complete' || this.readyState == 'loaded') {
+            onLoad();
+          }
+        };
+      } else {
+        script_tag.onload = onLoad;
+      }
+
+      // append loaded script to head
+      document.getElementById('widget-preview').appendChild(script_tag);
+    }
+
+    $(document).ready(function () {
+      $('.collapse')
+        .on('shown.bs.collapse', function () {
+          $(this)
+            .parent()
+            .find('.glyphicon-expand')
+            .removeClass('glyphicon-expand')
+            .addClass('glyphicon-collapse-down');
+        })
+        .on('hidden.bs.collapse', function () {
+          $(this)
+            .parent()
+            .find('.glyphicon-collapse-down')
+            .removeClass('glyphicon-collapse-down')
+            .addClass('glyphicon-expand');
+        });
+
+      $('#generate-markup').click(function () {
+        generateWidgetCode();
+      });
+
+      generateWidgetCode();
+    });
+  })();
+</script>
+</body>
+</html>
