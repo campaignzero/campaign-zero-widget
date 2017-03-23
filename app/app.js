@@ -786,17 +786,16 @@ var appWidget = {
         if(bills[i].status === 'considering') {
           jQuery('#widget-bill-results', elm).append('<div class="support"><span class="status ' + bills[i].status + '">' + bills[i].status + '</span> <a target="_blank" rel="noopener" href="' + bills[i].url + '">' + bills[i].bill + '</a> ' + bills[i].label + '</div>');
         } else {
-          var billID = bills[i].bill;
-          setTimeout(function () {
-            jQuery('#widget-bill-results', elm).append('<div id="loading-results" class="support text-center"><i class="fa fa-spinner fa-pulse fa-fw"></i> Checking status of ' + billID + ' ...</div>');
-          }, 100);
           appWidget.voteStatus(bills[i], rep_id, function (bill, status) {
             jQuery('#loading-results', elm).remove();
             setTimeout(function () {
               jQuery('#loading-results', elm).remove();
             }, 500);
             var label = (status !== 'unknown') ? status : 'did not vote';
-            jQuery('#widget-bill-results', elm).append('<div class="support"><span class="status ' + status + ' ' + bill.progress + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> ' + bill.label + '</div>');
+
+            if (status !== 'unknown') {
+              jQuery('#widget-bill-results', elm).append('<div class="support"><span class="status ' + status + ' ' + bill.progress + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> ' + bill.label + '</div>');
+            }
 
             jQuery('#widget-bill-results a', elm).off('click.widget');
             jQuery('#widget-bill-results a', elm).on('click.widget', function () {
