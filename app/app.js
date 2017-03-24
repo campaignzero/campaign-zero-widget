@@ -772,10 +772,7 @@ var appWidget = {
     var elm = jQuery('#' + appWidget.elementName);
     var html = '';
 
-    if( !bills || bills.length === 0) {
-      jQuery('#widget-bill-results', elm).append('<div class="support text-center">No bills on this issue.</div>');
-    } else {
-
+    if(bills && bills.length > 0) {
       bills.sort(function (a, b) {
         if(a.status < b. status) return -1;
         if(a.status > b. status) return 1;
