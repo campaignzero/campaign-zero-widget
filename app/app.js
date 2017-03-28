@@ -79,7 +79,7 @@ var appWidget = {
 
           appWidget.getBills(appWidget.storedLocation.state.state_code);
           appWidget.getPoliceKillings(appWidget.storedLocation.state.state_code);
-          appWidget.getGovernment(appWidget.storedLocation.location);
+          appWidget.getGovernment(appWidget.storedLocation.location, appWidget.storedLocation.state.state_code);
 
           setTimeout(function () {
             appWidget.generateResults(response.data);
@@ -100,8 +100,8 @@ var appWidget = {
    * Get Government for Provided Location
    * @param location
    */
-  getGovernment: function (location) {
-    var jsonpUrl = appWidget.settings.api.base + 'government/?latitude=' + location.latitude + '&longitude=' + location.longitude + '&apikey=' + appWidget.settings.api.key;
+  getGovernment: function (location, state) {
+    var jsonpUrl = appWidget.settings.api.base + 'government/?state=' + state + '&latitude=' + location.latitude + '&longitude=' + location.longitude + '&apikey=' + appWidget.settings.api.key;
 
     jQuery.ajax({
       url: jsonpUrl,
@@ -272,109 +272,115 @@ var appWidget = {
           }
 
           // Add City Council
-          for (var i = 0; i < appWidget.government.city_council.length; i++) {
-            var rep = appWidget.government.city_council[i];
-            var $li = $template.clone();
+          if (appWidget.government && appWidget.government.city_council) {
+            for (var i = 0; i < appWidget.government.city_council.length; i++) {
+              var rep = appWidget.government.city_council[i];
+              var $li = $template.clone();
 
-            if (!rep.full_name && rep.name) {
-              rep.full_name = rep.name;
-            }
+              if (!rep.full_name && rep.name) {
+                rep.full_name = rep.name;
+              }
 
-            jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + i);
-            jQuery('.representative-summary', $li).data('type', 'city-council');
-            jQuery('.representative-summary', $li).data('id', i).addClass(rep.party.toLowerCase());
+              jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + i);
+              jQuery('.representative-summary', $li).data('type', 'city-council');
+              jQuery('.representative-summary', $li).data('id', i).addClass(rep.party.toLowerCase());
 
-            jQuery('.representative-summary .summary-name', $li).text(rep.full_name);
-            jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
-            jQuery('.representative-summary .summary-details .district', $li).text(rep.district);
+              jQuery('.representative-summary .summary-name', $li).text(rep.full_name);
+              jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
+              jQuery('.representative-summary .summary-details .district', $li).text(rep.district);
 
-            // Hide Element Not Needed
-            if (!rep.district || rep.district === '') {
-              jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
-            }
+              // Hide Element Not Needed
+              if (!rep.district || rep.district === '') {
+                jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
+              }
 
-            jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
+              jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
 
-            if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
-              var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
-              jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
-            }
+              if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
+                var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
+                jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
+              }
 
-            // fix for issue #10 to set order in which city council members are ordered
-            if (rep.title === 'mayor') {
-              jQuery('ul.city-council-mayor', elm).append($li);
-            } else if (rep.title === 'councilor') {
-              jQuery('ul.city-council-councilor', elm).append($li);
-            } else if (rep.title === 'district-attorney') {
-              jQuery('ul.city-council-district-attorney', elm).append($li);
+              // fix for issue #10 to set order in which city council members are ordered
+              if (rep.title === 'mayor') {
+                jQuery('ul.city-council-mayor', elm).append($li);
+              } else if (rep.title === 'councilor') {
+                jQuery('ul.city-council-councilor', elm).append($li);
+              } else if (rep.title === 'district-attorney') {
+                jQuery('ul.city-council-district-attorney', elm).append($li);
+              }
             }
           }
 
           // Add Senators
-          for (var i = 0; i < appWidget.government.senate.length; i++) {
-            var rep = appWidget.government.senate[i];
-            var $li = $template.clone();
+          if (appWidget.government && appWidget.government.senate) {
+            for (var i = 0; i < appWidget.government.senate.length; i++) {
+              var rep = appWidget.government.senate[i];
+              var $li = $template.clone();
 
-            if (!rep.full_name && rep.name) {
-              rep.full_name = rep.name;
+              if (!rep.full_name && rep.name) {
+                rep.full_name = rep.name;
+              }
+
+              jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + i);
+              jQuery('.representative-summary', $li).data('type', 'senator');
+              jQuery('.representative-summary', $li).data('id', i).addClass(rep.party.toLowerCase());
+
+              jQuery('.representative-summary .summary-name', $li).text('Senator ' + rep.name);
+              jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
+
+              // Hide Element Not Needed
+              if (!rep.district || rep.district === '') {
+                jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
+              }
+
+              if (!rep.chamber || rep.chamber === '') {
+                jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
+              }
+
+              if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
+                var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
+                jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
+              }
+
+              jQuery('ul.federal', elm).append($li);
             }
-
-            jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + i);
-            jQuery('.representative-summary', $li).data('type', 'senator');
-            jQuery('.representative-summary', $li).data('id', i).addClass(rep.party.toLowerCase());
-
-            jQuery('.representative-summary .summary-name', $li).text('Senator ' + rep.name);
-            jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
-
-            // Hide Element Not Needed
-            if (!rep.district || rep.district === '') {
-              jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
-            }
-
-            if (!rep.chamber || rep.chamber === '') {
-              jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
-            }
-
-            if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
-              var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
-              jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
-            }
-
-            jQuery('ul.federal', elm).append($li);
           }
 
           // Add House Reps
-          for (var i = 0; i < appWidget.government.house.length; i++) {
-            var rep = appWidget.government.house[i];
-            var $li = $template.clone();
+          if (appWidget.government && appWidget.government.house) {
+            for (var i = 0; i < appWidget.government.house.length; i++) {
+              var rep = appWidget.government.house[i];
+              var $li = $template.clone();
 
-            if (!rep.full_name && rep.name) {
-              rep.full_name = rep.name;
+              if (!rep.full_name && rep.name) {
+                rep.full_name = rep.name;
+              }
+
+              jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + i);
+              jQuery('.representative-summary', $li).data('type', 'representative');
+              jQuery('.representative-summary', $li).data('id', i).addClass(rep.party.toLowerCase());
+
+              jQuery('.representative-summary .summary-name', $li).text('Rep. ' + rep.name);
+              jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
+              jQuery('.representative-summary .summary-details .district', $li).text(rep.district);
+
+              // Hide Element Not Needed
+              if (!rep.district || rep.district === '') {
+                jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
+              }
+
+              jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
+
+              /* House Rep Images Missing
+               if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
+               var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
+               jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
+               }
+               */
+
+              jQuery('ul.federal', elm).append($li);
             }
-
-            jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + i);
-            jQuery('.representative-summary', $li).data('type', 'representative');
-            jQuery('.representative-summary', $li).data('id', i).addClass(rep.party.toLowerCase());
-
-            jQuery('.representative-summary .summary-name', $li).text('Rep. ' + rep.name);
-            jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
-            jQuery('.representative-summary .summary-details .district', $li).text(rep.district);
-
-            // Hide Element Not Needed
-            if (!rep.district || rep.district === '') {
-              jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
-            }
-
-            jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
-
-            /* House Rep Images Missing
-            if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
-              var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
-              jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
-            }
-            */
-
-            jQuery('ul.federal', elm).append($li);
           }
 
           jQuery('a', elm).off('click.widget');
