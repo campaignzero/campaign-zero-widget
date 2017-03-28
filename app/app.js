@@ -5,6 +5,7 @@ var appWidget = {
   elementName: 'campaign-zero-widget',
   selectedTab: 'city-council',
   storedResponse: {},
+  storedLocation: {},
   settings: window.CAMPAIGN_ZERO_WIDGET,
 
   /**
@@ -49,19 +50,15 @@ var appWidget = {
   /**
    * Handle Form Submission
    * @param geoLocation
-   * @param zipCode
    * @returns {boolean}
    */
-  getRepresentatives: function (geoLocation, zipCode) {
+  getRepresentatives: function (geoLocation) {
 
     var jsonpUrl = appWidget.settings.api.base + 'legislators/';
 
     if (geoLocation) {
       jsonpUrl += '?latitude=' + geoLocation.latitude + '&longitude=' + geoLocation.longitude;
       appWidget.trackEvent('Fetch', 'Reps Geo', geoLocation.latitude + ',' + geoLocation.longitude);
-    } else if(zipCode) {
-      jsonpUrl += '?zipcode=' + zipCode;
-      appWidget.trackEvent('Fetch', 'Reps Zipcode', zipCode);
     } else {
       return false;
     }
@@ -80,17 +77,16 @@ var appWidget = {
 
           appWidget.storedResponse = response.data;
 
-          appWidget.getBills(response.data.results[0].state);
-          appWidget.getSenators(response.data.results[0].state);
-          appWidget.getPoliceKillings(response.data.results[0].state);
-          appWidget.detectSupportedCity(response.data.request.state, response.data.request.city);
+          appWidget.getBills(appWidget.storedLocation.state.state_code);
+          appWidget.getPoliceKillings(appWidget.storedLocation.state.state_code);
+          appWidget.getGovernment(appWidget.storedLocation.location);
 
           setTimeout(function () {
             appWidget.generateResults(response.data);
           }, 250);
 
         } else {
-          appWidget.showError('Invalid Zip Code');
+          appWidget.showError('Invalid Address');
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -101,42 +97,24 @@ var appWidget = {
   },
 
   /**
-   * Get Senators for given State
-   * @param state
+   * Get Government for Provided Location
+   * @param location
    */
-  getSenators: function (state) {
-    var jsonpUrl = appWidget.settings.api.base + 'senate/?state=' + state + '&apikey=' + appWidget.settings.api.key;
+  getGovernment: function (location) {
+    var jsonpUrl = appWidget.settings.api.base + 'government/?latitude=' + location.latitude + '&longitude=' + location.longitude + '&apikey=' + appWidget.settings.api.key;
 
     jQuery.ajax({
       url: jsonpUrl,
       type: 'GET',
       dataType: 'json',
       success: function (response) {
-        appWidget.storedResponse.senators = [];
+        appWidget.storedResponse.government = [];
 
         if(response && response.error) {
           appWidget.showError(response.errors[0]);
-          appWidget.trackEvent('Error', 'Senators Error', response.errors);
+          appWidget.trackEvent('Error', 'Government Error', response.errors);
         } else {
-          for (var i = 0; i < response.data.length; i++) {
-            var senator = response.data[i];
-
-            appWidget.storedResponse.senators.push({
-              full_name: 'Senator ' + senator.name,
-              party: senator.party,
-              district: null,
-              chamber: null,
-              photo_url: (senator.photo_url) ? senator.photo_url : null,
-              state: senator.address_state,
-              offices: [
-                {
-                  name: 'Senate Office',
-                  email: null,
-                  phone: senator.phone
-                }
-              ]
-            });
-          }
+          appWidget.government = response.data;
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -174,37 +152,6 @@ var appWidget = {
       error: function (jqXHR, textStatus, errorThrown) {
         appWidget.showError('ERROR: ' + errorThrown);
         appWidget.trackEvent('Error', 'Reps Error', errorThrown);
-      }
-    });
-  },
-
-  /**
-   * Detect if Current City & State are supported for City Council Data
-   * @param state
-   * @param city
-   */
-  detectSupportedCity: function (state, city) {
-    appWidget.storedResponse.supportedCity = false;
-
-    var cleanState = state.toLowerCase();
-    var cleanCity = city.toLowerCase().replace(/[^a-z- ]/gi, '').replace(/ /gi, '-');
-
-    var jsonpUrl = appWidget.settings.api.base + 'city-council/' + cleanState + '/' + cleanCity + '?apikey=' + appWidget.settings.api.key;
-
-    jQuery.ajax({
-      url: jsonpUrl,
-      type: 'GET',
-      dataType: 'json',
-      success: function (response) {
-        if(response && response.error) {
-          appWidget.trackEvent('Error', 'Support City Error', response.errors);
-          appWidget.storedResponse.supportedCity = false;
-        } else {
-          appWidget.storedResponse.supportedCity = response.data.supported;
-        }
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        appWidget.trackEvent('Error', 'Support City Error', errorThrown);
       }
     });
   },
@@ -293,11 +240,15 @@ var appWidget = {
               var rep = response.results[key];
               var $li = $template.clone();
 
-              jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + key).addClass(rep.party.toLowerCase());
+              if (!rep.full_name && rep.name) {
+                rep.full_name = rep.name;
+              }
+
+              jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + key);
               jQuery('.representative-summary', $li).data('type', 'representative');
               jQuery('.representative-summary', $li).data('id', key).addClass(rep.party.toLowerCase());
 
-              jQuery('.representative-summary .summary-name', $li).text(rep.full_name).addClass(rep.party.toLowerCase());
+              jQuery('.representative-summary .summary-name', $li).text(rep.full_name);
               jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
               jQuery('.representative-summary .summary-details .district', $li).text(rep.district);
               jQuery('.representative-summary .summary-details .chamber', $li).text(rep.chamber);
@@ -320,77 +271,110 @@ var appWidget = {
             }
           }
 
-          for (var key in response.cityCouncil) {
-            if (response.cityCouncil.hasOwnProperty(key)) {
+          // Add City Council
+          for (var i = 0; i < appWidget.government.city_council.length; i++) {
+            var rep = appWidget.government.city_council[i];
+            var $li = $template.clone();
 
-              var rep = response.cityCouncil[key];
-              var $li = $template.clone();
+            if (!rep.full_name && rep.name) {
+              rep.full_name = rep.name;
+            }
 
-              jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + key).addClass(rep.party.toLowerCase());
-              jQuery('.representative-summary', $li).data('type', 'city-council');
-              jQuery('.representative-summary', $li).data('id', key).addClass(rep.party.toLowerCase());
+            jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + i);
+            jQuery('.representative-summary', $li).data('type', 'city-council');
+            jQuery('.representative-summary', $li).data('id', i).addClass(rep.party.toLowerCase());
 
-              jQuery('.representative-summary .summary-name', $li).text(rep.full_name).addClass(rep.party.toLowerCase());
-              jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
-              jQuery('.representative-summary .summary-details .district', $li).text(rep.district);
-              jQuery('.representative-summary .summary-details .chamber', $li).text(rep.chamber);
+            jQuery('.representative-summary .summary-name', $li).text(rep.full_name);
+            jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
+            jQuery('.representative-summary .summary-details .district', $li).text(rep.district);
 
-              // Hide Element Not Needed
-              if (!rep.district || rep.district === '') {
-                jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
-              }
+            // Hide Element Not Needed
+            if (!rep.district || rep.district === '') {
+              jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
+            }
 
-              if (!rep.chamber || rep.chamber === '') {
-                jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
-              }
+            jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
 
-              if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
-                var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
-                jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
-              }
+            if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
+              var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
+              jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
+            }
 
-              // fix for issue #10 to set order in which city council members are ordered
-              if (rep.position === 'mayor') {
-                jQuery('ul.city-council-mayor', elm).append($li);
-              } else if (rep.position === 'councilor') {
-                jQuery('ul.city-council-councilor', elm).append($li);
-              } else if (rep.position === 'district-attorney') {
-                jQuery('ul.city-council-district-attorney', elm).append($li);
-              }
+            // fix for issue #10 to set order in which city council members are ordered
+            if (rep.title === 'mayor') {
+              jQuery('ul.city-council-mayor', elm).append($li);
+            } else if (rep.title === 'councilor') {
+              jQuery('ul.city-council-councilor', elm).append($li);
+            } else if (rep.title === 'district-attorney') {
+              jQuery('ul.city-council-district-attorney', elm).append($li);
             }
           }
 
-          for (var key in response.senators) {
-            if (response.senators.hasOwnProperty(key)) {
+          // Add Senators
+          for (var i = 0; i < appWidget.government.senate.length; i++) {
+            var rep = appWidget.government.senate[i];
+            var $li = $template.clone();
 
-              var rep = response.senators[key];
-              var $li = $template.clone();
-
-              jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + key).addClass(rep.party.toLowerCase());
-              jQuery('.representative-summary', $li).data('type', 'senator');
-              jQuery('.representative-summary', $li).data('id', key).addClass(rep.party.toLowerCase());
-
-              jQuery('.representative-summary .summary-name', $li).text(rep.full_name).addClass(rep.party.toLowerCase());
-              jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
-              jQuery('.representative-summary .summary-details .district', $li).text(rep.district);
-              jQuery('.representative-summary .summary-details .chamber', $li).text(rep.chamber);
-
-              // Hide Element Not Needed
-              if (!rep.district || rep.district === '') {
-                jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
-              }
-
-              if (!rep.chamber || rep.chamber === '') {
-                jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
-              }
-
-              if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
-                var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
-                jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
-              }
-
-              jQuery('ul.federal', elm).append($li);
+            if (!rep.full_name && rep.name) {
+              rep.full_name = rep.name;
             }
+
+            jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + i);
+            jQuery('.representative-summary', $li).data('type', 'senator');
+            jQuery('.representative-summary', $li).data('id', i).addClass(rep.party.toLowerCase());
+
+            jQuery('.representative-summary .summary-name', $li).text('Senator ' + rep.name);
+            jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
+
+            // Hide Element Not Needed
+            if (!rep.district || rep.district === '') {
+              jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
+            }
+
+            if (!rep.chamber || rep.chamber === '') {
+              jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
+            }
+
+            if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
+              var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
+              jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
+            }
+
+            jQuery('ul.federal', elm).append($li);
+          }
+
+          // Add House Reps
+          for (var i = 0; i < appWidget.government.house.length; i++) {
+            var rep = appWidget.government.house[i];
+            var $li = $template.clone();
+
+            if (!rep.full_name && rep.name) {
+              rep.full_name = rep.name;
+            }
+
+            jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + i);
+            jQuery('.representative-summary', $li).data('type', 'representative');
+            jQuery('.representative-summary', $li).data('id', i).addClass(rep.party.toLowerCase());
+
+            jQuery('.representative-summary .summary-name', $li).text('Rep. ' + rep.name);
+            jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
+            jQuery('.representative-summary .summary-details .district', $li).text(rep.district);
+
+            // Hide Element Not Needed
+            if (!rep.district || rep.district === '') {
+              jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
+            }
+
+            jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
+
+            /* House Rep Images Missing
+            if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
+              var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
+              jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
+            }
+            */
+
+            jQuery('ul.federal', elm).append($li);
           }
 
           jQuery('a', elm).off('click.widget');
@@ -408,23 +392,23 @@ var appWidget = {
             var rep, chamber, bill;
 
             if (type === 'city-council') {
-              rep = response.cityCouncil[id];
-              chamber = response.cityCouncil[id]['chamber'];
-              bills = response.bills[chamber] || [];
+              rep = appWidget.government.city_council[id];
+              chamber = null;
+              bills = [];
             } else if (type === 'representative') {
               rep = response.results[id];
               chamber = response.results[id]['chamber'];
               bills = response.bills[chamber] || [];
             } else if (type === 'senator') {
-              rep = response.senators[id];
+              rep = appWidget.government.senate[id];
               chamber = null;
               bills = [];
             }
 
-            appWidget.trackEvent('Nav', 'Selected Rep', rep.full_name);
-            appWidget.trackEvent('Nav', 'Selected Rep State', rep.state.toUpperCase());
-
             appWidget.generateDetails(rep, bills, killings, true);
+
+            appWidget.trackEvent('Nav', 'Selected Rep', rep.name);
+            appWidget.trackEvent('Nav', 'Selected Rep State', rep.state_code);
           });
 
           jQuery('button', elm).off('click.widget');
@@ -438,7 +422,7 @@ var appWidget = {
             appWidget.trackEvent('Nav', 'Back Button', 'Main Page');
           });
 
-          if ((response.cityCouncil && response.cityCouncil.length > 0) || (response.senators && response.senators.length > 0)) {
+          if ((appWidget.government.city_council && appWidget.government.city_council.length > 0) || (appWidget.government.senate && appWidget.government.senate.length > 0) || (appWidget.government.house && appWidget.government.house.length > 0)) {
 
             jQuery('a.tab-button', elm).removeClass('active');
             jQuery('#' + appWidget.selectedTab + '-button', elm).addClass('active');
@@ -469,28 +453,7 @@ var appWidget = {
             jQuery('.representatives-tab', elm).addClass('active');
           }
 
-          if (appWidget.storedResponse.supportedCity && !appWidget.promptedCityData) {
-            appWidget.promptedCityData = true;
-
-            jQuery('.supported-cty', elm).show();
-
-            jQuery('a.modal-close', elm).off('click.widget');
-            jQuery('a.modal-close', elm).on('click.widget', function () {
-              jQuery('.supported-cty', elm).hide();
-              appWidget.trackEvent('Nav', 'Local Data Modal', 'Closed');
-            });
-
-            jQuery('#address-lookup', elm).off('submit.widget');
-            jQuery('#address-lookup', elm).on('submit.widget', function () {
-              jQuery('.supported-cty', elm).hide();
-              appWidget.trackEvent('Nav', 'Local Data Modal', 'Closed');
-
-              var address = jQuery('#address', elm).val();
-
-              appWidget.geoCodeAddress(address);
-              return false;
-            });
-          } else if (!response.cityCouncil || response.cityCouncil.length === 0) {
+          if (!appWidget.government.city_council || appWidget.government.city_council.length === 0) {
             appWidget.selectedTab = 'representatives';
 
             jQuery('.federal-tab', elm).removeClass('active');
@@ -522,10 +485,14 @@ var appWidget = {
 
       // Prepare Data
       var phoneNumbers = '';
-      for (var i = 0; i < rep.offices.length; i++) {
-        if (rep.offices[i].phone) {
-          phoneNumbers = phoneNumbers.concat('<div class="address-phone"><a href="tel:' + rep.offices[i].phone.replace(/-/g, '') + '">' + rep.offices[i].phone + '</a>&nbsp; <span>( ' + rep.offices[i].name + ' )</span></div>');
+      if (rep.offices) {
+        for (var i = 0; i < rep.offices.length; i++) {
+          if (rep.offices[i].phone) {
+            phoneNumbers = phoneNumbers.concat('<div class="address-phone"><a href="tel:' + rep.offices[i].phone.replace(/-/g, '') + '">' + rep.offices[i].phone + '</a>&nbsp; <span>( ' + rep.offices[i].name + ' )</span></div>');
+          }
         }
+      } else if (rep.phone) {
+        phoneNumbers = phoneNumbers.concat('<div class="address-phone"><a href="tel:' + rep.phone.replace(/-/g, '') + '">' + rep.phone + '</a></div>');
       }
 
       var emailSubject = encodeURIComponent(appWidget.settings.email.subject);
@@ -551,6 +518,10 @@ var appWidget = {
       if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
         var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
         jQuery('#rep-image', elm).addClass(rep.party.toLowerCase()).css('background-image', 'url(' + image + ')');
+      }
+
+      if (!rep.full_name && rep.name) {
+        rep.full_name = rep.name;
       }
 
       // Replace Template Data
@@ -643,15 +614,11 @@ var appWidget = {
   /**
    * Geocode Address
    * @param address
-   * @param city
-   * @param state
    */
   geoCodeAddress: function (address) {
     var cleanAddress = address.replace(/ /g, '+');
-    var cleanCity = appWidget.storedResponse.request.city.replace(/ /g, '+');
-    var cleanState = appWidget.storedResponse.request.state;
 
-    var jsonpUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + cleanAddress + ',+' + cleanCity + ',+' + cleanState + '&key=AIzaSyBlgFUsVry1HfM7cbWEfNmbu_RSPNQin9o'
+    var jsonpUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + cleanAddress + '&key=AIzaSyBlgFUsVry1HfM7cbWEfNmbu_RSPNQin9o';
 
     jQuery.ajax({
       url: jsonpUrl,
@@ -659,101 +626,32 @@ var appWidget = {
       dataType: 'json',
       success: function (response) {
         if (response.status && response.status === 'OK' && response && response.results && response.results.length > 0) {
-          appWidget.getCityCouncilData(response.results[0].geometry.location);
-        }
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        appWidget.trackEvent('Error', 'Geo Code Address Error', errorThrown);
-      }
-    });
-  },
+          var geolocation = {
+              latitude: response.results[0].geometry.location.lat,
+              longitude: response.results[0].geometry.location.lng
+          };
 
-  /**
-   * Get City Council Data
-   * @param location
-   */
-  getCityCouncilData: function (location) {
+          appWidget.storedLocation = {
+            location: geolocation,
+            address: response.results[0].formatted_address
+          };
 
-    var cleanCity = appWidget.storedResponse.request.city.toLowerCase().replace(/[^a-z- ]/gi, '').replace(/ /gi, '-');
-    var cleanState = appWidget.storedResponse.request.state.toLowerCase();
+          var components = response.results[0].address_components;
 
-    var jsonpUrl = appWidget.settings.api.base + 'city-council/' + cleanState + '/' + cleanCity + '?latitude=' + location.lat + '&longitude=' + location.lng + '&apikey=' + appWidget.settings.api.key;
+          for (var i = 0; i < components.length; i++) {
+            if (components[i].types.indexOf('administrative_area_level_1') > -1) {
+              appWidget.storedLocation.state = {
+                state_name: components[i].long_name,
+                state_code: components[i].short_name
+              }
+            }
 
-    jQuery.ajax({
-      url: jsonpUrl,
-      type: 'GET',
-      dataType: 'json',
-      success: function (response) {
-        if(response && response.error) {
-          appWidget.trackEvent('Error', 'Get City Council Data Error', response.errors);
-        } else {
-
-          appWidget.storedResponse.cityCouncil = [];
-
-          if (response.data && response.data.mayor) {
-            var mayor = response.data.mayor;
-
-            appWidget.storedResponse.cityCouncil.push({
-              full_name: 'Mayor ' + mayor.representative,
-              party: mayor.party,
-              district: '',
-              chamber: '',
-              photo_url: (mayor.photo_url) ? mayor.photo_url : null,
-              state: appWidget.storedResponse.request.state,
-              position: 'mayor',
-              offices: [
-                {
-                  name: 'City Council',
-                  email: mayor.email,
-                  phone: mayor.phone
-                }
-              ]
-            });
+            if (components[i].types.indexOf('locality') > -1) {
+              appWidget.storedLocation.city = components[i].long_name;
+            }
           }
 
-          if (response.data && response.data.district_attorney) {
-            var district_attorney = response.data.district_attorney;
-
-            appWidget.storedResponse.cityCouncil.push({
-              full_name: 'D.A. ' + district_attorney.representative,
-              party: district_attorney.party,
-              district: '',
-              chamber: '',
-              photo_url: (district_attorney.photo_url) ? district_attorney.photo_url : null,
-              state: appWidget.storedResponse.request.state,
-              position: 'district-attorney',
-              offices: [
-                {
-                  name: 'City Council',
-                  email: district_attorney.email,
-                  phone: district_attorney.phone
-                }
-              ]
-            });
-          }
-
-          if (response.data && response.data.council_member) {
-            var council_member = response.data.council_member;
-
-            appWidget.storedResponse.cityCouncil.push({
-              full_name: 'Councilor ' + council_member.representative,
-              party: council_member.party,
-              district: council_member.district_number,
-              chamber: '',
-              photo_url: (council_member.photo_url) ? council_member.photo_url : null,
-              state: appWidget.storedResponse.request.state,
-              position: 'councilor',
-              offices: [
-                {
-                  name: 'City Council',
-                  email: council_member.email,
-                  phone: council_member.phone
-                }
-              ]
-            });
-          }
-
-          appWidget.generateResults(appWidget.storedResponse);
+          appWidget.getRepresentatives(geolocation);
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -928,19 +826,18 @@ var appWidget = {
 
         jQuery('button.submit', elm).attr('disabled', 'disabled').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Loading');
 
-        var zipcode = jQuery('#zip-code').val();
-        var pattern = /[0-9]{5}/g;
+        var address = jQuery('#address').val();
 
-        appWidget.trackEvent('Form', 'Submit', zipcode);
+        appWidget.trackEvent('Form', 'Submit', address);
 
-        if(zipcode !== '' && pattern.test(zipcode)) {
-          appWidget.getRepresentatives(null, zipcode);
-        } else if(zipcode !== '' && !pattern.test(zipcode)) {
-          appWidget.showError('Invalid Zip Code ( e.g. 90210 )');
-          appWidget.trackEvent('Error', 'Submit Form', 'Invalid Zip Code');
+        if(address !== '') {
+          appWidget.geoCodeAddress(address);
+        } else if(address !== '' && !pattern.test(address)) {
+          appWidget.showError('Invalid Address ( e.g. 123 Any Street, New York, NY 10001 )');
+          appWidget.trackEvent('Error', 'Submit Form', 'Invalid Address');
         } else {
-          appWidget.showError('Enter a Zip Code ( e.g. 90210 )');
-          appWidget.trackEvent('Error', 'Submit Form', 'No Zip Code Entered');
+          appWidget.showError('Enter a Address ( e.g. 123 Any Street, New York, NY 10001 )');
+          appWidget.trackEvent('Error', 'Submit Form', 'No Address Entered');
         }
 
         event.preventDefault();
