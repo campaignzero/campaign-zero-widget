@@ -402,7 +402,7 @@ var appWidget = {
               chamber = null;
               bills = [];
             } else if (type === 'representative') {
-              rep = response.results[id];
+              rep = appWidget.government.house[id];
               chamber = response.results[id]['chamber'];
               bills = response.bills[chamber] || [];
             } else if (type === 'senator') {
