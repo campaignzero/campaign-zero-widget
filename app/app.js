@@ -3,7 +3,7 @@ var appWidget = {
   timeout: null,
   promptedCityData: false,
   elementName: 'campaign-zero-widget',
-  selectedTab: 'city-council',
+  selectedTab: 'representatives',
   storedResponse: {},
   storedLocation: {},
   settings: window.CAMPAIGN_ZERO_WIDGET,
@@ -115,6 +115,7 @@ var appWidget = {
           appWidget.trackEvent('Error', 'Government Error', response.errors);
         } else {
           appWidget.government = response.data;
+          appWidget.selectedTab = (response.data.city_council && response.data.city_council.length > 0) ? 'city-council' : 'representatives';
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -358,7 +359,7 @@ var appWidget = {
               }
 
               jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + i);
-              jQuery('.representative-summary', $li).data('type', 'representative');
+              jQuery('.representative-summary', $li).data('type', 'house');
               jQuery('.representative-summary', $li).data('id', i).addClass(rep.party.toLowerCase());
 
               jQuery('.representative-summary .summary-name', $li).text('Rep. ' + rep.name);
@@ -402,19 +403,25 @@ var appWidget = {
               chamber = null;
               bills = [];
             } else if (type === 'representative') {
-              rep = appWidget.government.house[id];
+              rep = response.results[id];
               chamber = response.results[id]['chamber'];
               bills = response.bills[chamber] || [];
             } else if (type === 'senator') {
               rep = appWidget.government.senate[id];
               chamber = null;
               bills = [];
+            } else if (type === 'house') {
+              rep = appWidget.government.house[id];
+              chamber = null;
+              bills = [];
             }
 
             appWidget.generateDetails(rep, bills, killings, true);
 
-            appWidget.trackEvent('Nav', 'Selected Rep', rep.name);
-            appWidget.trackEvent('Nav', 'Selected Rep State', rep.state_code);
+            if (typeof rep.name !== 'undefined' && typeof rep.state_code !== 'undefined') {
+              appWidget.trackEvent('Nav', 'Selected Rep', rep.name);
+              appWidget.trackEvent('Nav', 'Selected Rep State', rep.state_code);
+            }
           });
 
           jQuery('button', elm).off('click.widget');
@@ -460,13 +467,18 @@ var appWidget = {
           }
 
           if (!appWidget.government.city_council || appWidget.government.city_council.length === 0) {
-            appWidget.selectedTab = 'representatives';
+            //appWidget.selectedTab = 'representatives';
 
-            jQuery('.federal-tab', elm).removeClass('active');
+            jQuery('a.tab-button', elm).removeClass('active');
+            jQuery('#' + appWidget.selectedTab + '-button', elm).addClass('active');
+
+            jQuery('.tab-content', elm).removeClass('active');
+            jQuery('#' + appWidget.selectedTab + '-tab', elm).addClass('active');
+
+            jQuery('.tab-set', elm).show();
+
             jQuery('.city-council-tab', elm).removeClass('active').hide();
             jQuery('#city-council-button', elm).removeClass('active').hide();
-            jQuery('.representatives-tab', elm).addClass('active');
-            jQuery('#representatives-button', elm).addClass('active');
           }
         });
       });
@@ -491,7 +503,7 @@ var appWidget = {
 
       // Prepare Data
       var phoneNumbers = '';
-      if (rep.offices) {
+      if (typeof rep.offices !== 'undefined') {
         for (var i = 0; i < rep.offices.length; i++) {
           if (rep.offices[i].phone) {
             phoneNumbers = phoneNumbers.concat('<div class="address-phone"><a href="tel:' + rep.offices[i].phone.replace(/-/g, '') + '">' + rep.offices[i].phone + '</a>&nbsp; <span>( ' + rep.offices[i].name + ' )</span></div>');
