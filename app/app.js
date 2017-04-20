@@ -540,7 +540,9 @@ var appWidget = {
       jQuery('a.widget-twitter', elm).attr('href', 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(appWidget.settings.twitter.text) + '&hashtags=' + encodeURIComponent(appWidget.settings.twitter.hashtags));
       jQuery('a.widget-facebook', elm).attr('href', 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(appWidget.settings.facebook.link) + '&description=' + encodeURIComponent(appWidget.settings.facebook.description));
 
-      appWidget.templateBills(bills, rep.id);
+      if (appWidget.selectedTab === 'representatives') {
+        appWidget.templateBills(bills, rep.id);
+      }
 
       jQuery('.widget-modal .phone-numbers', elm).html(phoneNumbers);
       jQuery('.widget-modal .email-addresses', elm).html(emailAddress);
