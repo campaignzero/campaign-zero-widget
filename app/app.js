@@ -22,6 +22,20 @@ var appWidget = {
   },
 
   /**
+   * Title Case
+   * @param str
+   * @returns {string}
+   */
+  titleCase: function (str) {
+    str = str.replace('-', ' ').replace('_', ' ');
+    str = str.toLowerCase().split(' ');
+    for (var i = 0; i < str.length; i++) {
+      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+    }
+    return str.join(' ');
+  },
+
+  /**
    * Show Error Message
    * @param error
    */
@@ -249,7 +263,7 @@ var appWidget = {
               jQuery('.representative-summary', $li).data('type', 'representative');
               jQuery('.representative-summary', $li).data('id', key).addClass(rep.party.toLowerCase());
 
-              jQuery('.representative-summary .summary-name', $li).text(rep.full_name);
+              jQuery('.representative-summary .summary-name', $li).text('Rep. ' + rep.full_name);
               jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
               jQuery('.representative-summary .summary-details .district', $li).text(rep.district);
               jQuery('.representative-summary .summary-details .chamber', $li).text(rep.chamber);
@@ -286,7 +300,7 @@ var appWidget = {
               jQuery('.representative-summary', $li).data('type', 'city-council');
               jQuery('.representative-summary', $li).data('id', i).addClass(rep.party.toLowerCase());
 
-              jQuery('.representative-summary .summary-name', $li).text(rep.full_name);
+              jQuery('.representative-summary .summary-name', $li).text(appWidget.titleCase(rep.title) + ' ' + rep.full_name);
               jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
               jQuery('.representative-summary .summary-details .district', $li).text(rep.district);
 
@@ -348,6 +362,36 @@ var appWidget = {
             }
           }
 
+          // Add Governor
+          if (appWidget.government && appWidget.government.governor) {
+            for (var i = 0; i < appWidget.government.governor.length; i++) {
+              var rep = appWidget.government.governor[i];
+              var $li = $template.clone();
+
+              if (!rep.full_name && rep.name) {
+                rep.full_name = rep.name;
+              }
+
+              jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + i);
+              jQuery('.representative-summary', $li).data('type', 'governor');
+              jQuery('.representative-summary', $li).data('id', i).addClass(rep.party.toLowerCase());
+
+              jQuery('.representative-summary .summary-name', $li).text('Governor ' + rep.name);
+              jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
+
+              // Hide Element Not Needed
+              jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
+              jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
+
+              if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
+                var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
+                jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
+              }
+
+              jQuery('ul.representatives', elm).append($li);
+            }
+          }
+
           // Add House Reps
           if (appWidget.government && appWidget.government.house) {
             for (var i = 0; i < appWidget.government.house.length; i++) {
@@ -373,12 +417,10 @@ var appWidget = {
 
               jQuery('.summary-details .chamber, .summary-details .chamber-label', $li).hide();
 
-              /* House Rep Images Missing
                if (typeof rep.photo_url !== 'undefined' && rep.photo_url !== '') {
-               var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
-               jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
+                var image = (rep.photo_url).startsWith('https://') ? rep.photo_url : 'https://proxy.joincampaignzero.org/' + rep.photo_url;
+                jQuery('.representative-summary .avatar', $li).css('background-image', 'url(' + image + ')');
                }
-               */
 
               jQuery('ul.federal', elm).append($li);
             }
@@ -414,6 +456,10 @@ var appWidget = {
               rep = appWidget.government.house[id];
               chamber = null;
               bills = [];
+            } else if (type === 'governor') {
+              rep = appWidget.government.governor[id];
+              chamber = null;
+              bills = [];
             }
 
             appWidget.generateDetails(rep, bills, killings, true);
@@ -435,7 +481,7 @@ var appWidget = {
             appWidget.trackEvent('Nav', 'Back Button', 'Main Page');
           });
 
-          if ((appWidget.government.city_council && appWidget.government.city_council.length > 0) || (appWidget.government.senate && appWidget.government.senate.length > 0) || (appWidget.government.house && appWidget.government.house.length > 0)) {
+          if ((appWidget.government.city_council && appWidget.government.city_council.length > 0) || (appWidget.government.senate && appWidget.government.senate.length > 0) || (appWidget.government.house && appWidget.government.house.length > 0) || (appWidget.government.governor && appWidget.government.governor.length > 0)) {
 
             jQuery('a.tab-button', elm).removeClass('active');
             jQuery('#' + appWidget.selectedTab + '-button', elm).addClass('active');
