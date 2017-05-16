@@ -319,7 +319,7 @@ var appWidget = {
               // fix for issue #10 to set order in which city council members are ordered
               if (rep.title === 'mayor') {
                 jQuery('ul.city-council-mayor', elm).append($li);
-              } else if (rep.title === 'councilor') {
+              } else if (rep.title === 'councilor' || rep.title === 'alderman') {
                 jQuery('ul.city-council-councilor', elm).append($li);
               } else if (rep.title === 'district-attorney') {
                 jQuery('ul.city-council-district-attorney', elm).append($li);
