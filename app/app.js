@@ -513,8 +513,6 @@ var appWidget = {
           }
 
           if (!appWidget.government.city_council || appWidget.government.city_council.length === 0) {
-            //appWidget.selectedTab = 'representatives';
-
             jQuery('a.tab-button', elm).removeClass('active');
             jQuery('#' + appWidget.selectedTab + '-button', elm).addClass('active');
 
@@ -575,6 +573,8 @@ var appWidget = {
         emailAddress = '<div class="address-email"><a href="mailto:' + rep.email + '?subject=' + emailSubject + '&body=' + emailMessage + '">' + rep.email + '</a></div>';
       } else if(rep.offices && rep.offices[0].email) {
         emailAddress = '<div class="address-email"><a href="mailto:' + rep.offices[0].email + '?subject=' + emailSubject + '&body=' + emailMessage + '">' + rep.offices[0].email + '</a></div>';
+      } else if (phoneNumbers !== '') {
+        emailAddress = '<div class="address-email"><a href="javascript:void(0)">No email address currently available</a></div><div style="margin-bottom: 12px; font-weight: 300;">Try calling them instead:</div>' + phoneNumbers;
       } else {
         emailAddress = '<div class="address-email"><a href="javascript:void(0)">No email address currently available</a></div>';
       }
