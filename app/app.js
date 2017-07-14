@@ -259,17 +259,19 @@ var appWidget = {
                 rep.full_name = rep.name;
               }
 
+              var title = (rep.chamber && rep.chamber === 'upper') ? 'Senator' : 'Representative';
+
               jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + key);
               jQuery('.representative-summary', $li).data('type', 'representative');
               jQuery('.representative-summary', $li).data('id', key).addClass(rep.party.toLowerCase());
 
-              jQuery('.representative-summary .summary-name', $li).text('Rep. ' + rep.full_name);
+              jQuery('.representative-summary .summary-name', $li).text(title + ' ' + rep.full_name);
               jQuery('.representative-summary .summary-details .party', $li).text(rep.party);
               jQuery('.representative-summary .summary-details .district', $li).text(rep.district);
               jQuery('.representative-summary .summary-details .chamber', $li).text(rep.chamber);
 
               // Hide Element Not Needed
-              if (!rep.district || rep.district === '') {
+              if (!rep.district || rep.district === '' || (rep.chamber && rep.chamber === 'upper')) {
                 jQuery('.summary-details .district, .summary-details .district-label', $li).hide();
               }
 
