@@ -754,9 +754,11 @@ var appWidget = {
             setTimeout(function () {
               jQuery('#loading-results', elm).remove();
             }, 500);
-            var label = (status !== 'unknown') ? status : 'no vote';
+            var label = (status !== 'unknown') ? status : 'did not vote';
 
-            jQuery('#widget-bill-results', elm).append('<div class="support"><span class="status ' + status + ' ' + bill.progress + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> ' + bill.label + '</div>');
+            if (status !== 'unknown') {
+              jQuery('#widget-bill-results', elm).append('<div class="support"><span class="status ' + status + ' ' + bill.progress + '">' + label + '</span> <a target="_blank" rel="noopener" href="' + bill.url + '">' + bill.bill + '</a> ' + bill.label + '</div>');
+            }
 
             jQuery('#widget-bill-results a', elm).off('click.widget');
             jQuery('#widget-bill-results a', elm).on('click.widget', function () {
