@@ -44,7 +44,7 @@ if (!empty($state) && empty($session) && empty($bill) && empty($rep)) {
 }
 
 // Build URL
-$url = API_URL_BILLS . strtolower($state) . '/' . rawurlencode($session) . '/' . rawurlencode($bill) . '/';
+$url = API_URL_BILLS . strtolower($state) . '/' . rawurlencode($session) . '/' . rawurlencode($bill) . '/?apikey=bd38451d-7963-4afa-ad72-9577ea3d0eb1';
 
 // Create URL params for API call
 $params = array();
