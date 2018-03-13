@@ -44,10 +44,10 @@ if (!empty($state) && empty($session) && empty($bill) && empty($rep)) {
 }
 
 // Build URL
-$url = API_URL_BILLS . strtolower($state) . '/' . rawurlencode($session) . '/' . rawurlencode($bill) . '/?apikey=bd38451d-7963-4afa-ad72-9577ea3d0eb1';
+$url = API_URL_BILLS . strtolower($state) . '/' . rawurlencode($session) . '/' . rawurlencode($bill) . '/';
 
 // Create URL params for API call
-$params = array();
+$params = array('apikey' => 'bd38451d-7963-4afa-ad72-9577ea3d0eb1');
 
 // replace curl call with function that caches, or loads from cache
 $result = get_content($url, $params);
@@ -57,6 +57,7 @@ $data = json_decode($result, true);
 
 // loop through bills for specific rep
 $status = 'unknown';
+
 if($data && $data['votes']){
   for($i = 0; $i < count($data['votes']); $i++){
     for($j = 0; $j < count($data['votes'][$i]['yes_votes']); $j++){
