@@ -7,10 +7,8 @@ Campaign Zero Widget
 
 ![Demo](app-image.gif "Demo")
 
-DEMO The Widget Here:
----
 
-* [DEMO](https://embed.joincampaignzero.org)
+* [CLICK HERE TO DEMO THE WIDGET](https://www.ourstates.org/action)
 
 
 About The Data
