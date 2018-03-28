@@ -15,6 +15,8 @@ This Widget gets it's Elected Official data from the __[Civil Services API](http
 
 The specific bills we keep track of are managed internally by our team.
 
+Currently, the widget covers all state and federal representatives and the largest US cities. Legislator vote history is currently available for state legislators only; spanning issues of policing, gun violence, economic justice, reproductive justice, LGBTQ equality, immigration, voting rights, and healthcare. Note that the "Resistance" setting displays bills for all of these issues and "Default" displays bills on policing only.
+
 
 Usage Instructions
 ---
@@ -60,7 +62,7 @@ You can add one or all of the following Data Attributes on either our `<script>`
 
 Data Attribute                     | Default                                                                                                                                    | Description
 -----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|-------------
-`data-widget-type`                 | `default`                                                                                                                                  | This should be either `default` or `resistance` depending on which data source you want to use
+`data-widget-type`                 | `default`                                                                                                                                  | This should be either `default` or `resistance` depending on which data (Default shows policing bills only, Resistance shows all issue areas) source you want to use
 `data-widget-title-text`           | End Police Violence                                                                                                                        | This is the Title at the Top of the Widget
 `data-widget-subtitle-text`        | Where does your rep stand?                                                                                                                 | This is the Call to Action Text above the Search Field
 `data-widget-button-text`          | Find your rep                                                                                                                              | The is the Button on the Main Page
