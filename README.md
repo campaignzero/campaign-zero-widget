@@ -7,8 +7,13 @@ Campaign Zero Widget
 
 ![Demo](app-image.gif "Demo")
 
+DEMO The Widget Here:
+---
 
-Widget Data
+* [DEMO](https://embed.joincampaignzero.org)
+
+
+About The Data
 ---
 
 This Widget gets it's Elected Official data from the __[Civil Services API](https://github.com/civilserviceusa/api)__. 
@@ -87,9 +92,3 @@ Data Attribute                     | Default                                    
 ```html
 <script async src="https://embed.joincampaignzero.org/widget.js" charset="utf-8" data-widget-title-text="Custom Title" data-widget-subtitle-text="Custom Subtitle" data-widget-button-text="Custom Button" data-widget-pick-rep-text="Custom Rep Header"></script>
 ```
-
-
-Demos
----
-
-* [DEMO](https://embed.joincampaignzero.org)
