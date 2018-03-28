@@ -7,11 +7,11 @@ Campaign Zero Widget
 
 ![Demo](app-image.gif "Demo")
 
+Try Out The Widget
+---
 
 * [CLICK HERE TO DEMO THE WIDGET](https://www.ourstates.org/action)
 
-<script async src="https://embed.joincampaignzero.org/widget.js" charset="utf-8" data-widget-type="resistance" data-widget-title-text="ADVOCACY TOOL" data-widget-subtitle-text="Make your voice heard" data-widget-button-text="FIND MY REPS" data-widget-pick-rep-text="FIND YOUR REP" data-widget-email-body="[Insert the issue you want your rep to take action on below. To give you an idea for what an effective call to action looks like we've provided a sample email here focused on addressing police violence]
-My name is [insert name], I'm in your district, and I urge you to support [bill number] to require a special prosecutor to hold police accountable for police shootings."></script>
 
 About The Data
 ---
