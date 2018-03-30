@@ -9,14 +9,14 @@
   var elementName = 'campaign-zero-widget';
   var loadedCSS = false;
   var loadedJS = false;
-  var version = '1.4.7';
+  var version = '1.4.8';
 
   /** Get reference to self (scriptTag) */
   var allScripts = document.getElementsByTagName('script');
   var targetScripts = [];
 
   /** Helper function to load external scripts */
-  function loadScript(src, onLoad) {
+  function loadScript(src, onLoad, onError) {
     var script_tag = document.createElement('script');
         script_tag.setAttribute('type', 'text/javascript');
         script_tag.setAttribute('src', src);
@@ -29,6 +29,10 @@
       };
     } else {
       script_tag.onload = onLoad;
+    }
+
+    if (typeof onError === 'function') {
+      script_tag.onerror = onError;
     }
 
     // append loaded script to head
@@ -294,6 +298,14 @@
           ga('campaignZeroWidget.send', 'pageview');
         }
 
+        // load widgets main app's script file
+        loadScript(assets + 'app.js?v=' + version, function(){
+          loadedJS = true;
+          if(typeof appWidget !== 'undefined' && loadedCSS && loadedJS){
+            appWidget.init();
+          }
+        });
+      }, function (){
         // load widgets main app's script file
         loadScript(assets + 'app.js?v=' + version, function(){
           loadedJS = true;
