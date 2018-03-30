@@ -259,7 +259,13 @@ var appWidget = {
                 rep.full_name = rep.name;
               }
 
-              var title = (rep.chamber && rep.chamber === 'upper') ? 'Senator' : 'Representative';
+              var title;
+
+              if (rep.state && rep.state.toUpperCase() === 'DC') {
+                title = 'Councilmember';
+              } else {
+                title = (rep.chamber && rep.chamber === 'upper') ? 'Senator' : 'Representative';
+              }
 
               jQuery('.representative-summary .avatar', $li).attr('id', '#rep-image-' + key);
               jQuery('.representative-summary', $li).data('type', 'representative');
@@ -525,6 +531,12 @@ var appWidget = {
 
             jQuery('.city-council-tab', elm).removeClass('active').hide();
             jQuery('#city-council-button', elm).removeClass('active').hide();
+          }
+
+          if (rep.state && rep.state.toUpperCase() === 'DC') {
+            $('.representative-results .tab-set').hide();
+          } else {
+            $('.representative-results .tab-set').show();
           }
         });
       });
