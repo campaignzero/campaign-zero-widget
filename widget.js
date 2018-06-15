@@ -9,7 +9,7 @@
   var elementName = 'campaign-zero-widget';
   var loadedCSS = false;
   var loadedJS = false;
-  var version = '1.4.8';
+  var version = '1.5.0';
 
   /** Get reference to self (scriptTag) */
   var allScripts = document.getElementsByTagName('script');
@@ -146,6 +146,8 @@
       var facebookLink = 'http://www.joincampaignzero.org/action';
       var facebookDescription = 'Learn where your representatives stand on police violence and demand action now!';
 
+      var googleAnalytics = 'UA-77948909-1';
+
       var $elm = jQuery('#' + elementName);
 
       /**
@@ -200,6 +202,10 @@
         facebookDescription = $elm.data('widget-facebook-description');
       }
 
+      if($elm.data('widget-google-analytics')) {
+        googleAnalytics = $elm.data('widget-google-analytics');
+      }
+
       /**
        * Check for Data Attributes on Script Tag
        */
@@ -252,6 +258,10 @@
         facebookDescription = scriptTag.getAttribute('data-widget-facebook-description');
       }
 
+      if(scriptTag.getAttribute('data-widget-google-analytics')) {
+        googleAnalytics = scriptTag.getAttribute('data-widget-google-analytics');
+      }
+
       window.CAMPAIGN_ZERO_WIDGET = {
         environment: isProduction ? 'production' : 'development',
         base: isProduction ? 'https://embed.joincampaignzero.org/app/' : './app/',
@@ -294,7 +304,7 @@
       // Load Required Libraries first then init widget
       loadScript('https://www.google-analytics.com/analytics.js', function(){
         if(typeof window.ga !== 'undefined'){
-          ga('create', 'UA-77948909-1', 'auto', 'campaignZeroWidget');
+          ga('create', googleAnalytics, 'auto', 'campaignZeroWidget');
           ga('campaignZeroWidget.send', 'pageview');
         }
 
