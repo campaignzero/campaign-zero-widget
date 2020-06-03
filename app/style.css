@@ -74,7 +74,9 @@
       line-height: 20px;
       width: 20px;
       height: 20px; }
-    #campaign-zero-widget button:disabled, #campaign-zero-widget button:hover {
+    #campaign-zero-widget button:disabled,
+    #campaign-zero-widget button:hover,
+    #campaign-zero-widget button:focus {
       background-color: #272727;
       border-color: #272727;
       color: #FFF; }
