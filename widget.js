@@ -126,6 +126,8 @@
       var isProduction = (scriptTag.src === 'https://embed.joincampaignzero.org/widget.js');
 
       var validWidgetTypes = ['default', 'resistance'];
+      
+      var widgetHostSite = undefined;
 
       var widgetTitleText = 'End Police Violence';
       var widgetSubTitleText = 'Where does your rep stand?';
@@ -153,6 +155,9 @@
       /**
        * Check for Data Attributes on Element
        */
+      if($elm.data('widget-host-site')) {
+        widgetHostSite = $elm.data('widget-host-site');
+      }
       if($elm.data('widget-title-text')) {
         widgetTitleText = $elm.data('widget-title-text');
       }
@@ -209,6 +214,9 @@
       /**
        * Check for Data Attributes on Script Tag
        */
+      if(scriptTag.getAttribute('widget-host-site')) {
+        widgetHostSite = $elm.data('widget-host-site');
+      }
       if(scriptTag.getAttribute('data-widget-title-text')) {
         widgetTitleText = scriptTag.getAttribute('data-widget-title-text');
       }
@@ -305,6 +313,7 @@
       loadScript('https://www.google-analytics.com/analytics.js', function(){
         if(typeof window.ga !== 'undefined'){
           ga('create', googleAnalytics, 'auto', 'campaignZeroWidget');
+          ga('set', 'ContactRepresentativeWidgetHostSite', widgetHostSite);
           ga('campaignZeroWidget.send', 'pageview');
         }
 
